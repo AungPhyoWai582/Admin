@@ -77,18 +77,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
           </Stack>
           <Divider />
           <List>
-            <NavLink
-              style={{ textDecoration: "none" }}
-              to="/account_info"
-              onClick={() => setHandleOpen(false)}
-            >
-              <ListItem sx={{ ":hover": { bgcolor: teal[100] } }}>
-                <ListItemIcon>
-                  <NoteAddIcon />
-                </ListItemIcon>
-                <ListItemText primary="Account" />
-              </ListItem>
-            </NavLink>
+            
             <NavLink
               style={{ textDecoration: "none" }}
               to="/lotery"
@@ -213,6 +202,18 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
                 to={"/login"}
               onClick={logout}
             > */}
+            <NavLink
+              style={{ textDecoration: "none" }}
+              to="/account_info"
+              onClick={() => setHandleOpen(false)}
+            >
+              <ListItem sx={{ ":hover": { bgcolor: teal[100] } }}>
+                <ListItemIcon>
+                  <NoteAddIcon />
+                </ListItemIcon>
+                <ListItemText primary="Account" />
+              </ListItem>
+            </NavLink>
             <ListItem
               sx={{ ":hover": { bgcolor: teal[100] }, cursor: "pointer" }}
               onClick={logout}

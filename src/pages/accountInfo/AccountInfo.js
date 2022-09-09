@@ -6,6 +6,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { teal } from "@mui/material/colors";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -29,13 +30,15 @@ const AccountInfo = ({ authUser }) => {
       width={{ xs: "100%", md: "50%" }}
       margin={{ md: "auto" }}
       component={"table"}
-      border={0.1}
+      boxShadow={1}
+    
     >
       <Typography
         padding={1}
         textAlign={"center"}
         fontSize={25}
         fontWeight={700}
+        color={teal[900]}
       >
         Account Info
       </Typography>
@@ -43,31 +46,31 @@ const AccountInfo = ({ authUser }) => {
       {userInfo && (
         <Table>
           <TableRow>
-            <TableCell width={"50%"}>Username</TableCell>
+            <TableCell sx={{fontWeight:'bold'}} width={"50%"}>Username</TableCell>
             <TableCell>{userInfo.username}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell width={"50%"}>Name</TableCell>
+            <TableCell sx={{fontWeight:'bold'}} width={"50%"}>Name</TableCell>
             <TableCell>{userInfo.name}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Role</TableCell>
+            <TableCell sx={{fontWeight:'bold'}} width={"50%"}>Role</TableCell>
             <TableCell>{userInfo.role}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Za</TableCell>
+            <TableCell sx={{fontWeight:'bold'}} width={"50%"}>Za</TableCell>
             <TableCell>{userInfo.twoDZ}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Commission</TableCell>
+            <TableCell sx={{fontWeight:'bold'}} width={"50%"}>Commission</TableCell>
             <TableCell>{userInfo.commission}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Divider</TableCell>
+            <TableCell sx={{fontWeight:'bold'}} width={"50%"}>Divider</TableCell>
             <TableCell>{userInfo.divider}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Account created</TableCell>
+            <TableCell sx={{fontWeight:'bold'}} width={"50%"}>Account created</TableCell>
             <TableCell>{userInfo.acc_created_count}</TableCell>
           </TableRow>
         </Table>
