@@ -109,7 +109,7 @@ const MemberList = () => {
                           color="success"
                           // onClick={() => UserContent.setDetailUser(user._id)}
                         >
-                          <NavLink to={"/agents/detail"} state={{user:user}}>
+                          <NavLink to={`/masters/detail/${user._id}`} state={{user:user}}>
                             <VisibilityOutlined />
                           </NavLink>
                         </IconButton>

@@ -118,7 +118,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
               <List component="div" disablePadding>
                 <NavLink
                   style={{ textDecoration: "none", color: "inherit" }}
-                  to="/agents/agent_create"
+                  to="/masters/master_create"
                   onClick={() => setHandleOpen(false)}
                 >
                   <ListItemButton sx={{ pl: 4 }}>
@@ -131,7 +131,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
                 </NavLink>
                 <NavLink
                   style={{ textDecoration: "none", color: "inherit" }}
-                  to="/agents/agent_list"
+                  to="/masters/master_list"
                   onClick={() => setHandleOpen(false)}
                 >
                   <ListItemButton sx={{ pl: 4 }}>

@@ -88,9 +88,9 @@ const Dashboard = () => {
       />
       <Route path="/customer" element={<Customer />} />
 
-      <Route path="/agents/agent_list" element={<MemberList />} />
-      <Route path="/agents/detail" element={<MemberDetail />} />
-      <Route path="/agents/agent_create" element={<MemberCreate />} />
+      <Route path="/masters/master_list" element={<MemberList />} />
+      <Route path="/masters/detail/:masterId" element={<MemberDetail />} />
+      <Route path="/masters/master_create" element={<MemberCreate />} />
     </Routes>
   );
   return (
