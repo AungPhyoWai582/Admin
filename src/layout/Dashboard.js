@@ -24,6 +24,7 @@ import CallList from "../pages/report/CallLists";
 import ShortCup from "../pages/report/ShortCut";
 import MemberDetail from "../pages/customer/MemberDetail";
 import { grey } from "@mui/material/colors";
+import BetPage from "../pages/bet/BetPage";
 
 const Dashboard = () => {
   const [authUser, setAuthUser] = useState({
@@ -58,9 +59,9 @@ const Dashboard = () => {
       <Route path="/lottery" element={<Lottery />} />
       <Route path="/view" element={<View />} />
       {/* <Route path="/view/lager/:lotteryId" element={<LagerReport />} /> */}
-      <Route path="/report/agent" element={<AgentReport />} />
+      <Route path="/report/master" element={<AgentReport />} />
 
-      <Route path="/lottery/bet/:lotteryId" element={<Bet />} />
+      <Route path="/lottery/bet/:lotteryId" element={<BetPage />} />
       {/* <Route path="/lottery/calls/:lotteryId" element={<CallsList />} /> */}
       <Route path="/lottery/lager/:lotteryId" element={<Lager />} />
 

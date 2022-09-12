@@ -77,7 +77,6 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
           </Stack>
           <Divider />
           <List>
-            
             <NavLink
               style={{ textDecoration: "none" }}
               to="/lotery"
@@ -111,7 +110,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
               <ListItemIcon>
                 <ListAlt />
               </ListItemIcon>
-              <ListItemText primary="Agents" />
+              <ListItemText primary="Masters" />
               {subopen ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
             <Collapse in={!subopen} timeout="auto" unmountOnExit>
