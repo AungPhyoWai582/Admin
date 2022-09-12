@@ -23,13 +23,13 @@ import Axios from "../../shared/Axios";
 
 const MemberDetail = () => {
   const { masterId } = useParams();
-  const [user,setUser] = useState({});
+  const [user, setUser] = useState({});
   const [open, setOpen] = useState(false);
-  const [openInfo, setOpenInfo] = useState(false);
+  const [openCommission, setOpenCommission] = useState(false);
   const [openAccLimit, setOpenAccLimit] = useState(false);
   const [updateInfo, setUpdateInfo] = useState({});
 
-  const [controlEff,setControlEff] = useState(false)
+  const [controlEff, setControlEff] = useState(false);
 
   useEffect(() => {
     Axios.get(`/masters/${masterId}`, {
@@ -38,11 +38,11 @@ const MemberDetail = () => {
       },
     }).then((res) => {
       console.log(res.data.data);
-      const {name,phone} = res.data.data;
+      const { name, phone } = res.data.data;
       setUser(res.data.data);
-      setControlEff(false)
+      setControlEff(false);
     });
-  },[controlEff]);
+  }, [controlEff]);
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -59,11 +59,17 @@ const MemberDetail = () => {
     setUpdateInfo({ name: name, phone: phone, twoDZ: twoDZ });
   };
 
-  const editAccLimit = (e,limit)=>{
+  const editAccLimit = (e, limit) => {
     e.preventDefault();
     setOpenAccLimit(true);
-    setUpdateInfo({acc_limit_created:limit});
-  }
+    setUpdateInfo({ acc_limit_created: limit });
+  };
+
+  const editCommission = (e, commission) => {
+    e.preventDefault();
+    setOpenCommission(true);
+    setUpdateInfo({ commission: commission });
+  };
 
   const saveInfoUpdate = () => {
     console.log(updateInfo);
@@ -76,12 +82,27 @@ const MemberDetail = () => {
       setControlEff(true);
       setOpen(false);
       setOpenAccLimit(false);
-      setUpdateInfo({})
+      setUpdateInfo({});
     });
   };
 
-  const saveAccLimitUpdate = () =>{
-    console.log(updateInfo)
+  const saveCommissionUpdate = () => {
+    console.log(updateInfo);
+    Axios.put(`/masters/${user._id}`, updateInfo, {
+      headers: {
+        authorization: `Bearer ` + localStorage.getItem("access-token"),
+      },
+    }).then((res) => {
+      console.log(res.data);
+      setControlEff(true);
+      setOpen(false);
+      setOpenCommission(false);
+      setUpdateInfo({});
+    });
+  };
+
+  const saveAccLimitUpdate = () => {
+    console.log(updateInfo);
     Axios.put(`/masters/${user._id}`, updateInfo, {
       headers: {
         authorization: `Bearer ` + localStorage.getItem("access-token"),
@@ -91,9 +112,9 @@ const MemberDetail = () => {
       setControlEff(true);
       setOpen(false);
       setOpenAccLimit(false);
-      setUpdateInfo({})
+      setUpdateInfo({});
     });
-  }
+  };
 
   console.log(updateInfo);
   return (
@@ -112,15 +133,15 @@ const MemberDetail = () => {
           padding={1}
           // border={0.1}
           boxShadow={1}
-          bgcolor ={grey[100]}
+          bgcolor={grey[100]}
         >
           <Stack
             direction={"row"}
             justifyContent="space-between"
             width={"100%"}
-          //  bgcolor ={teal[300]}
+            //  bgcolor ={teal[300]}
           >
-            <Typography  paddingLeft={1} fontWeight={"bold"}>
+            <Typography paddingLeft={1} fontWeight={"bold"}>
               Basic Info
             </Typography>{" "}
             <IconButton
@@ -173,7 +194,10 @@ const MemberDetail = () => {
               <IconButton
                 size="small"
                 color="error"
-                onClick={() => {setOpen(false);setUpdateInfo({})}}
+                onClick={() => {
+                  setOpen(false);
+                  setUpdateInfo({});
+                }}
               >
                 <Cancel />
               </IconButton>
@@ -239,7 +263,10 @@ const MemberDetail = () => {
                 size="small"
                 color={"error"}
                 variant="contained"
-                onClick={() => {setOpen(false);setUpdateInfo({})}}
+                onClick={() => {
+                  setOpen(false);
+                  setUpdateInfo({});
+                }}
               >
                 <Typography textTransform={"none"} fontSize={12}>
                   Cancel
@@ -265,13 +292,133 @@ const MemberDetail = () => {
           padding={1}
           // border={0.1}
           boxShadow={1}
-          bgcolor ={grey[100]}
+          bgcolor={grey[100]}
         >
-         <Stack
+          <Stack
             direction={"row"}
             justifyContent="space-between"
             width={"100%"}
-          //  bgcolor ={teal[300]}
+            //  bgcolor ={teal[300]}
+          >
+            <Typography paddingLeft={1} fontWeight={"bold"}>
+              Commissions
+            </Typography>{" "}
+            <IconButton
+              size="small"
+              // color="success"
+              onClick={(e) => editCommission(e, user.commission)}
+            >
+              <EditOutlined />
+            </IconButton>
+          </Stack>
+          <Stack
+            direction={"row"}
+            spacing={3}
+            // justifyContent="space-around"
+            borderRadius={1}
+            bgcolor={"white"}
+            padding={1}
+            width={{ xs: "90%", sm: "90%", md: "75%", xl: "50%" }}
+            margin={"auto"}
+          >
+            <Stack>
+              <Typography>2D</Typography>
+              <Typography>3D</Typography>
+            </Stack>
+            <Stack>
+              <Typography fontWeight={"bold"} color={"#00c853"}>
+                {user.commission}
+              </Typography>
+              <Typography fontWeight={"bold"} color="error">
+                0
+              </Typography>
+            </Stack>
+          </Stack>
+          <ModalBox open={openCommission} setOpen={setOpenCommission}>
+            <Stack
+              direction={"row"}
+              justifyContent="space-between"
+              borderBottom={0.1}
+              width={"100%"}
+              borderColor={grey[300]}
+              // padding={1}
+            >
+              <Typography variant={"h6"} paddingLeft={1} fontWeight={"bold"}>
+                Update Commissions
+              </Typography>{" "}
+              <IconButton
+                size="small"
+                color="error"
+                onClick={() => {
+                  setOpenCommission(false);
+                }}
+              >
+                <Cancel />
+              </IconButton>
+            </Stack>
+            <Stack
+              padding={1}
+              paddingY={3}
+              spacing={1}
+              borderBottom={0.1}
+              borderColor={grey[300]}
+            >
+              <TextField
+                size="small"
+                color="secondary"
+                label="commission"
+                name="commission"
+                value={updateInfo.commission}
+                onChange={onChangeHandler}
+              />
+            </Stack>
+            <Stack
+              direction={"row"}
+              justifyContent="flex-end"
+              padding={1}
+              spacing={1}
+            >
+              <Button
+                size="small"
+                color={"error"}
+                variant="contained"
+                onClick={() => {
+                  setOpenCommission(false);
+                  setUpdateInfo({});
+                }}
+              >
+                <Typography textTransform={"none"} fontSize={12}>
+                  Cancel
+                </Typography>
+              </Button>
+              <Button
+                size="small"
+                color={"success"}
+                variant="contained"
+                onClick={saveCommissionUpdate}
+              >
+                <Typography textTransform={"none"} fontSize={12}>
+                  Save
+                </Typography>
+              </Button>
+            </Stack>
+          </ModalBox>
+        </Stack>
+
+        <Stack
+          direction={"column"}
+          width={{ xs: "90%", sm: "90%", md: "75%", xl: "50%" }}
+          margin={"auto"}
+          padding={1}
+          // border={0.1}
+          boxShadow={1}
+          bgcolor={grey[100]}
+        >
+          <Stack
+            direction={"row"}
+            justifyContent="space-between"
+            width={"100%"}
+            //  bgcolor ={teal[300]}
           >
             <Typography paddingLeft={1} fontWeight={"bold"}>
               Acc Limitation
@@ -279,7 +426,7 @@ const MemberDetail = () => {
             <IconButton
               size="small"
               // color="success"
-              onClick={(e) => editAccLimit(e,user.acc_limit_created)}
+              onClick={(e) => editAccLimit(e, user.acc_limit_created)}
             >
               <EditOutlined />
             </IconButton>
@@ -299,10 +446,12 @@ const MemberDetail = () => {
               <Typography>break</Typography>
             </Stack>
             <Stack>
-              <Typography fontWeight={'bold'} color={'#00c853'}>
+              <Typography fontWeight={"bold"} color={"#00c853"}>
                 {user.acc_created_count ? user.acc_created_count : 0}
               </Typography>
-              <Typography fontWeight={'bold'} color='error'>{user.acc_limit_created}</Typography>
+              <Typography fontWeight={"bold"} color="error">
+                {user.acc_limit_created}
+              </Typography>
             </Stack>
           </Stack>
           <ModalBox open={openAccLimit} setOpen={setOpenAccLimit}>
@@ -320,7 +469,9 @@ const MemberDetail = () => {
               <IconButton
                 size="small"
                 color="error"
-                onClick={() => {setOpenAccLimit(false)}}
+                onClick={() => {
+                  setOpenAccLimit(false);
+                }}
               >
                 <Cancel />
               </IconButton>
@@ -351,13 +502,21 @@ const MemberDetail = () => {
                 size="small"
                 color={"error"}
                 variant="contained"
-                onClick={() => {setOpenAccLimit(false);setUpdateInfo({})}}
+                onClick={() => {
+                  setOpenAccLimit(false);
+                  setUpdateInfo({});
+                }}
               >
                 <Typography textTransform={"none"} fontSize={12}>
                   Cancel
                 </Typography>
               </Button>
-              <Button size="small" color={"success"} variant="contained" onClick={saveAccLimitUpdate}>
+              <Button
+                size="small"
+                color={"success"}
+                variant="contained"
+                onClick={saveAccLimitUpdate}
+              >
                 <Typography textTransform={"none"} fontSize={12}>
                   Save
                 </Typography>
