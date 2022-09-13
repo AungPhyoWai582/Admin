@@ -25,6 +25,7 @@ import ShortCup from "../pages/report/ShortCut";
 import MemberDetail from "../pages/customer/MemberDetail";
 import { grey } from "@mui/material/colors";
 import BetPage from "../pages/bet/BetPage";
+import LagerCut from "../pages/lager/LagerCut";
 
 const Dashboard = () => {
   const [authUser, setAuthUser] = useState({
@@ -63,7 +64,7 @@ const Dashboard = () => {
 
       <Route path="/lottery/bet/:lotteryId" element={<BetPage />} />
       {/* <Route path="/lottery/calls/:lotteryId" element={<CallsList />} /> */}
-      <Route path="/lottery/lager/:lotteryId" element={<Lager />} />
+      <Route path="/lottery/lager/:lotteryId" element={<LagerCut />} />
 
       <Route path="/reports/total" element={<ShortCup />} />
       <Route path="/reports/daily" element={<Daily />} />
