@@ -7,14 +7,18 @@ import {
   Box,
   Table,
   TableBody,
+  Autocomplete,
+  TextField,
+  FormControlLabel,
 } from "@mui/material";
-import { green, grey, teal } from "@mui/material/colors";
+import { blue, green, grey, red, teal } from "@mui/material/colors";
 import { tab } from "@testing-library/user-event/dist/tab";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Axios from "../../shared/Axios";
+import { useMediaQuery } from "@mui/material";
 
 function createObj(row, col) {
   return { number: col.toString() + row.toString(), amount: "0" };
@@ -32,6 +36,8 @@ const lagerData = Array.prototype.concat.apply(
 const LagerCut = () => {
   const { lotteryId } = useParams();
   const [lager, setLager] = useState({});
+  const [viewLager, setViewLager] = useState([]);
+  const [breakPercent, setBreakPercent] = useState(0);
 
   const tableStyles = {
     border: "1px solid black",
@@ -46,96 +52,170 @@ const LagerCut = () => {
       },
     })
       .then((res) => {
-        setLager(res.data.data);
+        const lag = res.data.data;
+        if (lag) {
+          setLager(lag);
+          setViewLager(lag.in.numbers);
+        }
       })
       .catch((err) => console.log(err.message));
   }, []);
 
-  let lagNumbers;
-  if (lager.in) {
-    lagNumbers = [...lager.in.numbers];
-  }
-  console.log(lagNumbers);
+  // const onChangeHandler = (e) => console.log(e.target.value);
 
-  console.log(lagerData);
+  const setBreak = () => {
+    console.log(breakPercent);
+    const lagers = [...viewLager];
+    lagers.map(
+      (lag) => (lag.amount = Number(breakPercent * (lag.amount / 100)))
+    );
+    setViewLager(lagers);
+  };
+
+  console.log(viewLager);
 
   const lagNumsComponent = (
-    <Stack>
-      <table style={tableStyles}>
-        {/* <tablebody style={{width:'100%'}}> */}
-        {Array.from(Array(10), (_, x) => x).map((col) => (
-          <tr style={tableStyles}>
-            {Array.from(Array(10), (_, x) => x).map((row) => (
-              <td style={tableStyles}>
-                <Stack direction={"row"} spacing={1} justifyContent={"space-around"}>
-                  <Typography fontSize={14} fontWeight='bold'>55</Typography>
-                  <Typography fontSize={14} fontWeight='bold'>100000</Typography>
-                </Stack>
-              </td>
-            ))}
-          </tr>
-        ))}
-        {/* </tablebody> */}
-      </table>
-      {/* {Array.from(Array(10), (_, x) => x).map((col) => (
-        <Stack direction={"column"} bgcolor='blue'>
-          <Stack
-            direction={"row"}
-            // spacing={1}
-            // width={'100%'}
-            bgcolor='yellow'
-          >
-            {Array.from(Array(10), (_, x) => x).map((row) => (
-            
-            <Stack width={500} direction={"row"} spacing={1} padding={1} border={0.1} borderColor={teal[300]} bgcolor='red'>
-                <div fontSize={12}>89</div>
-                <div fontSize={12}>{row+col}</div>
-              </Stack>
-            ))}
-          </Stack>
-        </Stack>
-      ))} */}
-    </Stack>
+    <Table sx={{ border: 2, borderColor: grey[300] }} size="small">
+      {viewLager &&
+        Array.from(Array(10), (_, x) => x).map((col) => {
+          return (
+            <TableRow
+              style={{ height: 10 }}
+              sx={{
+                height: 50,
+                border: 0.1,
+                borderColor: grey[300],
+                borderCollapse: "collapse",
+              }}
+            >
+              {Array.from(Array(10), (_, x) => x).map((row) => {
+                return (
+                  <>
+                    <TableCell
+                      align="left"
+                      sx={{
+                        // width: "10px",
+                        border: 0.1,
+                        borderColor: grey[300],
+                        borderCollapse: "collapse",
+                      }}
+                    >
+                      <Typography width={20}>
+                        {viewLager
+                          .map((lag) => lag.number)
+                          .includes(row.toString() + col.toString())
+                          ? viewLager[
+                              viewLager.findIndex(
+                                (obj) =>
+                                  obj.number == row.toString() + col.toString()
+                              )
+                            ].number
+                          : row.toString() + col.toString()}
+                      </Typography>
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      sx={{
+                        // width: "500px",
+                        border: 0.1,
+                        color: blue[500],
+                        borderColor: grey[300],
+                        borderCollapse: "collapse",
+                      }}
+                    >
+                      <Typography width={100}>
+                        {viewLager
+                          .map((lag) => lag.number)
+                          .includes(row.toString() + col.toString())
+                          ? viewLager[
+                              viewLager.findIndex(
+                                (obj) =>
+                                  obj.number == row.toString() + col.toString()
+                              )
+                            ].amount
+                          : "0"}
+                      </Typography>
+                    </TableCell>
+                  </>
+                );
+              })}
+            </TableRow>
+          );
+        })}
+    </Table>
   );
-
-  //   const lagNumsComponent = (
-  //       <Stack flexDirection={"row"} flexWrap="wrap">
-  //         <Stack
-  //           overflow={"scroll"}
-  //           flex={1}
-  //           flexDirection="column"
-  //           flexWrap={"wrap"}
-  //           height={{ xs: 550, sm: 550, md: 550, xl: "100%" }}
-  //           justifyContent={"space-between"}
-  //         >
-  //           {lagerData.map((lag) => (
-  //             <TableRow sx={{ borderBottom: "0.5px solid black" }}>
-  //               <TableCell
-  //                 sx={{
-  //                   borderLeft: "0.5px solid black",
-  //                   borderRight: "0.5px solid black",
-  //                 }}
-  //               >
-  //                 {<span style={{ textAlign: "left" }}>{lag.number}</span>}
-  //               </TableCell>
-  //               <TableCell>{lag.amount}</TableCell>
-  //             </TableRow>
-  //           ))}
-  //         </Stack>
-  //       </Stack>
-  //   );
   return (
-    <Stack padding={1} direction="row" bgcolor={teal[300]}>
-      <Stack width={"70%"}>
+    <Stack
+      padding={1}
+      direction={"column"}
+      // sx={{ xs: { direction: "column", sm: { direction: "column" } } }}
+      // bgcolor={grey[300]}
+    >
+      {/* {useMediaQuery("(max-width:500px)") && <Typography>Heeo</Typography>} */}
+      <Stack
+        // width={"30%"}
+        padding={1}
+        alignItems="center"
+        // border={1}
+        margin="auto"
+        spacing={1}
+        direction={"row"}
+      >
+        <TextField
+          label="Break %"
+          color={"success"}
+          variant="outlined"
+          size="small"
+          name="break"
+          sx={{ bgcolor: teal[50] }}
+          value={breakPercent}
+          onChange={(e) => setBreakPercent(e.target.value)}
+        />
+
+        <Button
+          size="small"
+          color="secondary"
+          variant="outlined"
+          onClick={setBreak}
+        >
+          Set
+        </Button>
+        <Button size="small" color="primary" variant="outlined">
+          Copy
+        </Button>
+        <Button size="small" color="success" variant="outlined">
+          Save
+        </Button>
+      </Stack>
+      <Stack>
         <Stack direction={"row"}>
-          <Button>view</Button>
-          <Button>view</Button>
+          <Button>Main</Button>
+          <Button>Out</Button>
         </Stack>
-        <Stack bgcolor={"white"} overflow="scroll">
+        <Stack
+          border={0.5}
+          borderColor={grey[500]}
+          boxShadow={1}
+          direction={"column"}
+          bgcolor={"white"}
+          overflow="scroll"
+        >
           {lagNumsComponent}
         </Stack>
+        <Stack
+          padding={1}
+          alignItems="center"
+          direction={"row"}
+          justifyContent="space-between"
+        >
+          <Typography fontWeight={"bold"} color={red[500]} textAlign={"center"}>
+            Total Cash : 100000
+          </Typography>
+          <Typography fontWeight={"bold"} color={red[500]} textAlign={"center"}>
+            Total Units: 1000
+          </Typography>
+        </Stack>
       </Stack>
-      <Stack width={"30%"}>For Right Side</Stack>
     </Stack>
   );
 };
