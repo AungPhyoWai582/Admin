@@ -80,7 +80,6 @@ const ShortCup = () => {
 
         setCustomer([{ name: "All", value: "All" }, ...ms]);
 
-
         // setAutoCompleteValue('All');
       }
     });
@@ -238,8 +237,6 @@ const ShortCup = () => {
                 {time.map((t) => (
                   <MenuItem value={t}>{t}</MenuItem>
                 ))}
-                {/* <MenuItem value={"AM"}>AM</MenuItem>
-                <MenuItem value={"PM"}>PM</MenuItem> */}
               </Select>
             }
           />
