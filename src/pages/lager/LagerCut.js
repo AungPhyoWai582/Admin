@@ -29,7 +29,12 @@ import { SaveAlt } from "@mui/icons-material";
 const LagerCut = () => {
   const { lotteryId } = useParams();
   const [lager, setLager] = useState({});
-  const [viewLager, setViewLager] = useState({ numbers: [], totalAmount: 0 });
+  const [viewLager, setViewLager] = useState({
+    numbers: [],
+    totalAmount: 0,
+    mainAmount: null,
+    break: null,
+  });
   const [outList, setOutList] = useState([]);
   const [breakPercent, setBreakPercent] = useState(0);
   const [useEffCtrl, setUseEffCtrl] = useState(false);
@@ -56,6 +61,7 @@ const LagerCut = () => {
         if (lag) {
           setLager(lag);
           setViewLager({
+            ...viewLager,
             numbers: lag.in.numbers,
             totalAmount: lag.in.totalAmount,
           });
@@ -63,6 +69,7 @@ const LagerCut = () => {
         }
       })
       .catch((err) => console.log(err.message));
+
     Axios.get(`/outcall/${lotteryId}`, {
       headers: {
         authorization: "Bearer " + localStorage.getItem("access-token"),
@@ -76,20 +83,23 @@ const LagerCut = () => {
       setCustomers([{ name: "All", value: "All" }, ...customers]);
     });
   }, [useEffCtrl]);
-  console.log(viewLager);
+  console.log(outList);
 
   // const onChangeHandler = (e) => console.log(e.target.value);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
     if (newValue === "main") {
+      setCustomer("");
       setViewLager({
+        ...viewLager,
         numbers: lager.in.numbers,
         totalAmount: lager.in.totalAmount,
       });
     }
     if (newValue === "out") {
       setViewLager({
+        ...viewLager,
         numbers: lager.out.numbers,
         totalAmount: lager.out.totalAmount,
       });
@@ -102,12 +112,19 @@ const LagerCut = () => {
     if (value === "All") {
       console.log(lager.out.numbers);
       setViewLager({
+        ...viewLager,
         numbers: lager.out.numbers,
         totalAmount: lager.out.totalAmount,
       });
     } else {
       const view = outList.find((out) => out.customer === value);
-      setViewLager({ numbers: view.numbers, totalAmount: view.totalAmount });
+      setViewLager({
+        ...viewLager,
+        break: view.breakPercent,
+        mainAmount: view.mainAmount,
+        numbers: view.numbers,
+        totalAmount: view.totalAmount,
+      });
     }
   };
 
@@ -130,11 +147,16 @@ const LagerCut = () => {
         .reduce((pre, next) => pre + next, 0);
     console.log(numbers);
     console.log(data, total);
-    setViewLager({ numbers: data, totalAmount: total });
+    setViewLager({ ...viewLager, numbers: data, totalAmount: total });
   };
 
   const saveCut = () => {
-    let obj = { customer: customer, numbers: viewLager.numbers };
+    let obj = {
+      customer: customer,
+      breakPercent: breakPercent,
+      mainAmount: lager.in.totalAmount,
+      numbers: viewLager.numbers,
+    };
     console.log(obj);
     Axios.post(`/outcall/${lotteryId}`, obj, {
       headers: {
@@ -143,10 +165,13 @@ const LagerCut = () => {
     })
       .then((res) => {
         console.log(res.data);
+        setCustomer("");
+        setBreakPercent(0);
         setUseEffCtrl(true);
       })
       .catch((err) => console.log(err));
   };
+  console.log(viewLager);
 
   return (
     <Stack
@@ -235,7 +260,7 @@ const LagerCut = () => {
                 variant="contained"
                 onClick={saveCut}
               >
-                Save <SaveAlt fontSize="small" />
+                Save <SaveAlt fontSize="10px" />
               </Button>
             </Stack>
           )}
@@ -332,7 +357,7 @@ const LagerCut = () => {
                               borderCollapse: "collapse",
                             }}
                           >
-                            <Typography width={100}>
+                            <Typography width={80}>
                               {viewLager.numbers
                                 .map((lag) => lag.number)
                                 .includes(row.toString() + col.toString())
@@ -364,6 +389,25 @@ const LagerCut = () => {
           <Typography fontWeight={"bold"} color={red[500]} textAlign={"center"}>
             Total Cash : {viewLager.totalAmount}
           </Typography>
+          {value === "out" && (
+            <>
+              {" "}
+              <Typography
+                fontWeight={"bold"}
+                color={red[500]}
+                textAlign={"center"}
+              >
+                Break % : {viewLager.break ? viewLager.break : 0}
+              </Typography>
+              <Typography
+                fontWeight={"bold"}
+                color={red[500]}
+                textAlign={"center"}
+              >
+                Main Cash : {viewLager.mainAmount ? viewLager.mainAmount : 0}
+              </Typography>
+            </>
+          )}
           <Typography fontWeight={"bold"} color={red[500]} textAlign={"center"}>
             Total Units: soon
           </Typography>
