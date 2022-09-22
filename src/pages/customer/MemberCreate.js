@@ -189,6 +189,7 @@ const MemberCreate = ({ userinfo }) => {
                 control={
                   <TextField
                     color={"success"}
+                    placeholder="add username"
                     fullWidth
                     variant="outlined"
                     size="small"
@@ -209,6 +210,7 @@ const MemberCreate = ({ userinfo }) => {
                 control={
                   <TextField
                     color={"success"}
+                    placeholder="add name"
                     fullWidth
                     variant="outlined"
                     size="small"
@@ -228,6 +230,7 @@ const MemberCreate = ({ userinfo }) => {
                 control={
                   <TextField
                     color={"success"}
+                    placeholder="add password"
                     fullWidth
                     variant="outlined"
                     size="small"
@@ -247,6 +250,7 @@ const MemberCreate = ({ userinfo }) => {
                 control={
                   <TextField
                     color={"success"}
+                    placeholder="add phone no."
                     fullWidth
                     variant="outlined"
                     size="small"
@@ -268,6 +272,7 @@ const MemberCreate = ({ userinfo }) => {
                 control={
                   <TextField
                     color={"success"}
+                    placeholder="add pay commission"
                     fullWidth
                     variant="outlined"
                     size="small"
@@ -287,6 +292,27 @@ const MemberCreate = ({ userinfo }) => {
                 control={
                   <TextField
                     color={"success"}
+                    placeholder="add za"
+                    fullWidth
+                    variant="outlined"
+                    size="small"
+                    name="twoDz"
+                    sx={{ bgcolor: teal[50] }}
+                    value={master.twoDz.toString()}
+                    onChange={onChangeHandler}
+                  />
+                }
+              />
+            </Stack>
+            <Stack spacing={1.5} padding={1}>
+              <Typography variant={"caption"} component={"label"} fontSize={16}>
+                Lager Break <span style={{ color: "red" }}>*</span>
+              </Typography>
+              <FormControlLabel
+                control={
+                  <TextField
+                    color={"success"}
+                    placeholder="add numbers count"
                     fullWidth
                     variant="outlined"
                     size="small"
@@ -329,6 +355,7 @@ const MemberCreate = ({ userinfo }) => {
                 }
               />
             </Stack>
+
             <Stack
               marginTop={1}
               // spacing={1.5}
@@ -364,41 +391,41 @@ const MemberCreate = ({ userinfo }) => {
             </Stack>
           </Grid>
           {/* <Grid item xs={1} md={12}> */}
-            <Stack
-              direction={"row"}
-              spacing={2}
-              // marginTop={6}
-              // width={"80%"}
-              justifyContent={"flex-end"}
-              padding={3}
+          <Stack
+            direction={"row"}
+            spacing={2}
+            // marginTop={6}
+            // width={"80%"}
+            justifyContent={"flex-end"}
+            padding={3}
+          >
+            <Button
+              size="small"
+              variant={"none"}
+              sx={{ color: teal[500], bgcolor: grey[200] }}
             >
+              Cancle
+            </Button>
+            {master !== "" ? (
               <Button
                 size="small"
-                variant={"none"}
-                sx={{ color: teal[500], bgcolor: grey[200] }}
+                variant={"contained"}
+                sx={{ bgcolor: teal[500], color: grey[200] }}
+                onClick={createMaster}
               >
-                Cancle
+                Create
               </Button>
-              {master !== "" ? (
-                <Button
-                  size="small"
-                  variant={"contained"}
-                  sx={{ bgcolor: teal[500], color: grey[200] }}
-                  onClick={createMaster}
-                >
-                  Create
-                </Button>
-              ) : (
-                <Button
-                  size="small"
-                  variant={"contained"}
-                  sx={{ bgcolor: teal[500], color: grey[200] }}
-                  onClick={createMaster}
-                >
-                  Update
-                </Button>
-              )}
-            </Stack>
+            ) : (
+              <Button
+                size="small"
+                variant={"contained"}
+                sx={{ bgcolor: teal[500], color: grey[200] }}
+                onClick={createMaster}
+              >
+                Update
+              </Button>
+            )}
+          </Stack>
           {/* </Grid> */}
         </Grid>
       </Stack>

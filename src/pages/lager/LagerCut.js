@@ -171,7 +171,7 @@ const LagerCut = () => {
       })
       .catch((err) => console.log(err));
   };
-  console.log(viewLager);
+  console.log(viewLager.numbers.length);
 
   return (
     <Stack
@@ -262,6 +262,7 @@ const LagerCut = () => {
               >
                 Save <SaveAlt fontSize="10px" />
               </Button>
+              <Typography>Numbers : {viewLager.numbers.length}</Typography>
             </Stack>
           )}
           {value === "out" && (
@@ -272,6 +273,7 @@ const LagerCut = () => {
               alignItems="center"
               // border={1}
               // margin="auto"
+              // justifyContent={"space-around"}
               spacing={1}
               direction={"row"}
             >
@@ -297,6 +299,8 @@ const LagerCut = () => {
               <Button size="small" color="primary" variant="outlined">
                 Copy
               </Button>
+
+              <Typography>Numbers : {viewLager.numbers.length}</Typography>
             </Stack>
           )}
         </Stack>
@@ -357,7 +361,7 @@ const LagerCut = () => {
                               borderCollapse: "collapse",
                             }}
                           >
-                            <Typography width={80}>
+                            <Typography width={{ xs: 40, sm: 60, md: 80 }}>
                               {viewLager.numbers
                                 .map((lag) => lag.number)
                                 .includes(row.toString() + col.toString())

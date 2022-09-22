@@ -492,7 +492,7 @@ const ShortCup = () => {
                     sx={{ fontSize: 16, fontWeight: 500 }}
                     align="right"
                   >
-                    27/08/2022 - 02/09/2022
+                    start-to-end
                   </TableCell>
                 </TableRow>
               ) : (

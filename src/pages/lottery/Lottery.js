@@ -57,7 +57,7 @@ const Lottery = () => {
 
   const createLottery = (e) => {
     const { name, value } = e.target;
-    console.log(name,value)
+    console.log(name, value);
     setLotCreate({ ...lotCreate, [name]: value });
   };
 
@@ -81,21 +81,23 @@ const Lottery = () => {
 
   const AddLottery = () => {
     console.log(lotCreate);
-    let obj={};
+    let obj = {};
 
-    for(const key in lotCreate){
-      console.log(lotCreate[key])
+    for (const key in lotCreate) {
+      console.log(lotCreate[key]);
     }
-    Axios.post(`/lotterys`,lotCreate).then(res=>{
-      setLotCreate({
-        pout_tee: null,
-        hot_tee: [],
-        time: null,
-        play: false,
-      });
-      setEffCtrl(true);
-      setOpen(false);
-    }).catch(err=>Alert(err))
+    Axios.post(`/lotterys`, lotCreate)
+      .then((res) => {
+        setLotCreate({
+          pout_tee: null,
+          hot_tee: [],
+          time: null,
+          play: false,
+        });
+        setEffCtrl(true);
+        setOpen(false);
+      })
+      .catch((err) => Alert(err));
   };
 
   const updateLottery = () => {
@@ -140,7 +142,8 @@ const Lottery = () => {
             color="secondary"
             sx={{ fontWeight: "bold" }}
             onClick={() => {
-              setType("add"); setOpen(true);
+              setType("add");
+              setOpen(true);
             }}
           >
             <ListItemText primary={"Lottery Create"} />
@@ -163,8 +166,9 @@ const Lottery = () => {
           lottery
             .filter((lot) => lot.play === play)
             .map((l) => {
-              console.log(l.hot_tees);
+              console.log(l._date);
               const date = new Date(l._date);
+              console.log(l.getDate);
               // if (l.play === true) {
               return (
                 <Stack
@@ -192,7 +196,9 @@ const Lottery = () => {
                     </Avatar>
                     <Typography>
                       {/* {`${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`} */}{" "}
-                      {`${date.getDate()}/${date.getMonth()}/${date.getFullYear()} `}
+                      {`${date.getDate()}/${
+                        date.getMonth() + 1
+                      }/${date.getFullYear()} `}
                     </Typography>
                     <Typography fontWeight={"bold"}>{l._time}</Typography>
                   </Stack>
@@ -259,7 +265,8 @@ const Lottery = () => {
                 </Stack>
               );
               // }
-            }).reverse()}
+            })
+            .reverse()}
       </Stack>
       <LotteryCRUD
         type={type}

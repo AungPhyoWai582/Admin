@@ -100,7 +100,7 @@ const Customer = () => {
                 size={"small"}
                 onClick={CustomerCreate}
               >
-                Submit
+                Save
               </Button>
             </Stack>
           </DialogActions>

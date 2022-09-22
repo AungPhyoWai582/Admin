@@ -66,8 +66,6 @@ export const b = (onChange) => {
     { number: "98", amount: onChange.amount },
     { number: "09", amount: onChange.amount },
     { number: "90", amount: onChange.amount },
-    { number: "49", amount: onChange.amount },
-    { number: "94", amount: onChange.amount },
   ];
 };
 
@@ -152,38 +150,6 @@ export const padatha = (onChange) => {
       });
   }
 
-  // console.log(numOnChange);
-  // console.log(numOnChangeStar);
-  // numOnChange.map((pdt, key) => {
-  //   numOnChange.map((pdt1, key) => {
-  //     // pdt[key] === '*' && pdt1[key] == "*" ? numOnChange.pop();
-  //     console.log(numOnChange)
-  //   });
-  // });
-  // numOnChange.en
-  // if (
-  //   onChange &&
-  //   onChange.number.length < 6 &&
-  //   onChange.number.length >= 3
-  //   // onChange.number.endWud
-  // ) {
-  //   arr.map((pdt, key) => {
-  //     arr.map((pdt1, key) => {
-  //       result.push({ number: `${pdt}${pdt1}`, amount: onChange.amount });
-  //     });
-  //   });
-  // } else if (
-  //   onChange.number.length < 5 &&
-  //   onChange.number.length > 2 &&
-  //   onChange.number[5] !== "*"
-  // ) {
-  //   arr.map((pdt, key) => {
-  //     arr.map((pdt1, key) => {
-  //       pdt1 !== pdt &&
-  //         result.push({ number: `${pdt}${pdt1}`, amount: onChange.amount });
-  //     });
-  //   });
-  // }
   return result;
 };
 

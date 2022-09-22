@@ -19,11 +19,13 @@ import {
   FormControlLabel,
   FormLabel,
   IconButton,
+  MenuItem,
   Pagination,
   PaginationItem,
   Paper,
   Radio,
   RadioGroup,
+  Select,
   Stack,
   TextField,
   Typography,
@@ -36,6 +38,7 @@ import {
   lightBlue,
   orange,
   red,
+  teal,
   yellow,
 } from "@mui/material/colors";
 import { arrayIncludes } from "@mui/x-date-pickers/internals/utils/utils";
@@ -76,7 +79,7 @@ const BetPage = () => {
   const textFieldForNumber = useRef(null);
   const textFieldForAmount = useRef(null);
 
-  // const [inOutCtl, setInOutCtl] = useState();
+  const [inOutCtl, setInOutCtl] = useState(false);
   // const [singleBetCleanctlr, setSingleBetCleanctlr] = useState(false);
   const [callTotal, setCallTotal] = useState(0);
   const [calltotalCtrl, setCalltotalCtrl] = useState(false);
@@ -95,13 +98,15 @@ const BetPage = () => {
   const [callandBetlistctleff, setCallandBetlistctleff] = useState(true);
 
   const [mastercalls, setMastercalls] = useState([]);
-  const [callcrud, setCallcrud] = useState(null);
+  const [masterOutCalls, setMasterOutCall] = useState([]);
+
   const [lager, setLager] = useState();
   const [call, setCall] = useState({
     master: "",
     numbers: [],
   });
-  const [callList, setCallList] = useState([]);
+  const [outCalls, setOutCalls] = useState([]);
+  // const [callList, setCallList] = useState([]);
 
   const [masters, setMasters] = useState([]);
 
@@ -141,6 +146,9 @@ const BetPage = () => {
     Data: [],
     Total: 0,
   });
+
+  const [in_out, set_in_out] = useState("Out");
+  const [customers, setCustomers] = useState([]);
   useEffect(() => {
     // console.log(hot_tees);
     console.log(lotteryId);
@@ -170,37 +178,85 @@ const BetPage = () => {
       .then((res) => {
         console.log(res.data.data);
         setLager(res.data.data);
-        setCallList(res.data.data.in.read);
+        // setCallList(res.data.data.in.read);
         // setSuccess(false);
       })
       .catch((err) => console.log(err));
   }, [calllistctrl]);
 
   useEffect(() => {
-    Axios.get(`/call/${lotteryId}`, {
-      headers: {
-        authorization: `Bearer ` + localStorage.getItem("access-token"),
-      },
-    }).then((res) => {
-      console.log(res.data.data);
-      setMastercalls(res.data.data);
-    });
-    if (call.master) {
-      console.log(call.master);
-      Axios.get(`/call/${lotteryId}/call-numbers-total/${call.master}`, {
+    console.log("HELLO");
+    console.log(in_out);
+
+    if (in_out === "In") {
+      Axios.get(`/call/${lotteryId}`, {
         headers: {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
-        console.log(res.data);
-        setMasterTotalData({
-          Data: res.data.numsData,
-          Total: res.data.numsTotal,
-        });
+        console.log(res.data.data);
+        setMastercalls(res.data.data);
+        setInOutCtl(false);
       });
+      if (call.master) {
+        console.log(call.master);
+        Axios.get(`/call/${lotteryId}/call-numbers-total/${call.master}`, {
+          headers: {
+            authorization: `Bearer ` + localStorage.getItem("access-token"),
+          },
+        }).then((res) => {
+          console.log(res.data);
+          setMasterTotalData({
+            Data: res.data.numsData,
+            Total: res.data.numsTotal,
+          });
+        });
+      }
+
+      // setAutoCompleteCtrl(false);
     }
+    if (in_out === "Out") {
+      console.log(in_out);
+      Axios.get(`/outcall/${lotteryId}`, {
+        headers: {
+          authorization: `Bearer ` + localStorage.getItem("access-token"),
+        },
+      }).then((res) => {
+        console.log(res.data.data);
+        setOutCalls(res.data.data);
+        const customers = res.data.data.map((d) => {
+          return { name: d.customer, value: d.customer };
+        });
+        setCustomers([{ name: "All", value: "All" }, ...customers]);
+        setInOutCtl(false);
+        //  setMastercalls(res.data.data);
+      });
+      //  if (call.master) {
+      //    console.log(call.master);
+      //    Axios.get(`/call/${lotteryId}/call-numbers-total/${call.master}`, {
+      //      headers: {
+      //        authorization: `Bearer ` + localStorage.getItem("access-token"),
+      //      },
+      //    }).then((res) => {
+      //      console.log(res.data);
+      //      setMasterTotalData({
+      //        Data: res.data.numsData,
+      //        Total: res.data.numsTotal,
+      //      });
+      //    });
+      //  }
+    }
+
     // setCalllistctrl(false);
-  }, [autocompleteCtrl]);
+  }, [inOutCtl]);
+
+  //setTimeout Alert
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setBeterrorcontrol(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [beterrorcontrol]);
   const SignArr = [
     "0",
     "1",
@@ -815,7 +871,7 @@ const BetPage = () => {
         setLoading(true);
         // setCalllistctrl(false);
         setCalltotalCtrl(true);
-        setAutoCompleteCtrl(false);
+        setAutoCompleteCtrl(true);
       })
       .then((res) => {
         setSuccess(false);
@@ -907,6 +963,9 @@ const BetPage = () => {
   const getAutoChoCus = (cus) => {
     return cus.username;
   };
+
+  console.log(in_out);
+
   return (
     <Stack height={"100%"} bgcolor={"white"}>
       {success && (
@@ -980,52 +1039,97 @@ const BetPage = () => {
       <Stack
         padding={1}
         spacing={1}
-        direction={"row"}
+        flexDirection={"row"}
+        flexWrap="wrap"
         justifyContent={"center"}
         boxShadow={1}
       >
-        <Autocomplete
-          size="small"
-          // options={selectChoice && selectChoice === "Out" ? agents : "0"}
-          options={masters}
-          isOptionEqualToValue={(option, value) =>
-            option.username === value.username
-          }
-          sx={{ width: 200 }}
-          getOptionLabel={(cus) => getAutoChoCus(cus)}
-          onChange={(e, value) => {
-            console.log(value);
-            setAutoCompleteValue(value);
-            setCall({ ...call, master: value._id });
-            setCalllistctrl(true);
-            setAutoCompleteCtrl(true);
-            setCall({ master: value._id, numbers: [] });
-          }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              sx={{ fontSize: 8 }}
-              label="Master"
-              size="small"
-              color={"success"}
-              // defaultValue={masters}
+        <Stack direction={"row"}>
+          <RadioGroup
+            row
+            aria-labelledby="demo-row-radio-buttons-group-label"
+            name="row-radio-buttons-group"
+            value={in_out}
+            onChange={(e) => {
+              set_in_out(e.target.value);
+              setInOutCtl(true);
+            }}
+          >
+            <FormControlLabel
+              value="In"
+              control={<Radio size="small" color="success" />}
+              label="In"
             />
-          )}
-        />
-
-        <Button
-          onClick={handleFiles}
-          variant="contained"
-          component="label"
-          color="success"
-          size="small"
-          // sx={{ fontSize: 14 }}
-        >
-          <Typography fontSize={{ xs: 8, sm: 10, md: 12 }}>Read</Typography>
-          <input hidden accept={"All/*"} multiple type="file" />
-        </Button>
-
-        <Stack direction={"row"} spacing={1}>
+            <FormControlLabel
+              value="Out"
+              control={<Radio size="small" color="success" />}
+              label="Out"
+            />
+          </RadioGroup>
+        </Stack>
+        <Stack direction={"row"} spacing={0.1}>
+          {(in_out === "In" && (
+            <Autocomplete
+              size="small"
+              // options={selectChoice && selectChoice === "Out" ? agents : "0"}
+              options={masters}
+              isOptionEqualToValue={(option, value) =>
+                option.username === value.username
+              }
+              sx={{ width: 150 }}
+              getOptionLabel={(cus) => getAutoChoCus(cus)}
+              onChange={(e, value) => {
+                console.log(value);
+                setAutoCompleteValue(value);
+                setCall({ ...call, master: value._id });
+                setCalllistctrl(true);
+                setAutoCompleteCtrl(true);
+                setCall({ master: value._id, numbers: [] });
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  sx={{ fontSize: 8 }}
+                  label="Master"
+                  size="small"
+                  color={"success"}
+                  // defaultValue={masters}
+                />
+              )}
+            />
+          )) ||
+            (in_out === "Out" && (
+              <FormControlLabel
+                label={"Customer : "}
+                labelPlacement="start"
+                // sx={{ width: "100%" }}
+                control={
+                  <Select
+                    sx={{ width: 150, height: 30, backgroundColor: teal[50] }}
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    // value={customer}
+                    defaultValue={"All"}
+                    // onChange={onSelect}
+                  >
+                    {customers.map((c) => (
+                      <MenuItem value={c.value}>{c.name}</MenuItem>
+                    ))}
+                  </Select>
+                }
+              />
+            ))}
+          <Button
+            onClick={handleFiles}
+            variant="contained"
+            component="label"
+            color="success"
+            size={"small"}
+            sx={{ fontSize: 14 }}
+          >
+            <span style={{ fontSize: 8 }}>Read</span>
+            <input hidden accept={"All/*"} multiple type="file" />
+          </Button>
           <Button
             variant={"contained"}
             size={"small"}
@@ -1122,7 +1226,7 @@ const BetPage = () => {
           // onFocus={false}
           label={"ထိုးငွေ"}
         />
-        <Stack alignItems={"center"}>
+        <Stack alignItems={"center"} alignContent={"center"}>
           {editCtlBtn ? (
             <IconButton onClick={updateCall} size={"small"}>
               <Edit fontSize="8" />
