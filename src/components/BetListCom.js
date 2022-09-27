@@ -13,7 +13,7 @@ const BetListCom = ({ call, key, onClick, children }) => {
         direction={"row"}
         width={{ xs: 150, sm: 230, md: 300 }}
         spacing={{ xs: 5, sm: 3, md: 1 }}
-        boxShadow={1}
+        // boxShadow={1}
         alignItems={"center"}
       >
         <Typography marginX={0.3} width={"20%"} textAlign={"right"}>

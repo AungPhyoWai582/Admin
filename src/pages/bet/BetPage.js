@@ -146,29 +146,49 @@ const BetPage = () => {
     Data: [],
     Total: 0,
   });
-
+  // in outt
   const [in_out, set_in_out] = useState("Out");
   const [customers, setCustomers] = useState([]);
+  const [cusval, setCusval] = useState({ cusname: "", id: "" });
+  const [singleCusCall, setSingleCusCall] = useState({
+    Lagnumbers: "",
+    Total: [],
+  });
   useEffect(() => {
     // console.log(hot_tees);
     console.log(lotteryId);
-    Axios.get(`/masters`, {
-      headers: {
-        authorization: `Bearer ` + localStorage.getItem("access-token"),
-      },
-    })
-      .then((res) => {
-        // console.log(res.data);
-        const masters = res.data.data;
-        // console.log(masters);
-
-        if (masters) {
-          setMasters([...masters]);
-          setAutoCompleteValue(masters[0]);
-          // setCalllistctrl(false);
-        }
+    if (in_out === "In") {
+      Axios.get(`/masters`, {
+        headers: {
+          authorization: `Bearer ` + localStorage.getItem("access-token"),
+        },
       })
-      .catch((err) => console.log(err));
+
+        .then((res) => {
+          // console.log(res.data);
+
+          // console.log(masters);
+
+          if (masters) {
+            const masters = res.data.data;
+            setMasters([...masters]);
+            setAutoCompleteValue(masters[0]);
+            // setCalllistctrl(false);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+    if (in_out === "Out") {
+      Axios.get(`customers`, {
+        headers: {
+          authorization: `Bearer ` + localStorage.getItem("access-token"),
+        },
+      }).then((res) => {
+        console.log(res.data);
+        setCustomers(res.data);
+      });
+      console.log(customers);
+    }
 
     Axios.get(`/lagers/${lotteryId}`, {
       headers: {
@@ -197,6 +217,8 @@ const BetPage = () => {
         console.log(res.data.data);
         setMastercalls(res.data.data);
         setInOutCtl(false);
+        setCalllistctrl(false);
+        setAutoCompleteCtrl(true);
       });
       if (call.master) {
         console.log(call.master);
@@ -206,6 +228,7 @@ const BetPage = () => {
           },
         }).then((res) => {
           console.log(res.data);
+
           setMasterTotalData({
             Data: res.data.numsData,
             Total: res.data.numsTotal,
@@ -224,11 +247,9 @@ const BetPage = () => {
       }).then((res) => {
         console.log(res.data.data);
         setOutCalls(res.data.data);
-        const customers = res.data.data.map((d) => {
-          return { name: d.customer, value: d.customer };
-        });
-        setCustomers([{ name: "All", value: "All" }, ...customers]);
+
         setInOutCtl(false);
+        // setCalllistctrl(false);
         //  setMastercalls(res.data.data);
       });
       //  if (call.master) {
@@ -248,7 +269,19 @@ const BetPage = () => {
     }
 
     // setCalllistctrl(false);
-  }, [inOutCtl]);
+  }, [inOutCtl, calllistctrl]);
+
+  // out Customer select
+  const OnSelect = (e) => {
+    const { value, name } = e.target;
+
+    console.log(value);
+    const view = outCalls.find((out) => out.customer === value);
+    console.log(view);
+    setCusval({ cusname: name, id: value });
+    setSingleCusCall({ Lagnumbers: view.numbers, Total: view.totalAmount });
+    console.log(singleCusCall);
+  };
 
   //setTimeout Alert
   useEffect(() => {
@@ -845,39 +878,45 @@ const BetPage = () => {
 
   console.log(call);
 
-  const bet = (e) => {
+  const bet = (e, in_out) => {
     e.preventDefault();
     console.log(call);
-    if (call.numbers.length === 0 && loading === false) {
+    if (call.numbers.length === 0 && loading === false && in_out === "Out") {
       setBeterrorcontrol(true);
+      console.log(in_out);
+
       return;
     }
-    Axios.post(`/call/${lotteryId}`, call, {
-      headers: {
-        authorization: `Bearer ` + localStorage.getItem("access-token"),
-      },
-    })
-      .then((res) => {
-        console.log(res.data);
-        setCall({
-          master: "",
-          numbers: [],
-        });
-        setOnchange({
-          number: "",
-          amount: "",
-        });
-        setSuccess(true);
-        setLoading(true);
-        // setCalllistctrl(false);
-        setCalltotalCtrl(true);
-        setAutoCompleteCtrl(true);
+    if (in_out === "In") {
+      console.log(in_out);
+
+      Axios.post(`/call/${lotteryId}`, call, {
+        headers: {
+          authorization: `Bearer ` + localStorage.getItem("access-token"),
+        },
       })
-      .then((res) => {
-        setSuccess(false);
-        setLoading(false);
-      })
-      .catch((err) => console.log(err));
+        .then((res) => {
+          console.log(res.data);
+          setCall({
+            master: "",
+            numbers: [],
+          });
+          setOnchange({
+            number: "",
+            amount: "",
+          });
+          setSuccess(true);
+          setLoading(true);
+          setCalllistctrl(true);
+          setCalltotalCtrl(true);
+          setAutoCompleteCtrl(true);
+        })
+        .then((res) => {
+          setSuccess(false);
+          setLoading(false);
+        })
+        .catch((err) => console.log(err));
+    }
   };
   // console.log(la);
   //crud delete
@@ -912,7 +951,7 @@ const BetPage = () => {
     console.log(numbers[index]);
     numbers[index] = onchange;
     console.log(numbers);
-    // setAgentCallCrud({ ...agentcallcrud, numbers: numbers });
+    setMasterCallCrud({ ...mastercallcrud, numbers: numbers });
     Axios.put(
       `/call/${lotteryId}/${mastercallcrud.id}`,
       {
@@ -1053,6 +1092,7 @@ const BetPage = () => {
             onChange={(e) => {
               set_in_out(e.target.value);
               setInOutCtl(true);
+              setCalllistctrl(true);
             }}
           >
             <FormControlLabel
@@ -1067,7 +1107,7 @@ const BetPage = () => {
             />
           </RadioGroup>
         </Stack>
-        <Stack direction={"row"} spacing={0.1}>
+        <Stack direction={"row"} spacing={1}>
           {(in_out === "In" && (
             <Autocomplete
               size="small"
@@ -1082,9 +1122,9 @@ const BetPage = () => {
                 console.log(value);
                 setAutoCompleteValue(value);
                 setCall({ ...call, master: value._id });
-                setCalllistctrl(true);
+                // setCalllistctrl(true);
                 setAutoCompleteCtrl(true);
-                setCall({ master: value._id, numbers: [] });
+                // setCall({ master: value._id, numbers: [] });
               }}
               renderInput={(params) => (
                 <TextField
@@ -1100,36 +1140,46 @@ const BetPage = () => {
           )) ||
             (in_out === "Out" && (
               <FormControlLabel
-                label={"Customer : "}
                 labelPlacement="start"
-                // sx={{ width: "100%" }}
+                sx={{ marginX: 1 }}
                 control={
                   <Select
-                    sx={{ width: 150, height: 30, backgroundColor: teal[50] }}
+                    sx={{
+                      padding: 0.8,
+                      width: 150,
+                      height: 30,
+                      backgroundColor: teal[50],
+                    }}
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    // value={customer}
+                    value={cusval.cusname}
                     defaultValue={"All"}
-                    // onChange={onSelect}
+                    onChange={(e) =>
+                      setCusval({ cusname: e.target.name, id: e.target.value })
+                    }
                   >
                     {customers.map((c) => (
-                      <MenuItem value={c.value}>{c.name}</MenuItem>
+                      <MenuItem sx={{ width: 200 }} value={c._id} name={c.name}>
+                        {c.name}
+                      </MenuItem>
                     ))}
                   </Select>
                 }
               />
             ))}
-          <Button
-            onClick={handleFiles}
-            variant="contained"
-            component="label"
-            color="success"
-            size={"small"}
-            sx={{ fontSize: 14 }}
-          >
-            <span style={{ fontSize: 8 }}>Read</span>
-            <input hidden accept={"All/*"} multiple type="file" />
-          </Button>
+          {in_out === "In" && (
+            <Button
+              onClick={handleFiles}
+              variant="contained"
+              component="label"
+              color="success"
+              size={"small"}
+              sx={{ fontSize: 14 }}
+            >
+              <span style={{ fontSize: 8 }}>Read</span>
+              <input hidden accept={"All/*"} multiple type="file" />
+            </Button>
+          )}
           <Button
             variant={"contained"}
             size={"small"}
@@ -1233,7 +1283,7 @@ const BetPage = () => {
             </IconButton>
           ) : (
             <IconButton
-              onClick={bet}
+              onClick={(e) => bet(e, in_out)}
               size={"small"}
               sx={{ bgcolor: green[700] }}
             >
@@ -1300,7 +1350,7 @@ const BetPage = () => {
           // padding={1}
           // spacing={1}
         >
-          {call.master && call.numbers.length && autocompleteCtrl === false
+          {in_out === "In" && call.numbers.length // autocompleteCtrl === false
             ? call.numbers
                 .map((cal, key) => (
                   // <Stack
@@ -1342,8 +1392,9 @@ const BetPage = () => {
                   </>
                 ))
                 .reverse()
-            : autoCompleteValue &&
-              autocompleteCtrl &&
+            : // autocompleteCtrl &&
+              //   autoCompleteValue &&
+
               mastercalls
                 .filter(
                   (ms, key) =>
@@ -1362,12 +1413,13 @@ const BetPage = () => {
                       // component={"button"}
                       sx={{ cursor: "pointer" }}
                       onClick={() => {
+                        console.log("Hello");
                         setMasterCallCrud({
                           id: cal._id,
                           numbers: cal.numbers,
                         });
                         setCallTotal(cal.totalAmount);
-                        // setAutoCompleteCtrl(true);
+                        setAutoCompleteCtrl(true);
                       }}
                     >
                       {cal.numbers.map((ca, key) => {
@@ -1390,6 +1442,24 @@ const BetPage = () => {
                   );
                 })
                 .reverse()}
+          {in_out === "Out" &&
+            singleCusCall.Lagnumbers &&
+            singleCusCall.Lagnumbers.map((cuscall, key) => {
+              return (
+                <Stack
+                  direction={"row"}
+                  // width={{ sx: 180 }}
+                  marginY={0.3}
+                  justifyContent={{
+                    sx: "space-between",
+                    sm: "space-around",
+                    md: "space-around",
+                  }}
+                >
+                  <BetListCom call={cuscall} key={key}></BetListCom>
+                </Stack>
+              );
+            })}
         </Stack>
         <Stack
           alignItems={"center"}

@@ -16,9 +16,8 @@ import {
 import { green, grey, red, teal } from "@mui/material/colors";
 import React, { useState } from "react";
 
-const Customer = ({
-  customer,
-  createCustomer,
+const Master = ({
+  master,
   success,
   setSuccess,
   error,
@@ -42,7 +41,7 @@ const Customer = ({
         // color="white"
         // bgcolor={teal[500]}
       >
-        Customer {`Create`}
+        Master {`Create`}
       </Stack>
       <Stack>
         {success && (
@@ -66,7 +65,7 @@ const Customer = ({
               </IconButton>
             }
           >
-            customer create successfully
+            Master create successfully
           </Alert>
         )}
         {error && (
@@ -103,6 +102,27 @@ const Customer = ({
         <Grid item xs={12} md={6}>
           <Stack spacing={1.5} padding={1}>
             <Typography variant={"caption"} component={"label"} fontSize={16}>
+              UserName <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <FormControlLabel
+              control={
+                <TextField
+                  color={"success"}
+                  placeholder="add username"
+                  fullWidth
+                  variant="outlined"
+                  size="small"
+                  name="username"
+                  sx={{ bgcolor: teal[50] }}
+                  value={master.username}
+                  // value={userinfo.username}
+                  onChange={onChangeHandler}
+                />
+              }
+            />
+          </Stack>
+          <Stack spacing={1.5} padding={1}>
+            <Typography variant={"caption"} component={"label"} fontSize={16}>
               Name <span style={{ color: "red" }}>*</span>
             </Typography>
             <FormControlLabel
@@ -115,13 +135,32 @@ const Customer = ({
                   size="small"
                   name="name"
                   sx={{ bgcolor: teal[50] }}
-                  value={customer.name}
+                  value={master.name}
                   onChange={onChangeHandler}
                 />
               }
             />
           </Stack>
-
+          <Stack spacing={1.5} padding={1}>
+            <Typography variant={"caption"} component={"label"} fontSize={16}>
+              Password <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <FormControlLabel
+              control={
+                <TextField
+                  color={"success"}
+                  placeholder="add password"
+                  fullWidth
+                  variant="outlined"
+                  size="small"
+                  name="password"
+                  sx={{ bgcolor: teal[50] }}
+                  value={master.password.toString()}
+                  onChange={onChangeHandler}
+                />
+              }
+            />
+          </Stack>
           <Stack spacing={1.5} padding={1}>
             <Typography variant={"caption"} component={"label"} fontSize={16}>
               Phone Number <span style={{ color: "red" }}>*</span>
@@ -136,7 +175,7 @@ const Customer = ({
                   size="small"
                   name="phone"
                   sx={{ bgcolor: teal[50] }}
-                  value={customer.phone}
+                  value={master.phone}
                   onChange={onChangeHandler}
                 />
               }
@@ -158,7 +197,7 @@ const Customer = ({
                   size="small"
                   name="commission"
                   sx={{ bgcolor: teal[50] }}
-                  value={customer.commission.toString()}
+                  value={master.commission.toString()}
                   onChange={onChangeHandler}
                 />
               }
@@ -178,13 +217,33 @@ const Customer = ({
                   size="small"
                   name="twoDz"
                   sx={{ bgcolor: teal[50] }}
-                  value={customer.twoDz.toString()}
+                  value={master.twoDz.toString()}
                   onChange={onChangeHandler}
                 />
               }
             />
           </Stack>
-          {/* <Stack spacing={1.5} padding={1}>
+          <Stack spacing={1.5} padding={1}>
+            <Typography variant={"caption"} component={"label"} fontSize={16}>
+              Lager Break <span style={{ color: "red" }}>*</span>
+            </Typography>
+            <FormControlLabel
+              control={
+                <TextField
+                  color={"success"}
+                  placeholder="add numbers count"
+                  fullWidth
+                  variant="outlined"
+                  size="small"
+                  name="twoDz"
+                  sx={{ bgcolor: teal[50] }}
+                  value={master.twoDz.toString()}
+                  onChange={onChangeHandler}
+                />
+              }
+            />
+          </Stack>
+          <Stack spacing={1.5} padding={1}>
             <Typography variant={"caption"} component={"label"} fontSize={16}>
               Divider
             </Typography>
@@ -207,12 +266,46 @@ const Customer = ({
                     />
                   )}
                   name="divider"
-                  // value={master.divider}
-                  // onChange={(e, value) => onSelectHandler(e, "divider", value)}
+                  value={master.divider}
+                  onChange={(e, value) => onSelectHandler(e, "divider", value)}
                 />
               }
             />
-          </Stack> */}
+          </Stack>
+
+          <Stack
+            marginTop={1}
+            // spacing={1.5}
+            padding={1}
+            alignItems="center"
+            // bgcolor={"red"}
+            flexDirection={"row"}
+            justifyContent={"space-between"}
+            sx={{ display: "flex", flexWrap: "wrap" }}
+          >
+            <Typography variant={"caption"} fontSize={16}>
+              Acc Limit:
+            </Typography>
+
+            <Stack direction={"row"} alignItems={"center"}>
+              <Checkbox
+                color="success"
+                checked={master.accLimit}
+                onChange={handleChange}
+                //  inputProps={{ "aria-label": "controlled" }}
+              />
+              <TextField
+                disabled={master.accLimit ? false : true}
+                size="small"
+                variant="outlined"
+                value={master.acc_limit_created}
+                sx={{ bgcolor: master.accLimit ? teal[50] : grey[300] }}
+                color={"secondary"}
+                name="acc_limit_created"
+                onChange={onChangeHandler}
+              />
+            </Stack>
+          </Stack>
         </Grid>
         {/* <Grid item xs={1} md={12}> */}
         <Stack
@@ -230,15 +323,25 @@ const Customer = ({
           >
             Cancle
           </Button>
-
-          <Button
-            size="small"
-            variant={"contained"}
-            sx={{ bgcolor: teal[500], color: grey[200] }}
-            onClick={createCustomer}
-          >
-            Create
-          </Button>
+          {master !== "" ? (
+            <Button
+              size="small"
+              variant={"contained"}
+              sx={{ bgcolor: teal[500], color: grey[200] }}
+              onClick={createMaster}
+            >
+              Create
+            </Button>
+          ) : (
+            <Button
+              size="small"
+              variant={"contained"}
+              sx={{ bgcolor: teal[500], color: grey[200] }}
+              onClick={createMaster}
+            >
+              Update
+            </Button>
+          )}
         </Stack>
         {/* </Grid> */}
       </Grid>
@@ -246,4 +349,4 @@ const Customer = ({
   );
 };
 
-export default Customer;
+export default Master;

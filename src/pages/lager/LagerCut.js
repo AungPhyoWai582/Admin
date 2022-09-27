@@ -25,6 +25,8 @@ import { useParams } from "react-router-dom";
 
 import Axios from "../../shared/Axios";
 import { SaveAlt } from "@mui/icons-material";
+import ModalBox from "../../components/modal/ModalBox";
+import BetListCom from "../../components/BetListCom";
 
 const LagerCut = () => {
   const { lotteryId } = useParams();
@@ -38,8 +40,8 @@ const LagerCut = () => {
   const [outList, setOutList] = useState([]);
   const [breakPercent, setBreakPercent] = useState(0);
   const [useEffCtrl, setUseEffCtrl] = useState(false);
-  const [customers, setCustomers] = React.useState([]);
-  const [customer, setCustomer] = useState("");
+  const [customers, setCustomers] = useState([]);
+  const [customer, setCustomer] = useState({ id: "", name: "" });
 
   const [value, setValue] = useState("main");
 
@@ -50,6 +52,14 @@ const LagerCut = () => {
   };
 
   useEffect(() => {
+    Axios.get(`/customers`, {
+      headers: {
+        authorization: "Bearer " + localStorage.getItem("access-token"),
+      },
+    }).then((res) => {
+      console.log(res.data);
+      setCustomers(res.data);
+    });
     Axios.get(`/lagers/${lotteryId}`, {
       headers: {
         authorization: "Bearer " + localStorage.getItem("access-token"),
@@ -77,10 +87,10 @@ const LagerCut = () => {
     }).then((res) => {
       console.log(res.data.data);
       setOutList(res.data.data);
-      const customers = res.data.data.map((d) => {
-        return { name: d.customer, value: d.customer };
-      });
-      setCustomers([{ name: "All", value: "All" }, ...customers]);
+      // const customers = res.data.data.map((d) => {
+      //   return { name: d.customer.name, value: d.customer._id };
+      // });
+      // setCustomers([{ name: "All", value: "All" }, ...customers]);
     });
   }, [useEffCtrl]);
   console.log(outList);
@@ -106,27 +116,28 @@ const LagerCut = () => {
     }
   };
 
-  const onSelect = (e) => {
-    const { value } = e.target;
-    setCustomer(value);
-    if (value === "All") {
-      console.log(lager.out.numbers);
-      setViewLager({
-        ...viewLager,
-        numbers: lager.out.numbers,
-        totalAmount: lager.out.totalAmount,
-      });
-    } else {
-      const view = outList.find((out) => out.customer === value);
-      setViewLager({
-        ...viewLager,
-        break: view.breakPercent,
-        mainAmount: view.mainAmount,
-        numbers: view.numbers,
-        totalAmount: view.totalAmount,
-      });
-    }
-  };
+  // const onSelect = (e) => {
+  //   const { value } = e.target;
+  //   console.log(value);
+  //   setCustomer(value);
+  //   if (value === "All") {
+  //     console.log(lager.out.numbers);
+  //     setViewLager({
+  //       ...viewLager,
+  //       numbers: lager.out.numbers,
+  //       totalAmount: lager.out.totalAmount,
+  //     });
+  //   } else {
+  //     const view = outList.find((out) => out.customer === value.toString());
+  //     setViewLager({
+  //       ...viewLager,
+  //       break: view.breakPercent,
+  //       mainAmount: view.mainAmount,
+  //       numbers: view.numbers,
+  //       totalAmount: view.totalAmount,
+  //     });
+  //   }
+  // };
 
   console.log(customer);
   const setBreak = () => {
@@ -137,7 +148,7 @@ const LagerCut = () => {
     const data = numbers.map((num) => {
       return {
         number: num.number,
-        amount: (breakPercent * (num.amount / 100)).toString(),
+        amount: (num.amount - breakPercent).toString(),
       };
     });
     const total =
@@ -152,272 +163,396 @@ const LagerCut = () => {
 
   const saveCut = () => {
     let obj = {
-      customer: customer,
+      customer: customer.id,
       breakPercent: breakPercent,
       mainAmount: lager.in.totalAmount,
       numbers: viewLager.numbers,
     };
     console.log(obj);
-    Axios.post(`/outcall/${lotteryId}`, obj, {
-      headers: {
-        authorization: `Bearer ` + localStorage.getItem("access-token"),
-      },
-    })
-      .then((res) => {
-        console.log(res.data);
-        setCustomer("");
-        setBreakPercent(0);
-        setUseEffCtrl(true);
-      })
-      .catch((err) => console.log(err));
+    // Axios.post(`/outcall/${lotteryId}`, obj, {
+    //   headers: {
+    //     authorization: `Bearer ` + localStorage.getItem("access-token"),
+    //   },
+    // })
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     setCustomer("");
+    //     setBreakPercent(0);
+    //     setUseEffCtrl(true);
+    //   })
+    //   .catch((err) => console.log(err));
   };
-  console.log(viewLager.numbers.length);
+  console.log(customers);
 
   return (
-    <Stack
-      padding={1}
-      direction={"column"}
-      // sx={{ xs: { direction: "column", sm: { direction: "column" } } }}
-      // bgcolor={grey[300]}
-    >
-      {/* {useMediaQuery("(max-width:500px)") && <Typography>Heeo</Typography>} */}
+    <>
       <Stack
-        // width={"30%"}
-        // padding={1}
-        // alignItems="center"
-        // border={1}
-        // margin="auto"
-        spacing={1}
-        direction={"row"}
+        padding={1}
+        direction={"column"}
+        // sx={{ xs: { direction: "column", sm: { direction: "column" } } }}
+        // bgcolor={grey[300]}
       >
-        <TextField
-          label="Break %"
-          color={"success"}
-          variant="outlined"
-          size="small"
-          name="break"
-          sx={{ bgcolor: teal[50] }}
-          value={breakPercent}
-          onChange={(e) => setBreakPercent(e.target.value)}
-        />
-
-        <Button
-          size="small"
-          color="secondary"
-          variant="contained"
-          onClick={setBreak}
+        {/* {useMediaQuery("(max-width:500px)") && <Typography>Heeo</Typography>} */}
+        <Stack
+          // width={"30%"}
+          // padding={1}
+          // alignItems="center"
+          // border={1}
+          // margin="auto"
+          spacing={1}
+          direction={"row"}
         >
-          Set
-        </Button>
-      </Stack>
-      <Stack>
-        <Stack direction={"row"}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            textColor="secondary"
-            indicatorColor="secondary"
-            aria-label="secondary tabs example"
-          >
-            <Tab value="main" label="Main" />
-            <Tab value="out" label="Out Lists" />
-          </Tabs>
-          {/* <FormControl size="small"> */}
+          <TextField
+            label="Break"
+            color={"success"}
+            variant="outlined"
+            size="small"
+            name="break"
+            sx={{ bgcolor: teal[50] }}
+            value={breakPercent}
+            onChange={(e) => setBreakPercent(e.target.value)}
+          />
 
-          {/* </FormControl> */}
+          <Button
+            size="small"
+            color="secondary"
+            variant="contained"
+            onClick={setBreak}
+          >
+            Set
+          </Button>
         </Stack>
         <Stack>
-          {value === "main" && (
-            <Stack
-              // width={"30%"}
-              padding={1}
-              alignItems="center"
-              // border={1}
-              // margin="auto"
-              spacing={1}
-              direction={"row"}
+          <Stack direction={"row"}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              textColor="secondary"
+              indicatorColor="secondary"
+              aria-label="secondary tabs example"
             >
-              <FormControlLabel
-                control={
-                  <TextField
-                    label="Customer"
-                    color={"success"}
-                    variant="outlined"
-                    size="small"
-                    name="customer"
-                    sx={{ bgcolor: teal[50] }}
-                    value={customer}
-                    onChange={(e) => setCustomer(e.target.value)}
-                  />
-                }
-              />
-              <Button size="small" color="primary" variant="outlined">
-                Copy
-              </Button>
-              <Button
-                size="small"
-                color="success"
-                variant="contained"
-                onClick={saveCut}
-              >
-                Save <SaveAlt fontSize="10px" />
-              </Button>
-              <Typography>Numbers : {viewLager.numbers.length}</Typography>
-            </Stack>
-          )}
-          {value === "out" && (
-            <Stack
-              // width={"30%"}
-              // fullWidth
-              padding={1}
-              alignItems="center"
-              // border={1}
-              // margin="auto"
-              // justifyContent={"space-around"}
-              spacing={1}
-              direction={"row"}
-            >
-              <FormControlLabel
-                label={"Customer : "}
-                labelPlacement="start"
-                // sx={{ width: "100%" }}
-                control={
-                  <Select
-                    sx={{ width: 150, height: 30, backgroundColor: teal[50] }}
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={customer}
-                    defaultValue={"All"}
-                    onChange={onSelect}
-                  >
-                    {customers.map((c) => (
-                      <MenuItem value={c.value}>{c.name}</MenuItem>
-                    ))}
-                  </Select>
-                }
-              />
-              <Button size="small" color="primary" variant="outlined">
-                Copy
-              </Button>
+              <Tab value="main" label="Main" />
+              <Tab value="out" label="Out Lists" />
+            </Tabs>
+            {/* <FormControl size="small"> */}
 
-              <Typography>Numbers : {viewLager.numbers.length}</Typography>
-            </Stack>
-          )}
-        </Stack>
-        <Stack
-          border={0.5}
-          borderColor={grey[500]}
-          boxShadow={1}
-          direction={"column"}
-          bgcolor={"white"}
-          overflow="scroll"
-        >
-          {viewLager.numbers && (
-            <Table sx={{ border: 2, borderColor: grey[300] }} size="small">
-              {Array.from(Array(10), (_, x) => x).map((col) => {
-                return (
-                  <TableRow
-                    style={{ height: 10 }}
-                    sx={{
-                      height: 50,
-                      border: 0.1,
-                      borderColor: grey[300],
-                      borderCollapse: "collapse",
-                    }}
-                  >
-                    {Array.from(Array(10), (_, x) => x).map((row) => {
-                      return (
-                        <>
-                          <TableCell
-                            align="left"
-                            sx={{
-                              // width: "10px",
-                              border: 0.1,
-                              borderColor: grey[300],
-                              borderCollapse: "collapse",
-                            }}
-                          >
-                            <Typography width={20}>
-                              {viewLager.numbers
-                                .map((lag) => lag.number)
-                                .includes(row.toString() + col.toString())
-                                ? viewLager.numbers[
-                                    viewLager.numbers.findIndex(
-                                      (obj) =>
-                                        obj.number ==
-                                        row.toString() + col.toString()
-                                    )
-                                  ].number
-                                : row.toString() + col.toString()}
-                            </Typography>
-                          </TableCell>
-                          <TableCell
-                            align="right"
-                            sx={{
-                              // width: "500px",
-                              border: 0.1,
-                              color: blue[500],
-                              borderColor: grey[300],
-                              borderCollapse: "collapse",
-                            }}
-                          >
-                            <Typography width={{ xs: 40, sm: 60, md: 80 }}>
-                              {viewLager.numbers
-                                .map((lag) => lag.number)
-                                .includes(row.toString() + col.toString())
-                                ? viewLager.numbers[
-                                    viewLager.numbers.findIndex(
-                                      (obj) =>
-                                        obj.number ==
-                                        row.toString() + col.toString()
-                                    )
-                                  ].amount
-                                : "0"}
-                            </Typography>
-                          </TableCell>
-                        </>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-            </Table>
-          )}
-        </Stack>
-        <Stack
-          padding={1}
-          alignItems="center"
-          direction={"row"}
-          justifyContent="space-between"
-        >
-          <Typography fontWeight={"bold"} color={red[500]} textAlign={"center"}>
-            Total Cash : {viewLager.totalAmount}
-          </Typography>
-          {value === "out" && (
-            <>
-              {" "}
-              <Typography
-                fontWeight={"bold"}
-                color={red[500]}
-                textAlign={"center"}
+            {/* </FormControl> */}
+          </Stack>
+          <Stack>
+            {value === "main" && (
+              <Stack
+                // width={"30%"}
+                padding={1}
+                alignItems="center"
+                // border={1}
+                // margin="auto"
+                spacing={1}
+                direction={"row"}
               >
-                Break % : {viewLager.break ? viewLager.break : 0}
-              </Typography>
-              <Typography
-                fontWeight={"bold"}
-                color={red[500]}
-                textAlign={"center"}
+                <FormControlLabel
+                  label={"Customer : "}
+                  labelPlacement="start"
+                  // sx={{ width: "100%" }}
+                  control={
+                    <Select
+                      sx={{ width: 150, height: 30, backgroundColor: teal[50] }}
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={customer.name}
+                      defaultValue={"All"}
+                      onChange={(e) =>
+                        console.log(e.target.value, e.target.name)
+                      }
+                    >
+                      {customers.map((c) => (
+                        <MenuItem value={c._id} name={c.name}>
+                          {c.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  }
+                />
+                <Button size="small" color="primary" variant="outlined">
+                  Copy
+                </Button>
+                <Button
+                  size="small"
+                  color="success"
+                  variant="contained"
+                  onClick={saveCut}
+                >
+                  Save <SaveAlt fontSize="10px" />
+                </Button>
+                <Typography>Numbers : {viewLager.numbers.length}</Typography>
+              </Stack>
+            )}
+            {value === "out" && (
+              <Stack
+                // width={"30%"}
+                // fullWidth
+                padding={1}
+                alignItems="center"
+                // border={1}
+                // margin="auto"
+                // justifyContent={"space-around"}
+                spacing={1}
+                direction={"row"}
               >
-                Main Cash : {viewLager.mainAmount ? viewLager.mainAmount : 0}
-              </Typography>
-            </>
-          )}
-          <Typography fontWeight={"bold"} color={red[500]} textAlign={"center"}>
-            Total Units: soon
-          </Typography>
+                <FormControlLabel
+                  label={"Customer : "}
+                  labelPlacement="start"
+                  // sx={{ width: "100%" }}
+                  control={
+                    <Select
+                      sx={{ width: 150, height: 30, backgroundColor: teal[50] }}
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={customer}
+                      defaultValue={"All"}
+                      // onChange={onSelect}
+                    >
+                      {customers.map((c) => (
+                        <MenuItem value={c._id}>{c.name}</MenuItem>
+                      ))}
+                    </Select>
+                  }
+                />
+                <Button size="small" color="primary" variant="outlined">
+                  Copy
+                </Button>
+
+                <Typography>Numbers : {viewLager.numbers.length}</Typography>
+              </Stack>
+            )}
+          </Stack>
+          <Stack
+            border={0.5}
+            borderColor={grey[500]}
+            boxShadow={1}
+            direction={"column"}
+            bgcolor={"white"}
+            overflow="scroll"
+          >
+            {viewLager.numbers && (
+              <Table sx={{ border: 2, borderColor: grey[300] }} size="small">
+                {Array.from(Array(10), (_, x) => x).map((col) => {
+                  return (
+                    <TableRow
+                      style={{ height: 10 }}
+                      sx={{
+                        height: 50,
+                        border: 0.1,
+                        borderColor: grey[300],
+                        borderCollapse: "collapse",
+                      }}
+                    >
+                      {Array.from(Array(10), (_, x) => x).map((row) => {
+                        return (
+                          <>
+                            <TableCell
+                              align="left"
+                              sx={{
+                                // width: "10px",
+                                border: 0.1,
+                                borderColor: grey[300],
+                                borderCollapse: "collapse",
+                              }}
+                            >
+                              <Typography width={20}>
+                                {viewLager.numbers
+                                  .map((lag) => lag.number)
+                                  .includes(row.toString() + col.toString())
+                                  ? viewLager.numbers[
+                                      viewLager.numbers.findIndex(
+                                        (obj) =>
+                                          obj.number ==
+                                          row.toString() + col.toString()
+                                      )
+                                    ].number
+                                  : row.toString() + col.toString()}
+                              </Typography>
+                            </TableCell>
+                            <TableCell
+                              align="right"
+                              sx={{
+                                // width: "500px",
+                                border: 0.1,
+                                color: blue[500],
+                                borderColor: grey[300],
+                                borderCollapse: "collapse",
+                              }}
+                            >
+                              <Typography width={{ xs: 40, sm: 60, md: 80 }}>
+                                {viewLager.numbers
+                                  .map((lag) => lag.number)
+                                  .includes(row.toString() + col.toString())
+                                  ? viewLager.numbers[
+                                      viewLager.numbers.findIndex(
+                                        (obj) =>
+                                          obj.number ==
+                                          row.toString() + col.toString()
+                                      )
+                                    ].amount
+                                  : "0"}
+                              </Typography>
+                            </TableCell>
+                          </>
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })}
+              </Table>
+            )}
+          </Stack>
+          <Stack
+            padding={1}
+            alignItems="center"
+            direction={"row"}
+            justifyContent="space-between"
+          >
+            <Typography
+              fontWeight={"bold"}
+              color={red[500]}
+              textAlign={"center"}
+            >
+              Total Cash : {viewLager.totalAmount}
+            </Typography>
+            {value === "out" && (
+              <>
+                {" "}
+                <Typography
+                  fontWeight={"bold"}
+                  color={red[500]}
+                  textAlign={"center"}
+                >
+                  Break % : {viewLager.break ? viewLager.break : 0}
+                </Typography>
+                <Typography
+                  fontWeight={"bold"}
+                  color={red[500]}
+                  textAlign={"center"}
+                >
+                  Main Cash : {viewLager.mainAmount ? viewLager.mainAmount : 0}
+                </Typography>
+              </>
+            )}
+            <Typography
+              fontWeight={"bold"}
+              color={red[500]}
+              textAlign={"center"}
+            >
+              Total Units: soon
+            </Typography>
+          </Stack>
         </Stack>
       </Stack>
-    </Stack>
+      <ModalBox open={false}>
+        <Stack bgcolor={teal[100]} padding={1}>
+          <Stack
+            spacing={1.5}
+            padding={1}
+            direction="row"
+            alignItems={"center"}
+          >
+            <Typography>customer :</Typography>
+            {/* <FormControlLabel
+              label={"Customer : "}
+              labelPlacement="start"
+              sx={{ width: "100%" }}
+              control={ */}
+            <Select
+              sx={{ width: 100, height: 30, backgroundColor: teal[50] }}
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={customer.name}
+              defaultValue={"All"}
+              onChange={(e) =>
+                setCustomer({ id: e.target.value, name: e.target.name })
+              }
+            >
+              {customers.map((c) => (
+                <MenuItem value={c._id} name={c.name}>
+                  {c.name}
+                </MenuItem>
+              ))}
+            </Select>
+            {/* } */}
+            {/* /> */}
+          </Stack>
+          <Stack
+            spacing={1.5}
+            padding={1}
+            direction="row"
+            alignItems={"center"}
+          >
+            <Typography>Break :</Typography>
+            <Typography>10</Typography>
+          </Stack>
+          <Stack
+            spacing={1.5}
+            padding={1}
+            direction="row"
+            alignItems={"center"}
+          >
+            <Typography>Total :</Typography>
+            <Typography>1000</Typography>
+          </Stack>
+          <Stack
+            spacing={1.5}
+            padding={1}
+            direction="row"
+            alignItems={"center"}
+          >
+            <Typography>Count :</Typography>
+            <Typography>100</Typography>
+          </Stack>
+
+          <Stack
+            spacing={1.5}
+            padding={1}
+            direction="column"
+            alignItems={"right"}
+            minWidth="50%"
+            maxWidth={"70%"}
+          >
+            <Typography>Numbers :</Typography>
+            <Stack
+              bgcolor="white"
+              justifyContent={{
+                sx: "space-between",
+                sm: "space-around",
+                md: "space-around",
+              }}
+              height={"50vh"}
+              overflow="scroll"
+            >
+              {viewLager.numbers.map((ca, key) => (
+                <BetListCom call={ca} key={key} />
+              ))}
+            </Stack>
+          </Stack>
+          <Stack
+            spacing={1.5}
+            padding={1}
+            direction="row"
+            justifyContent={"end"}
+          >
+            <Button
+              variant="outlined"
+              size="small"
+              sx={{ bgcolor: "white" }}
+              color="success"
+            >
+              cancel
+            </Button>
+            <Button variant="contained" size="small" color="primary">
+              save
+            </Button>
+          </Stack>
+        </Stack>
+      </ModalBox>
+    </>
   );
 };
 
