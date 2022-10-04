@@ -29,8 +29,18 @@ import ModalBox from "../../components/modal/ModalBox";
 import BetListCom from "../../components/BetListCom";
 
 const LagerCut = () => {
+  //lager Cut Mod CTL
+  const [lagModCtl, setLagModCtl] = useState(false);
+
   const { lotteryId } = useParams();
   const [lager, setLager] = useState({});
+  const [cutLag, setCutLag] = useState({
+    customer: "",
+    breakPercent: 0,
+    mainAmount: 0,
+    cutAmount: 0,
+    numbers: [],
+  });
   const [viewLager, setViewLager] = useState({
     numbers: [],
     totalAmount: 0,
@@ -141,6 +151,7 @@ const LagerCut = () => {
 
   console.log(customer);
   const setBreak = () => {
+    setLagModCtl(true);
     console.log(breakPercent);
     const numbers = [...lager.in.numbers];
     const Tamount = lager.in.totalAmount;
@@ -151,14 +162,35 @@ const LagerCut = () => {
         amount: (num.amount - breakPercent).toString(),
       };
     });
-    const total =
-      Number(Tamount) -
-      data
-        .map((num) => Number(num.amount))
-        .reduce((pre, next) => pre + next, 0);
+    const breakData = numbers.map((na, key) => {
+      if (Number(na.amount) >= Number(breakPercent)) {
+        return {
+          number: na.number,
+          amount: breakPercent,
+        };
+      }
+      if (Number(na.amount) < Number(breakPercent)) {
+        return {
+          number: na.number,
+          amount: na.amount,
+        };
+      }
+    });
+    console.log(breakData);
+    const total = breakData
+      .map((num) => Number(num.amount))
+      .reduce((pre, next) => pre + next, 0);
     console.log(numbers);
     console.log(data, total);
-    setViewLager({ ...viewLager, numbers: data, totalAmount: total });
+    // setViewLager({ ...viewLager, numbers: breakData, totalAmount: total });
+    setCutLag({
+      ...cutLag,
+      numbers: breakData,
+      breakPercent: breakPercent,
+      cutAmount: total,
+      mainAmount: lager.in.totalAmount,
+    });
+    console.log(cutLag);
   };
 
   const saveCut = () => {
@@ -238,7 +270,7 @@ const LagerCut = () => {
 
             {/* </FormControl> */}
           </Stack>
-          <Stack>
+          {/* <Stack>
             {value === "main" && (
               <Stack
                 // width={"30%"}
@@ -324,29 +356,39 @@ const LagerCut = () => {
                 <Typography>Numbers : {viewLager.numbers.length}</Typography>
               </Stack>
             )}
-          </Stack>
+          </Stack> */}
           <Stack
             border={0.5}
+            borderRadius={1}
             borderColor={grey[500]}
             boxShadow={1}
             direction={"column"}
             bgcolor={"white"}
-            overflow="scroll"
           >
             {viewLager.numbers && (
-              <Table sx={{ border: 2, borderColor: grey[300] }} size="small">
-                {Array.from(Array(10), (_, x) => x).map((col) => {
+              <Table
+                sx={{
+                  border: 2,
+                  borderColor: grey[300],
+                  // height: "500vh",
+                  overflow: "scroll",
+                }}
+                size="small"
+              >
+                {Array.from(Array(25), (_, x) => x).map((col, upperkey) => {
                   return (
                     <TableRow
                       style={{ height: 10 }}
                       sx={{
+                        direction: "column",
                         height: 50,
                         border: 0.1,
                         borderColor: grey[300],
                         borderCollapse: "collapse",
                       }}
                     >
-                      {Array.from(Array(10), (_, x) => x).map((row) => {
+                      {Array.from(Array(4), (_, x) => x).map((row, key) => {
+                        let num = row * 25 + col;
                         return (
                           <>
                             <TableCell
@@ -359,9 +401,10 @@ const LagerCut = () => {
                               }}
                             >
                               <Typography width={20}>
-                                {viewLager.numbers
+                                {num.toString().length === 1 ? "0" + num : num}
+                                {/* {viewLager.numbers
                                   .map((lag) => lag.number)
-                                  .includes(row.toString() + col.toString())
+                                  .includes(col.toString() + row.toString())
                                   ? viewLager.numbers[
                                       viewLager.numbers.findIndex(
                                         (obj) =>
@@ -369,7 +412,7 @@ const LagerCut = () => {
                                           row.toString() + col.toString()
                                       )
                                     ].number
-                                  : row.toString() + col.toString()}
+                                  : col.toString() + row.toString()} */}
                               </Typography>
                             </TableCell>
                             <TableCell
@@ -385,14 +428,15 @@ const LagerCut = () => {
                               <Typography width={{ xs: 40, sm: 60, md: 80 }}>
                                 {viewLager.numbers
                                   .map((lag) => lag.number)
-                                  .includes(row.toString() + col.toString())
+                                  .includes(num.toString())
                                   ? viewLager.numbers[
                                       viewLager.numbers.findIndex(
-                                        (obj) =>
-                                          obj.number ==
-                                          row.toString() + col.toString()
+                                        (obj) => obj.number == num.toString()
                                       )
-                                    ].amount
+                                    ].amount.replace(
+                                      /\B(?=(\d{3})+(?!\d))/g,
+                                      ","
+                                    )
                                   : "0"}
                               </Typography>
                             </TableCell>
@@ -447,7 +491,7 @@ const LagerCut = () => {
           </Stack>
         </Stack>
       </Stack>
-      <ModalBox open={false}>
+      <ModalBox open={lagModCtl}>
         <Stack bgcolor={teal[100]} padding={1}>
           <Stack
             spacing={1.5}
@@ -467,14 +511,13 @@ const LagerCut = () => {
               id="demo-simple-select"
               value={customer.name}
               defaultValue={"All"}
-              onChange={(e) =>
-                setCustomer({ id: e.target.value, name: e.target.name })
+              onChange={
+                (e) => setCustomer({ id: e.target.value, name: e.target.name })
+                // setCutLag(...cutLag, { bra })
               }
             >
               {customers.map((c) => (
-                <MenuItem value={c._id} name={c.name}>
-                  {c.name}
-                </MenuItem>
+                <MenuItem value={c._id}>{c.name}</MenuItem>
               ))}
             </Select>
             {/* } */}
@@ -487,7 +530,7 @@ const LagerCut = () => {
             alignItems={"center"}
           >
             <Typography>Break :</Typography>
-            <Typography>10</Typography>
+            <Typography>{cutLag ? cutLag.breakPercent : "0"}</Typography>
           </Stack>
           <Stack
             spacing={1.5}
@@ -496,7 +539,7 @@ const LagerCut = () => {
             alignItems={"center"}
           >
             <Typography>Total :</Typography>
-            <Typography>1000</Typography>
+            <Typography>{cutLag ? cutLag.cutAmount : "0"}</Typography>
           </Stack>
           <Stack
             spacing={1.5}
@@ -505,7 +548,9 @@ const LagerCut = () => {
             alignItems={"center"}
           >
             <Typography>Count :</Typography>
-            <Typography>100</Typography>
+            <Typography>
+              {cutLag ? cutLag.numbers.length.toString() : "0"}
+            </Typography>
           </Stack>
 
           <Stack
@@ -527,7 +572,7 @@ const LagerCut = () => {
               height={"50vh"}
               overflow="scroll"
             >
-              {viewLager.numbers.map((ca, key) => (
+              {cutLag.numbers.map((ca, key) => (
                 <BetListCom call={ca} key={key} />
               ))}
             </Stack>
@@ -543,6 +588,7 @@ const LagerCut = () => {
               size="small"
               sx={{ bgcolor: "white" }}
               color="success"
+              onClick={() => setLagModCtl(false)}
             >
               cancel
             </Button>

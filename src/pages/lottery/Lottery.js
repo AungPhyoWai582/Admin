@@ -58,6 +58,12 @@ const Lottery = () => {
   const createLottery = (e) => {
     const { name, value } = e.target;
     console.log(name, value);
+
+    if (name === "hot_tee") {
+      let val = value.split("/");
+      setLotCreate({ ...lotCreate, [name]: val });
+    }
+
     setLotCreate({ ...lotCreate, [name]: value });
   };
 
@@ -101,6 +107,7 @@ const Lottery = () => {
   };
 
   const updateLottery = () => {
+    console.log(lotCreate);
     Axios.put(`/lotterys/${lotCreate.id}`, lotCreate)
       .then((res) => {
         setLotCreate({

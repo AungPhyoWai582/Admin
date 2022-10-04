@@ -149,7 +149,7 @@ const BetPage = () => {
   // in outt
   const [in_out, set_in_out] = useState("Out");
   const [customers, setCustomers] = useState([]);
-  const [cusval, setCusval] = useState({ cusname: "", id: "" });
+  const [cusval, setCusval] = useState("");
   const [singleCusCall, setSingleCusCall] = useState({
     Lagnumbers: "",
     Total: [],
@@ -245,7 +245,7 @@ const BetPage = () => {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
-        console.log(res.data.data);
+        console.log(res.data);
         setOutCalls(res.data.data);
 
         setInOutCtl(false);
@@ -273,14 +273,17 @@ const BetPage = () => {
 
   // out Customer select
   const OnSelect = (e) => {
-    const { value, name } = e.target;
+    console.log(e);
+    const { value } = e.target;
 
-    console.log(value);
-    const view = outCalls.find((out) => out.customer === value);
-    console.log(view);
-    setCusval({ cusname: name, id: value });
-    setSingleCusCall({ Lagnumbers: view.numbers, Total: view.totalAmount });
-    console.log(singleCusCall);
+    console.log(outCalls);
+    setCusval(value);
+    setInOutCtl(true);
+    // const view = outCalls.find((out) => out.customer === value);
+    // console.log(name);
+    // setCusval({ cusname: name, id: value });
+    // setSingleCusCall({ Lagnumbers: view.numbers, Total: view.totalAmount });
+    // console.log(singleCusCall);
   };
 
   //setTimeout Alert
@@ -1003,7 +1006,7 @@ const BetPage = () => {
     return cus.username;
   };
 
-  console.log(in_out);
+  console.log(cusval);
 
   return (
     <Stack height={"100%"} bgcolor={"white"}>
@@ -1152,14 +1155,12 @@ const BetPage = () => {
                     }}
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={cusval.cusname}
+                    // value={cusval}
                     defaultValue={"All"}
-                    onChange={(e) =>
-                      setCusval({ cusname: e.target.name, id: e.target.value })
-                    }
+                    onChange={(e) => OnSelect(e)}
                   >
                     {customers.map((c) => (
-                      <MenuItem sx={{ width: 200 }} value={c._id} name={c.name}>
+                      <MenuItem sx={{ width: 200 }} value={c._id}>
                         {c.name}
                       </MenuItem>
                     ))}
