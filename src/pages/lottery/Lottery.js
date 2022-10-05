@@ -58,12 +58,6 @@ const Lottery = () => {
   const createLottery = (e) => {
     const { name, value } = e.target;
     console.log(name, value);
-
-    if (name === "hot_tee") {
-      let val = value.split("/");
-      setLotCreate({ ...lotCreate, [name]: val });
-    }
-
     setLotCreate({ ...lotCreate, [name]: value });
   };
 
@@ -248,7 +242,7 @@ const Lottery = () => {
                         to={`/lottery/bet/${l._id}`}
                         state={{
                           lotteryId: l._id,
-                          hot_tees: l.hot_tee,
+                          hot_tees: l.hot_tee.toString(),
                         }}
                       >
                         <IconButton

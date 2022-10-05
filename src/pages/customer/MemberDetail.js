@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { green, grey, teal } from "@mui/material/colors";
 import { Box } from "@mui/system";
+import {LoadingButton} from '@mui/lab'
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
@@ -103,8 +104,10 @@ const MemberDetail = () => {
         spacing={1}
         direction="column"
         alignItems={"center"}
-        paddingTop={1}
-        // bgcolor={teal[100]}
+        padding={1}
+        bgcolor={teal[100]}
+        // height='500px'
+        overflow='scroll'
       >
         <Stack
           direction={"column"}
@@ -243,7 +246,10 @@ const MemberDetail = () => {
               padding={1}
               spacing={1}
             >
-              <Button
+              {/* <LoadingButton></LoadingButton> */}
+              <LoadingButton
+              loadingPosition="start"
+              loading={false}
                 size="small"
                 color={"error"}
                 variant="contained"
@@ -255,8 +261,10 @@ const MemberDetail = () => {
                 <Typography textTransform={"none"} fontSize={12}>
                   Cancel
                 </Typography>
-              </Button>
-              <Button
+              </LoadingButton>
+              <LoadingButton
+              loading={false}
+              loadingPosition='start'
                 size="small"
                 color={"success"}
                 variant="contained"
@@ -265,7 +273,7 @@ const MemberDetail = () => {
                 <Typography textTransform={"none"} fontSize={12}>
                   Save
                 </Typography>
-              </Button>
+              </LoadingButton>
             </Stack>
           </ModalBox>
         </Stack>
