@@ -117,7 +117,7 @@ const BetPage = () => {
   const location = useLocation();
   const { hot_tees } = location.state;
   const hot = hot_tees.split("/");
-  const [hotNumbers,setHotNumbers]=useState();
+  const [hotNumbers, setHotNumbers] = useState();
   // console.log(hot);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -163,7 +163,6 @@ const BetPage = () => {
   });
 
   useEffect(() => {
-
     if (in_out === "In") {
       Axios.get(`/masters`, {
         headers: {
@@ -190,8 +189,6 @@ const BetPage = () => {
         setCustomers(res.data);
       });
     }
-
-   
   }, [calllistctrl]);
 
   useEffect(() => {
@@ -202,18 +199,23 @@ const BetPage = () => {
     })
       .then((res) => {
         const lager = res.data.data;
-        if(lager){
+        if (lager) {
           setLager(lager);
-          
-           setHotNumbers( calculateHotTee(JSON.parse(localStorage.getItem('user-info')),hot_tees,lager.in.numbers,lager.in.totalAmount))
-          
+
+          setHotNumbers(
+            calculateHotTee(
+              JSON.parse(localStorage.getItem("user-info")),
+              hot_tees,
+              lager.in.numbers,
+              lager.in.totalAmount
+            )
+          );
         }
         // setCallList(res.data.data.in.read);
         // setSuccess(false);
-
       })
       .catch((err) => console.log(err));
-   
+
     if (in_out === "In") {
       Axios.get(`/call/${lotteryId}`, {
         headers: {
@@ -272,7 +274,7 @@ const BetPage = () => {
     // setCalllistctrl(false);
   }, [inOutCtl, calllistctrl]);
 
-  console.log(hotNumbers)
+  console.log(hotNumbers);
 
   // out Customer select
   const OnSelect = (e) => {
@@ -924,14 +926,11 @@ const BetPage = () => {
   };
 
   const setBreak = () => {
-<<<<<<< HEAD
     const avg = (Number(demoLager.totalAmount) / Number(lagerBreak)).toString();
     console.log(avg);
     setDemolager({ ...demoLager, originalBreak: lagerBreak, average: avg });
 
     console.log(lagerBreak);
-=======
->>>>>>> f500f9a4627d0dd48e3c5375447ad9db10d45078
     const extraArray = [];
     demoLager.map((demol, key) => {
       if (Number(demol.amount) > Number(lagerBreak)) {
@@ -1278,7 +1277,7 @@ const BetPage = () => {
           padding={1}
           overflow="scroll"
           justifyContent={{ xs: "start", sm: "start", md: "start" }}
-          width={{ xs: '20%', sm: "20%", md: "25%" }}
+          width={{ xs: "20%", sm: "20%", md: "25%" }}
         >
           {hotNumbers &&
             hotNumbers.map((h, key) => {
@@ -1311,10 +1310,11 @@ const BetPage = () => {
                     textAlign={"center"}
                     alignItems="center"
                     fontSize={10}
-                    fontWeight={'bold'}
-                    color={h.amount==0?'red':'blue'}
+                    fontWeight={"bold"}
+                    color={h.amount == 0 ? "red" : "blue"}
                   >
-                    {h.amount!=0?'+':'-'}{h.amount}
+                    {h.amount != 0 ? "+" : "-"}
+                    {h.amount}
                   </Typography>
                 </Stack>
               );
