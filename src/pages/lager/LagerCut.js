@@ -358,10 +358,11 @@ const LagerCut = () => {
             )}
           </Stack> */}
           <Stack
-            border={0.5}
-            borderRadius={1}
-            borderColor={grey[500]}
-            boxShadow={1}
+            // border={0.5}
+            // borderRadius={1}
+            // borderColor={grey[500]}
+            // boxShadow={1}
+            overflow={"scroll"}
             direction={"column"}
             bgcolor={"white"}
           >
@@ -506,18 +507,18 @@ const LagerCut = () => {
               sx={{ width: "100%" }}
               control={ */}
             <Select
-              sx={{ width: 100, height: 30, backgroundColor: teal[50] }}
+              sx={{ width: 150, height: 30, backgroundColor: teal[50] }}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={customer.name}
               defaultValue={"All"}
               onChange={
-                (e) => setCustomer({ id: e.target.value, name: e.target.name })
+                (e) => setCustomer({ id: e.target.value })
                 // setCutLag(...cutLag, { bra })
               }
             >
               {customers.map((c) => (
-                <MenuItem value={c._id}>{c.name}</MenuItem>
+                <MenuItem value={c._id}>{c.name.toString()}</MenuItem>
               ))}
             </Select>
             {/* } */}
@@ -547,7 +548,7 @@ const LagerCut = () => {
             direction="row"
             alignItems={"center"}
           >
-            <Typography>Count :</Typography>
+            <Typography>Average : </Typography>
             <Typography>
               {cutLag ? cutLag.numbers.length.toString() : "0"}
             </Typography>

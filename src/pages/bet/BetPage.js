@@ -137,7 +137,12 @@ const BetPage = () => {
 
   //Lager Break
   const [lagerBreak, setLagerBreak] = useState("0");
-  const [demoLager, setDemolager] = useState();
+  const [demoLager, setDemolager] = useState({
+    numbers: [],
+    totalAmount: 0,
+    average: 0,
+    originalBreak: 0,
+  });
   const [callDemo, setCallDemo] = useState([]);
   //calllist control state
   const [calllistctrl, setCalllistctrl] = useState(false);
@@ -279,11 +284,11 @@ const BetPage = () => {
     console.log(outCalls);
     setCusval(value);
     setInOutCtl(true);
-    // const view = outCalls.find((out) => out.customer === value);
+    const view = outCalls.find((out) => out.customer === value);
     // console.log(name);
-    // setCusval({ cusname: name, id: value });
-    // setSingleCusCall({ Lagnumbers: view.numbers, Total: view.totalAmount });
-    // console.log(singleCusCall);
+    setCusval({ cusname: "", id: value });
+    setSingleCusCall({ Lagnumbers: view.numbers, Total: view.totalAmount });
+    console.log(singleCusCall);
   };
 
   //setTimeout Alert
@@ -973,7 +978,10 @@ const BetPage = () => {
   };
   console.log(lager);
   const setBreak = () => {
-    console.log(demoLager);
+    const avg = (Number(demoLager.totalAmount) / Number(lagerBreak)).toString();
+    console.log(avg);
+    setDemolager({ ...demoLager, originalBreak: lagerBreak, average: avg });
+
     console.log(lagerBreak);
     const extraArray = [];
     demoLager.map((demol, key) => {
@@ -1187,7 +1195,11 @@ const BetPage = () => {
             color={"success"}
             onClick={() => {
               setLagerOpen(true);
-              setDemolager(lager.in.numbers);
+              setDemolager({
+                ...demoLager,
+                totalAmount: lager.in.totalAmount,
+                numbers: lager.in.numbers,
+              });
             }}
           >
             <Typography
@@ -1550,29 +1562,33 @@ const BetPage = () => {
       </Stack>
 
       <Dialog fullScreen open={lagerOpen}>
-        <Stack alignItems={"end"}>
-          <IconButton onClick={() => setLagerOpen(false)}>
-            <Close />
-          </IconButton>
-        </Stack>
-        <Stack maxWidth={"100%"} padding={1}>
-          <Stack direction={"row"} padding={1}>
-            <TextField
-              value={lagerBreak}
-              label={"Break Amount"}
-              size={"small"}
-              onChange={(e) => setLagerBreak(e.target.value)}
-            />
-            <Button
-              size="small"
-              variant={"contained"}
-              color={"success"}
-              onClick={setBreak}
-            >
-              Set
-            </Button>
+        <Stack direction={"column"}>
+          <Stack direction={"row"} justifyContent={"space-between"}>
+            <Stack direction={"row"} padding={1}>
+              <TextField
+                value={lagerBreak}
+                label={"Break %"}
+                size={"small"}
+                onChange={(e) => setLagerBreak(e.target.value)}
+              />
+              <Button
+                size="small"
+                variant={"contained"}
+                color={"success"}
+                onClick={setBreak}
+              >
+                Set
+              </Button>
+            </Stack>
+            <Stack>
+              <IconButton onClick={() => setLagerOpen(false)}>
+                <Close />
+              </IconButton>
+            </Stack>
           </Stack>
-          <LagerTable lid={lotteryId} />
+          <Stack overflow={"scroll"}>
+            <LagerTable lid={lotteryId} demo={demoLager} hot={hot_tees} />
+          </Stack>
         </Stack>
       </Dialog>
     </Stack>
