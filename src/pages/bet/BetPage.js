@@ -280,14 +280,6 @@ const BetPage = () => {
 
     setCusval(value);
     setInOutCtl(true);
-<<<<<<< HEAD
-    const view = outCalls.find((out) => out.customer === value);
-    // console.log(name);
-    setCusval({ cusname: "", id: value });
-    setSingleCusCall({ Lagnumbers: view.numbers, Total: view.totalAmount });
-    console.log(singleCusCall);
-=======
->>>>>>> f500f9a4627d0dd48e3c5375447ad9db10d45078
   };
 
   //setTimeout Alert
