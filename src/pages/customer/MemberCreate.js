@@ -30,6 +30,9 @@ const MemberCreate = ({ userinfo }) => {
     divider: "",
     twoDz: "",
     commission: "",
+    lager_break:"",
+    hot_limit:"",
+    superhot_limit:"",
     accLimit: false,
     acc_limit_created: "",
   });
@@ -111,6 +114,9 @@ const MemberCreate = ({ userinfo }) => {
           divider: "",
           twoDz: "",
           commission: "",
+          lager_break:"",
+          hot_limit:"",
+          superhot_limit:"",
           accLimit: false,
           acc_limit_created: "",
         });

@@ -12,9 +12,11 @@ import {
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { green, grey, teal } from "@mui/material/colors";
 import { Box } from "@mui/system";
+import {LoadingButton} from '@mui/lab'
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
@@ -27,6 +29,7 @@ const MemberDetail = () => {
   const [open, setOpen] = useState(false);
   const [openCommission, setOpenCommission] = useState(false);
   const [openAccLimit, setOpenAccLimit] = useState(false);
+  const [openHotLimit, setOpenHotLimit] = useState(false);
   const [updateInfo, setUpdateInfo] = useState({});
 
   const [controlEff, setControlEff] = useState(false);
@@ -71,7 +74,13 @@ const MemberDetail = () => {
     setUpdateInfo({ commission: commission });
   };
 
-  const saveInfoUpdate = () => {
+  const editHotLimit = (e, hot_limit, superhot_limit) => {
+    e.preventDefault();
+    setOpenHotLimit(true);
+    setUpdateInfo({ hot_limit: hot_limit, superhot_limit: superhot_limit });
+  };
+
+  const saveUpdate = () => {
     console.log(updateInfo);
     Axios.put(`/masters/${user._id}`, updateInfo, {
       headers: {
@@ -82,36 +91,8 @@ const MemberDetail = () => {
       setControlEff(true);
       setOpen(false);
       setOpenAccLimit(false);
-      setUpdateInfo({});
-    });
-  };
-
-  const saveCommissionUpdate = () => {
-    console.log(updateInfo);
-    Axios.put(`/masters/${user._id}`, updateInfo, {
-      headers: {
-        authorization: `Bearer ` + localStorage.getItem("access-token"),
-      },
-    }).then((res) => {
-      console.log(res.data);
-      setControlEff(true);
-      setOpen(false);
       setOpenCommission(false);
-      setUpdateInfo({});
-    });
-  };
-
-  const saveAccLimitUpdate = () => {
-    console.log(updateInfo);
-    Axios.put(`/masters/${user._id}`, updateInfo, {
-      headers: {
-        authorization: `Bearer ` + localStorage.getItem("access-token"),
-      },
-    }).then((res) => {
-      console.log(res.data);
-      setControlEff(true);
-      setOpen(false);
-      setOpenAccLimit(false);
+      setOpenHotLimit(false);
       setUpdateInfo({});
     });
   };
@@ -123,8 +104,10 @@ const MemberDetail = () => {
         spacing={1}
         direction="column"
         alignItems={"center"}
-        paddingTop={1}
-        // bgcolor={teal[100]}
+        padding={1}
+        bgcolor={teal[100]}
+        // height='500px'
+        overflow='scroll'
       >
         <Stack
           direction={"column"}
@@ -153,16 +136,16 @@ const MemberDetail = () => {
             </IconButton>
           </Stack>
           <Stack
-            direction={"row"}
+            direction={"column"}
             spacing={3}
             // justifyContent="space-around"
             borderRadius={1}
-            bgcolor={"white"}
             padding={1}
             width={{ xs: "90%", sm: "90%", md: "75%", xl: "50%" }}
             margin={"auto"}
           >
-            <Stack>
+          
+            <Stack padding={1} bgcolor="white">
               <Typography>Username - {user.username}</Typography>
               <Typography>Name - {user.name}</Typography>
               <Typography>Phone - {user.phone}</Typography>
@@ -170,14 +153,18 @@ const MemberDetail = () => {
               <Typography>Role - {user.role}</Typography>
               <Typography>Divider - {user.divider}</Typography>
             </Stack>
-            {/* <Stack>
-              <Typography color={'#33eb91'} fontSize={16}>{user.username}</Typography>
-              <Typography color={'#33eb91'} fontSize={16}>{user.name}</Typography>
-              <Typography color={'#33eb91'} fontSize={16}>{user.phone}</Typography>
-              <Typography color={'#33eb91'} fontSize={16}>{user.twoDZ}</Typography>
-              <Typography color={'#33eb91'} fontSize={16}>{user.role}</Typography>
-              <Typography color={'#33eb91'} fontSize={16}>{user.divider}</Typography>
-            </Stack> */}
+            <Stack direction={useMediaQuery('(max-width:450px)')?'column':'row'} spacing={1}>
+              <Button size="small" variant="contained"  color={'info'}  fullWidth={useMediaQuery('(max-width:450px)')?true:false}>
+                <Typography textTransform={"none"} fontSize={12} >
+                  Reset Password
+                </Typography>
+              </Button>
+              <Button size="small" variant="contained" color='error' fullWidth={useMediaQuery('(max-width:450px)')?true:false}>
+                <Typography textTransform={"none"} fontSize={12}>
+                  Suspend
+                </Typography>
+              </Button>
+            </Stack>
           </Stack>
           <ModalBox open={open} setOpen={setOpen}>
             <Stack
@@ -259,7 +246,10 @@ const MemberDetail = () => {
               padding={1}
               spacing={1}
             >
-              <Button
+              {/* <LoadingButton></LoadingButton> */}
+              <LoadingButton
+              loadingPosition="start"
+              loading={false}
                 size="small"
                 color={"error"}
                 variant="contained"
@@ -271,17 +261,19 @@ const MemberDetail = () => {
                 <Typography textTransform={"none"} fontSize={12}>
                   Cancel
                 </Typography>
-              </Button>
-              <Button
+              </LoadingButton>
+              <LoadingButton
+              loading={false}
+              loadingPosition='start'
                 size="small"
                 color={"success"}
                 variant="contained"
-                onClick={saveInfoUpdate}
+                onClick={saveUpdate}
               >
                 <Typography textTransform={"none"} fontSize={12}>
                   Save
                 </Typography>
-              </Button>
+              </LoadingButton>
             </Stack>
           </ModalBox>
         </Stack>
@@ -395,7 +387,7 @@ const MemberDetail = () => {
                 size="small"
                 color={"success"}
                 variant="contained"
-                onClick={saveCommissionUpdate}
+                onClick={saveUpdate}
               >
                 <Typography textTransform={"none"} fontSize={12}>
                   Save
@@ -515,7 +507,139 @@ const MemberDetail = () => {
                 size="small"
                 color={"success"}
                 variant="contained"
-                onClick={saveAccLimitUpdate}
+                onClick={saveUpdate}
+              >
+                <Typography textTransform={"none"} fontSize={12}>
+                  Save
+                </Typography>
+              </Button>
+            </Stack>
+          </ModalBox>
+        </Stack>
+
+        <Stack
+          direction={"column"}
+          width={{ xs: "90%", sm: "90%", md: "75%", xl: "50%" }}
+          margin={"auto"}
+          padding={1}
+          // border={0.1}
+          boxShadow={1}
+          bgcolor={grey[100]}
+        >
+          <Stack
+            direction={"row"}
+            justifyContent="space-between"
+            width={"100%"}
+            //  bgcolor ={teal[300]}
+          >
+            <Typography paddingLeft={1} fontWeight={"bold"}>
+              Hot Limitation
+            </Typography>{" "}
+            <IconButton
+              size="small"
+              // color="success"
+              onClick={(e) =>
+                editHotLimit(e, user.hot_limit, user.superhot_limit)
+              }
+            >
+              <EditOutlined />
+            </IconButton>
+          </Stack>
+          <Stack
+            direction={"row"}
+            spacing={3}
+            // justifyContent="space-around"
+            borderRadius={1}
+            bgcolor={"white"}
+            padding={1}
+            width={{ xs: "90%", sm: "90%", md: "75%", xl: "50%" }}
+            margin={"auto"}
+          >
+            <Stack>
+              <Typography>hot numbers :</Typography>
+              <Typography>super hot numbers :</Typography>
+            </Stack>
+            <Stack>
+              <Typography fontWeight={"bold"} color={"error"}>
+                {user.hot_limit ? user.hot_limit : 0}
+              </Typography>
+              <Typography fontWeight={"bold"} color="error">
+                {user.superhot_limit ? user.superhot_limit : 0}
+              </Typography>
+            </Stack>
+          </Stack>
+          <ModalBox open={openHotLimit} setOpen={setOpenHotLimit}>
+            <Stack
+              direction={"row"}
+              justifyContent="space-between"
+              borderBottom={0.1}
+              width={"100%"}
+              borderColor={grey[300]}
+              // padding={1}
+            >
+              <Typography variant={"h6"} paddingLeft={1} fontWeight={"bold"}>
+                Update Hot Limit
+              </Typography>{" "}
+              <IconButton
+                size="small"
+                color="error"
+                onClick={() => {
+                  setOpenHotLimit(false);
+                }}
+              >
+                <Cancel />
+              </IconButton>
+            </Stack>
+            <Stack
+              padding={1}
+              paddingY={3}
+              spacing={1}
+              borderBottom={0.1}
+              borderColor={grey[300]}
+            >
+              <TextField
+                size="small"
+                color="secondary"
+                label="hot limit"
+                name="hot_limit"
+                value={updateInfo.hot_limit}
+                onChange={onChangeHandler}
+              />
+              <TextField
+                size="small"
+                color="secondary"
+                label="super hot limit"
+                name="superhot_limit"
+                value={
+                  updateInfo.superhot_limit
+                }
+                onChange={onChangeHandler}
+              />
+            </Stack>
+            <Stack
+              direction={"row"}
+              justifyContent="flex-end"
+              padding={1}
+              spacing={1}
+            >
+              <Button
+                size="small"
+                color={"error"}
+                variant="contained"
+                onClick={() => {
+                  setOpenHotLimit(false);
+                  setUpdateInfo({});
+                }}
+              >
+                <Typography textTransform={"none"} fontSize={12}>
+                  Cancel
+                </Typography>
+              </Button>
+              <Button
+                size="small"
+                color={"success"}
+                variant="contained"
+                onClick={saveUpdate}
               >
                 <Typography textTransform={"none"} fontSize={12}>
                   Save

@@ -73,6 +73,7 @@ import {
   forwardPate,
 } from "./Betsign";
 import LagerTable from "../../components/LagerTable";
+import { calculateHotTee } from "./BetPage.method";
 
 const BetPage = () => {
   // For input refs
@@ -100,7 +101,7 @@ const BetPage = () => {
   const [mastercalls, setMastercalls] = useState([]);
   const [masterOutCalls, setMasterOutCall] = useState([]);
 
-  const [lager, setLager] = useState();
+  const [lager, setLager] = useState({});
   const [call, setCall] = useState({
     master: "",
     numbers: [],
@@ -115,8 +116,9 @@ const BetPage = () => {
   const { lotteryId } = useParams();
   const location = useLocation();
   const { hot_tees } = location.state;
-
-  console.log(hot_tees);
+  const hot = hot_tees.split("/");
+  const [hotNumbers,setHotNumbers]=useState();
+  // console.log(hot);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
 
@@ -131,7 +133,7 @@ const BetPage = () => {
     number: "",
     amount: "",
   });
-  // console.log(agents);
+
   //lager open
   const [lagerOpen, setLagerOpen] = useState(false);
 
@@ -159,9 +161,9 @@ const BetPage = () => {
     Lagnumbers: "",
     Total: [],
   });
+
   useEffect(() => {
-    // console.log(hot_tees);
-    console.log(lotteryId);
+
     if (in_out === "In") {
       Axios.get(`/masters`, {
         headers: {
@@ -170,10 +172,6 @@ const BetPage = () => {
       })
 
         .then((res) => {
-          // console.log(res.data);
-
-          // console.log(masters);
-
           if (masters) {
             const masters = res.data.data;
             setMasters([...masters]);
@@ -189,51 +187,51 @@ const BetPage = () => {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
-        console.log(res.data);
         setCustomers(res.data);
       });
-      console.log(customers);
     }
 
+   
+  }, [calllistctrl]);
+
+  useEffect(() => {
     Axios.get(`/lagers/${lotteryId}`, {
       headers: {
         authorization: "Bearer " + localStorage.getItem("access-token"),
       },
     })
       .then((res) => {
-        console.log(res.data.data);
-        setLager(res.data.data);
+        const lager = res.data.data;
+        if(lager){
+          setLager(lager);
+          
+           setHotNumbers( calculateHotTee(JSON.parse(localStorage.getItem('user-info')),hot_tees,lager.in.numbers,lager.in.totalAmount))
+          
+        }
         // setCallList(res.data.data.in.read);
         // setSuccess(false);
+
       })
       .catch((err) => console.log(err));
-  }, [calllistctrl]);
-
-  useEffect(() => {
-    console.log("HELLO");
-    console.log(in_out);
-
+   
     if (in_out === "In") {
       Axios.get(`/call/${lotteryId}`, {
         headers: {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
-        console.log(res.data.data);
         setMastercalls(res.data.data);
         setInOutCtl(false);
         setCalllistctrl(false);
         setAutoCompleteCtrl(true);
       });
       if (call.master) {
-        console.log(call.master);
         Axios.get(`/call/${lotteryId}/call-numbers-total/${call.master}`, {
           headers: {
             authorization: `Bearer ` + localStorage.getItem("access-token"),
           },
         }).then((res) => {
           console.log(res.data);
-
           setMasterTotalData({
             Data: res.data.numsData,
             Total: res.data.numsTotal,
@@ -244,13 +242,11 @@ const BetPage = () => {
       // setAutoCompleteCtrl(false);
     }
     if (in_out === "Out") {
-      console.log(in_out);
       Axios.get(`/outcall/${lotteryId}`, {
         headers: {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
-        console.log(res.data);
         setOutCalls(res.data.data);
 
         setInOutCtl(false);
@@ -276,19 +272,22 @@ const BetPage = () => {
     // setCalllistctrl(false);
   }, [inOutCtl, calllistctrl]);
 
+  console.log(hotNumbers)
+
   // out Customer select
   const OnSelect = (e) => {
-    console.log(e);
     const { value } = e.target;
 
-    console.log(outCalls);
     setCusval(value);
     setInOutCtl(true);
+<<<<<<< HEAD
     const view = outCalls.find((out) => out.customer === value);
     // console.log(name);
     setCusval({ cusname: "", id: value });
     setSingleCusCall({ Lagnumbers: view.numbers, Total: view.totalAmount });
     console.log(singleCusCall);
+=======
+>>>>>>> f500f9a4627d0dd48e3c5375447ad9db10d45078
   };
 
   //setTimeout Alert
@@ -298,32 +297,6 @@ const BetPage = () => {
     }, 3000);
     return () => clearTimeout(timer);
   }, [beterrorcontrol]);
-  const SignArr = [
-    "0",
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "+",
-    "/",
-    "-",
-    "*",
-    "S",
-    "M",
-    "m",
-    "s",
-    "k",
-    "K",
-    "P",
-    "p",
-    "B",
-    "b",
-  ];
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -338,14 +311,12 @@ const BetPage = () => {
 
   const choice = (e) => {
     e.preventDefault();
-    if (onchange.number.includes(hot_tees)) {
-      console.log(onchange.number);
-    }
+
     if (onchange.number.length === 1 && onchange.amount.length > 2) {
       if (onchange.number[0] === "k" || onchange.number[0] === "K") {
         const R = k(onchange);
         setCall({ ...call, numbers: [...call.numbers, ...R] });
-        console.log(call);
+
         setOnchange({ number: "", amount: onchange.amount });
         setAutoCompleteCtrl(false);
       } else if (onchange.number[0] === "p" || onchange.number[0] === "P") {
@@ -481,7 +452,7 @@ const BetPage = () => {
           onchange.amount.length > 2
         ) {
           const BR = Breaks(onchange);
-          console.log(BR);
+
           setCall({ ...call, numbers: [...call.numbers, ...BR] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
@@ -856,9 +827,6 @@ const BetPage = () => {
   };
 
   const handleFiles = (e) => {
-    // console.log(file.base64);
-    // console.log(file.fileList);
-
     const reader = new FileReader();
     reader.onload = (e) => {
       const ReadData = [];
@@ -884,27 +852,21 @@ const BetPage = () => {
     reader.readAsText(e.target.files[0]);
   };
 
-  console.log(call);
-
   const bet = (e, in_out) => {
     e.preventDefault();
-    console.log(call);
+
     if (call.numbers.length === 0 && loading === false && in_out === "Out") {
       setBeterrorcontrol(true);
-      console.log(in_out);
-
       return;
     }
-    if (in_out === "In") {
-      console.log(in_out);
 
+    if (in_out === "In") {
       Axios.post(`/call/${lotteryId}`, call, {
         headers: {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       })
         .then((res) => {
-          console.log(res.data);
           setCall({
             master: "",
             numbers: [],
@@ -926,39 +888,32 @@ const BetPage = () => {
         .catch((err) => console.log(err));
     }
   };
-  // console.log(la);
+
   //crud delete
   const mscallcrud = (cal, key) => {
     const afterDelete = call.numbers.filter((arr, key1) => key1 !== key);
-    console.log(afterDelete);
     setCall({ ...call, numbers: afterDelete });
     // setAutoCompleteCtrl(false);
-    console.log(call);
   };
-  const mastercallDelete = (key, calcrud) => {
-    console.log(calcrud);
-    // const enumbers = [...calcrud];
 
-    // console.log(index);
-  };
   const editHandle = (cal, key) => {
-    console.log(key);
+    // console.log(key);
     setEditCtlBtn(true);
     setOnchange({
       number: cal.number,
       amount: cal.amount,
     });
   };
-  // console.log(callcrud);
+
   //editReading
   const updateCall = () => {
-    console.log(onchange);
-    console.log(mastercallcrud);
+    // console.log(onchange);
+    // console.log(mastercallcrud);
     const numbers = [...mastercallcrud.numbers];
     const index = numbers.findIndex((obj) => obj.number == onchange.number);
-    console.log(numbers[index]);
+
     numbers[index] = onchange;
-    console.log(numbers);
+
     setMasterCallCrud({ ...mastercallcrud, numbers: numbers });
     Axios.put(
       `/call/${lotteryId}/${mastercallcrud.id}`,
@@ -971,18 +926,20 @@ const BetPage = () => {
         },
       }
     ).then((res) => {
-      console.log(res.data.data);
       setMasterCallCrud({ id: "", numbers: [] });
       setEditCtlBtn(false);
     });
   };
-  console.log(lager);
+
   const setBreak = () => {
+<<<<<<< HEAD
     const avg = (Number(demoLager.totalAmount) / Number(lagerBreak)).toString();
     console.log(avg);
     setDemolager({ ...demoLager, originalBreak: lagerBreak, average: avg });
 
     console.log(lagerBreak);
+=======
+>>>>>>> f500f9a4627d0dd48e3c5375447ad9db10d45078
     const extraArray = [];
     demoLager.map((demol, key) => {
       if (Number(demol.amount) > Number(lagerBreak)) {
@@ -995,7 +952,6 @@ const BetPage = () => {
       }
       // console.log(array);
     });
-    console.log(extraArray);
     setCallDemo(extraArray);
     // setDemolager(callDemo);
     setLagerOpen(false);
@@ -1004,17 +960,14 @@ const BetPage = () => {
   //CallOutLager
   const changeInOut = (e) => {
     setSelectChoice(e.target.value);
-    console.log(selectChoice);
   };
-
-  console.log(masterTotalData.numsData);
 
   // get autocomplete option function
   const getAutoChoCus = (cus) => {
     return cus.username;
   };
 
-  console.log(cusval);
+  // console.log(cusval);
 
   return (
     <Stack height={"100%"} bgcolor={"white"}>
@@ -1327,24 +1280,51 @@ const BetPage = () => {
         <Stack
           // display={{ md: "none" }}
           bgcolor={grey[300]}
-          // spacing={3}
-          flexDirection={{ xs: "column", sm: "column", md: "row" }}
+          spacing={1}
+          flexDirection={"column"}
           flexWrap={"wrap"}
+          padding={1}
+          overflow="scroll"
           justifyContent={{ xs: "start", sm: "start", md: "start" }}
-          width={{ xs: 30, sm: "20%", md: "25%" }}
+          width={{ xs: '20%', sm: "20%", md: "25%" }}
         >
-          {hot_tees &&
-            hot_tees.map((hot, key) => {
-              console.log(hot);
+          {hotNumbers &&
+            hotNumbers.map((h, key) => {
+              console.log(h);
               return (
-                <Typography
-                  color={"red"}
-                  fontSize={18}
-                  fontWeight={600}
-                  textAlign={"center"}
+                <Stack
+                  width={"100%"}
+                  flexDirection={"row"}
+                  flexWrap="wrap"
+                  alignItems={"center"}
+                  borderRadius={1}
+                  bgcolor={green[300]}
+                  paddingLeft={0.5}
                 >
-                  {hot.number}
-                </Typography>
+                  <Typography
+                    color={"red"}
+                    fontSize={14}
+                    align="center"
+                    // bgcolor={'green'}
+                    fontWeight={600}
+                    // width="100%"
+                    textAlign={"center"}
+                    alignItems="center"
+                    // display='flex'
+                  >
+                    {h.number}&nbsp;
+                  </Typography>
+                  <Typography
+                    // width="100%"
+                    textAlign={"center"}
+                    alignItems="center"
+                    fontSize={10}
+                    fontWeight={'bold'}
+                    color={h.amount==0?'red':'blue'}
+                  >
+                    {h.amount!=0?'+':'-'}{h.amount}
+                  </Typography>
+                </Stack>
               );
             })}
         </Stack>
@@ -1414,9 +1394,6 @@ const BetPage = () => {
                     ms.master._id.toString() == call.master.toString()
                 )
                 .map((cal, key) => {
-                  // console.log(key);
-                  // console.log(cal);
-
                   return (
                     <Stack
                       bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
@@ -1426,7 +1403,6 @@ const BetPage = () => {
                       // component={"button"}
                       sx={{ cursor: "pointer" }}
                       onClick={() => {
-                        console.log("Hello");
                         setMasterCallCrud({
                           id: cal._id,
                           numbers: cal.numbers,
