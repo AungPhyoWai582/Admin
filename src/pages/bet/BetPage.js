@@ -117,7 +117,7 @@ const BetPage = () => {
   const location = useLocation();
   const { hot_tees } = location.state;
   const hot = hot_tees.split("/");
-  const [hotNumbers,setHotNumbers]=useState();
+  const [hotNumbers, setHotNumbers] = useState();
   // console.log(hot);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -158,7 +158,6 @@ const BetPage = () => {
   });
 
   useEffect(() => {
-
     if (in_out === "In") {
       Axios.get(`/masters`, {
         headers: {
@@ -171,7 +170,7 @@ const BetPage = () => {
             const masters = res.data.data;
             setMasters([...masters]);
             setAutoCompleteValue(masters[0]);
-            // setCalllistctrl(false);
+            setCalllistctrl(false);
           }
         })
         .catch((err) => console.log(err));
@@ -186,8 +185,8 @@ const BetPage = () => {
       });
     }
 
-   
-  }, [calllistctrl]);
+    // setHotNumbers( calculateHotTee(JSON.parse(localStorage.getItem('user-info')),hot_tees,lager.in.numbers,lager.in.totalAmount))
+  }, [inOutCtl]);
 
   useEffect(() => {
     Axios.get(`/lagers/${lotteryId}`, {
@@ -197,18 +196,14 @@ const BetPage = () => {
     })
       .then((res) => {
         const lager = res.data.data;
-        if(lager){
+        if (lager) {
           setLager(lager);
-          
-           setHotNumbers( calculateHotTee(JSON.parse(localStorage.getItem('user-info')),hot_tees,lager.in.numbers,lager.in.totalAmount))
-          
         }
         // setCallList(res.data.data.in.read);
         // setSuccess(false);
-
       })
       .catch((err) => console.log(err));
-   
+
     if (in_out === "In") {
       Axios.get(`/call/${lotteryId}`, {
         headers: {
@@ -216,24 +211,32 @@ const BetPage = () => {
         },
       }).then((res) => {
         setMastercalls(res.data.data);
-        setInOutCtl(false);
-        setCalllistctrl(false);
-        setAutoCompleteCtrl(true);
       });
-      if (call.master) {
-        Axios.get(`/call/${lotteryId}/call-numbers-total/${call.master}`, {
+
+      Axios.get(
+        `/call/${lotteryId}/call-numbers-total/${autoCompleteValue._id}`,
+        {
           headers: {
             authorization: `Bearer ` + localStorage.getItem("access-token"),
           },
-        }).then((res) => {
-          console.log(res.data);
-          setMasterTotalData({
-            Data: res.data.numsData,
-            Total: res.data.numsTotal,
-          });
-        });
-      }
+        }
+      ).then((res) => {
+        console.log(res.data);
 
+        setMasterTotalData({
+          Data: res.data.numsData,
+          Total: res.data.numsTotal,
+        });
+      });
+      console.log(autoCompleteValue);
+      // setHotNumbers(
+      //   calculateHotTee(
+      //     autoCompleteValue,
+      //     hot_tees,
+      //     masterTotalData.Data,
+      //     masterTotalData.Total
+      //   )
+      // );
       // setAutoCompleteCtrl(false);
     }
     if (in_out === "Out") {
@@ -263,11 +266,13 @@ const BetPage = () => {
       //    });
       //  }
     }
-
+    // setInOutCtl(false);
+    setCalllistctrl(false);
+    setAutoCompleteCtrl(false);
     // setCalllistctrl(false);
-  }, [inOutCtl, calllistctrl]);
+  }, [calllistctrl, autocompleteCtrl]);
 
-  console.log(hotNumbers)
+  console.log(masterTotalData);
 
   // out Customer select
   const OnSelect = (e) => {
@@ -298,27 +303,208 @@ const BetPage = () => {
 
   const choice = (e) => {
     e.preventDefault();
+    // const hotRemain = calculateHotTee(onchange,hot,autoCompleteValue,masterTotalData);
 
     if (onchange.number.length === 1 && onchange.amount.length > 2) {
       if (onchange.number[0] === "k" || onchange.number[0] === "K") {
         const R = k(onchange);
-        setCall({ ...call, numbers: [...call.numbers, ...R] });
+        let checkHot;
+        R.map((a) => {
+          if (hot.includes(a.number)) {
+            if (
+              !masterTotalData.Data.includes(a.number) &&
+              !(
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                onchange.amount
+              )
+            ) {
+              alert(
+                `remain hot amount : ${
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                }`
+              );
+              checkHot = true;
+            } else if (
+              masterTotalData.Data.includes(a.number) &&
+              !(
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                onchange.amount
+              )
+            ) {
+              alert(
+                `remain hot amount : ${
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number == a.number
+                    )
+                  ].amount
+                }`
+              );
+              checkHot = true;
+            }
+          }
+        });
+
+        setCall({
+          ...call,
+          numbers: [
+            ...call.numbers,
+            ...(checkHot ? R.filter((a) => !hot.includes(a.number)) : R),
+          ],
+        });
+        // setCall({ ...call, numbers: [...call.numbers, ...R] });
 
         setOnchange({ number: "", amount: onchange.amount });
         setAutoCompleteCtrl(false);
       } else if (onchange.number[0] === "p" || onchange.number[0] === "P") {
         const P = p(onchange);
-        setCall({ ...call, numbers: [...call.numbers, ...P] });
+        let checkHot;
+        P.map((a) => {
+          if (hot.includes(a.number)) {
+            if (
+              !masterTotalData.Data.includes(a.number) &&
+              !(
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                onchange.amount
+              )
+            ) {
+              alert(
+                `remain hot  amount : ${
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                }`
+              );
+              checkHot = true;
+            } else if (
+              masterTotalData.Data.includes(a.number) &&
+              !(
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                onchange.amount
+              )
+            ) {
+              alert(
+                `remain hot amount : ${
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number == a.number
+                    )
+                  ].amount
+                }`
+              );
+              checkHot = true;
+            }
+          }
+        });
+
+        setCall({
+          ...call,
+          numbers: [
+            ...call.numbers,
+            ...(checkHot ? P.filter((a) => !hot.includes(a.number)) : P),
+          ],
+        });
+        // setCall({ ...call, numbers: [...call.numbers, ...P] });
         setOnchange({ number: "", amount: onchange.amount });
         setAutoCompleteCtrl(false);
       } else if (onchange.number[0] === "b" || onchange.number[0] === "B") {
         const B = b(onchange);
-        setCall({ ...call, numbers: [...call.numbers, ...B] });
+        let checkHot;
+        B.map((a) => {
+          if (hot.includes(a.number)) {
+            if (
+              !masterTotalData.Data.includes(a.number) &&
+              !(
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                onchange.amount
+              )
+            ) {
+              alert(
+                `remain hot amount : ${
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                }`
+              );
+              checkHot = true;
+            } else if (
+              masterTotalData.Data.includes(a.number) &&
+              !(
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                onchange.amount
+              )
+            ) {
+              alert(
+                `remain hot amount : ${
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number == a.number
+                    )
+                  ].amount
+                }`
+              );
+              checkHot = true;
+            }
+          }
+        });
+
+        setCall({
+          ...call,
+          numbers: [
+            ...call.numbers,
+            ...(checkHot ? B.filter((a) => !hot.includes(a.number)) : B),
+          ],
+        });
+        // setCall({ ...call, numbers: [...call.numbers, ...B] });
         setOnchange({ number: "", amount: onchange.amount });
         setAutoCompleteCtrl(false);
       } else if (onchange.number[0] === "b" || onchange.number[0] === "B") {
         const B = b(onchange);
-        setCall({ ...call, numbers: [...call.numbers, ...B] });
+        let checkHot;
+        B.map((a) => {
+          if (hot.includes(a.number)) {
+            if (
+              !masterTotalData.Data.includes(a.number) &&
+              !(
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                onchange.amount
+              )
+            ) {
+              alert(
+                `remain hot amount : ${
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                }`
+              );
+              checkHot = true;
+            } else if (
+              masterTotalData.Data.includes(a.number) &&
+              !(
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                onchange.amount
+              )
+            ) {
+              alert(
+                `remain hot amount : ${
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number == a.number
+                    )
+                  ].amount
+                }`
+              );
+              checkHot = true;
+            }
+          }
+        });
+
+        setCall({
+          ...call,
+          numbers: [
+            ...call.numbers,
+            ...(checkHot ? B.filter((a) => !hot.includes(a.number)) : B),
+          ],
+        });
+        // setCall({ ...call, numbers: [...call.numbers, ...B] });
         setOnchange({ number: "", amount: onchange.amount });
         setAutoCompleteCtrl(false);
       } else {
@@ -328,7 +514,52 @@ const BetPage = () => {
       if (onchange.number.startsWith("*")) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const apu = startStar(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...apu] });
+          let checkHot;
+          apu.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? apu.filter((a) => !hot.includes(a.number)) : apu),
+            ],
+          });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else if (
@@ -345,7 +576,54 @@ const BetPage = () => {
           onchange.amount.length > 2
         ) {
           const FPate = forwardPate(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...FPate] });
+          let checkHot;
+          FPate.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot
+                ? FPate.filter((a) => !hot.includes(a.number))
+                : FPate),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...FPate] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else {
@@ -357,7 +635,52 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const SPU = spu(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...SPU] });
+          let checkHot;
+          SPU.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? SPU.filter((a) => !hot.includes(a.number)) : SPU),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...SPU] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else if (
@@ -365,7 +688,52 @@ const BetPage = () => {
           onchange.amount.length > 2
         ) {
           const SS = ss(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...SS] });
+          let checkHot;
+          SS.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? SS.filter((a) => !hot.includes(a.number)) : SS),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...SS] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else if (
@@ -373,8 +741,54 @@ const BetPage = () => {
           onchange.amount.length > 2
         ) {
           const SM = sonema(onchange);
+          let checkHot;
+          SM.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? SM.filter((a) => !hot.includes(a.number)) : SM),
+            ],
+          });
           // console.log(MS);
-          setCall({ ...call, numbers: [...call.numbers, ...SM] });
+          // setCall({ ...call, numbers: [...call.numbers, ...SM] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else {
@@ -386,7 +800,53 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const MPU = mpu(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...MPU] });
+          let checkHot;
+          MPU.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? MPU.filter((a) => !hot.includes(a.number)) : MPU),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...MPU] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else if (
@@ -394,7 +854,52 @@ const BetPage = () => {
           onchange.amount.length > 2
         ) {
           const MS = masone(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...MS] });
+          let checkHot;
+          MS.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? MS.filter((a) => !hot.includes(a.number)) : MS),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...MS] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else if (
@@ -402,8 +907,53 @@ const BetPage = () => {
           onchange.amount.length > 2
         ) {
           const SM = sonema(onchange);
+          let checkHot;
+          SM.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? SM.filter((a) => !hot.includes(a.number)) : SM),
+            ],
+          });
           // console.log(MS);
-          setCall({ ...call, numbers: [...call.numbers, ...SM] });
+          // setCall({ ...call, numbers: [...call.numbers, ...SM] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else {
@@ -423,7 +973,55 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const BPate = backpate(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...BPate] });
+          let checkHot;
+          BPate.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot
+                ? BPate.filter((a) => !hot.includes(a.number))
+                : BPate),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...BPate] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else if (
@@ -431,7 +1029,53 @@ const BetPage = () => {
           onchange.amount.length > 2
         ) {
           const AP = aper(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...AP] });
+          let checkHot;
+          AP.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? AP.filter((a) => !hot.includes(a.number)) : AP),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...AP] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else if (
@@ -439,8 +1083,53 @@ const BetPage = () => {
           onchange.amount.length > 2
         ) {
           const BR = Breaks(onchange);
+          let checkHot;
+          BR.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
 
-          setCall({ ...call, numbers: [...call.numbers, ...BR] });
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? BR.filter((a) => !hot.includes(a.number)) : BR),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...BR] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else if (
@@ -455,6 +1144,46 @@ const BetPage = () => {
           onchange.number.endsWith("8") ||
           onchange.number.endsWith("9")
         ) {
+          // FPate.map((a) => {
+          // if(hot.includes(a.number)){
+
+          if (hot.includes(onchange.number)) {
+            if (
+              !masterTotalData.Data.includes(onchange.number) &&
+              !(
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                onchange.amount
+              )
+            ) {
+              alert(
+                `remain hot amount : ${
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                }`
+              );
+              // checkHot = true;
+              return;
+            } else if (
+              masterTotalData.Data.includes(onchange.number) &&
+              !(
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                onchange.amount
+              )
+            ) {
+              alert(
+                `remain hot amount : ${
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number == onchange.number
+                    )
+                  ].amount
+                }`
+              );
+              // checkHot = true;
+              return;
+            }
+          }
+
           setCall({
             ...call,
             numbers: [...call.numbers, onchange],
@@ -493,7 +1222,53 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("+")) {
           const R = r(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...R] });
+          let checkHot;
+          R.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? R.filter((a) => !hot.includes(a.number)) : R),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...R] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else if (
@@ -509,7 +1284,53 @@ const BetPage = () => {
           onchange.number.endsWith("0")
         ) {
           const PDT = padatha(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...PDT] });
+          let checkHot;
+          PDT.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else {
@@ -551,7 +1372,53 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const PDT = padatha(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...PDT] });
+          let checkHot;
+          PDT.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else if (
@@ -567,7 +1434,53 @@ const BetPage = () => {
           onchange.number.endsWith("0")
         ) {
           const PDT = padatha(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...PDT] });
+          let checkHot;
+          PDT.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else {
@@ -619,7 +1532,53 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const PDT = padatha(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...PDT] });
+          let checkHot;
+          PDT.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else if (
@@ -635,7 +1594,53 @@ const BetPage = () => {
           onchange.number.endsWith("0")
         ) {
           const PDT = padatha(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...PDT] });
+          let checkHot;
+          PDT.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else {
@@ -697,7 +1702,53 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const PDT = padatha(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...PDT] });
+          let checkHot;
+          PDT.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else if (
@@ -713,7 +1764,53 @@ const BetPage = () => {
           onchange.number.endsWith("0")
         ) {
           const PDT = padatha(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...PDT] });
+          let checkHot;
+          PDT.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else {
@@ -785,7 +1882,53 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const PDT = padatha(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...PDT] });
+          let checkHot;
+          PDT.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else if (
@@ -801,7 +1944,53 @@ const BetPage = () => {
           onchange.number.endsWith("0")
         ) {
           const PDT = padatha(onchange);
-          setCall({ ...call, numbers: [...call.numbers, ...PDT] });
+          let checkHot;
+          PDT.map((a) => {
+            if (hot.includes(a.number)) {
+              if (
+                !masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+                  }`
+                );
+                checkHot = true;
+              } else if (
+                masterTotalData.Data.includes(a.number) &&
+                !(
+                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
+                  onchange.amount
+                )
+              ) {
+                alert(
+                  `remain hot amount : ${
+                    masterTotalData.Total *
+                      (autoCompleteValue.hot_limit / 100) -
+                    masterTotalData[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number == a.number
+                      )
+                    ].amount
+                  }`
+                );
+                checkHot = true;
+              }
+            }
+          });
+
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+            ],
+          });
+          // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
           setOnchange({ number: "", amount: onchange.amount });
           setAutoCompleteCtrl(false);
         } else {
@@ -1153,6 +2342,7 @@ const BetPage = () => {
           name="number"
           autoFocus={true}
           value={onchange.number}
+          textColor={hot.includes(onchange.number) ? "red" : "blue"}
           onChange={onChangeHandler}
           inputRef={textFieldForNumber}
           style={{ position: "relative" }}
@@ -1261,47 +2451,118 @@ const BetPage = () => {
           padding={1}
           overflow="scroll"
           justifyContent={{ xs: "start", sm: "start", md: "start" }}
-          width={{ xs: '20%', sm: "20%", md: "25%" }}
+          width={{ xs: "20%", sm: "20%", md: "25%" }}
         >
-          {hotNumbers &&
-            hotNumbers.map((h, key) => {
-              console.log(h);
-              return (
-                <Stack
-                  width={"100%"}
-                  flexDirection={"row"}
-                  flexWrap="wrap"
-                  alignItems={"center"}
-                  borderRadius={1}
-                  bgcolor={green[300]}
-                  paddingLeft={0.5}
-                >
-                  <Typography
-                    color={"red"}
-                    fontSize={14}
-                    align="center"
-                    // bgcolor={'green'}
-                    fontWeight={600}
-                    // width="100%"
-                    textAlign={"center"}
-                    alignItems="center"
-                    // display='flex'
-                  >
-                    {h.number}&nbsp;
-                  </Typography>
-                  <Typography
+          <Stack
+            width={"100%"}
+            flexDirection={"row"}
+            flexWrap="wrap"
+            alignItems={"center"}
+            // borderRadius={1}
+            // bgcolor={green[300]}
+            // paddingLeft={0.5}
+          >
+            <Typography
+              color={"black"}
+              fontSize={13}
+              align="center"
+              fontWeight={600}
+              textAlign={"center"}
+              alignItems="center"
+            >
+              Hot Limit :
+            </Typography>
+            <Typography
+              // width="100%"
+              textAlign={"center"}
+              alignItems="center"
+              fontSize={12}
+              fontWeight={"bold"}
+              color={"blue"}
+            >
+              {(masterTotalData.Total * autoCompleteValue.hot_limit) / 100}
+            </Typography>
+          </Stack>
+          <Stack
+            width={"100%"}
+            flexDirection={"row"}
+            flexWrap="wrap"
+            alignItems={"center"}
+            // borderRadius={1}
+            // bgcolor={green[300]}
+            // paddingLeft={0.5}
+          >
+            <Typography
+              color={"black"}
+              fontSize={13}
+              align="center"
+              fontWeight={600}
+              textAlign={"center"}
+              alignItems="center"
+            >
+              Super Hot :
+            </Typography>
+            <Typography
+              // width="100%"
+              textAlign={"center"}
+              alignItems="center"
+              fontSize={12}
+              fontWeight={"bold"}
+              color={"blue"}
+            >
+              {(masterTotalData.Total * autoCompleteValue.superhot_limit) / 100}
+            </Typography>
+          </Stack>
+          <Stack
+            width={"100%"}
+            flexDirection={"row"}
+            flexWrap="wrap"
+            alignItems={"center"}
+            // borderRadius={1}
+            // bgcolor={green[300]}
+          >
+            {hot &&
+              hot.map((h, key) => {
+                console.log(h);
+                return (
+                  // <Stack
+                  //   width={"100%"}
+                  //   flexDirection={"row"}
+                  //   flexWrap="wrap"
+                  //   alignItems={"center"}
+                  //   borderRadius={1}
+                  //   bgcolor={green[300]}
+                  //   paddingLeft={0.5}
+                  // >
+                  <>
+                    <Typography
+                      color={"red"}
+                      fontSize={14}
+                      align="center"
+                      // bgcolor={'green'}
+                      fontWeight={600}
+                      // width="100%"
+                      textAlign={"center"}
+                      alignItems="center"
+                      // display='flex'
+                    >
+                      {h}&nbsp;
+                    </Typography>
+                    {/* <Typography
                     // width="100%"
                     textAlign={"center"}
                     alignItems="center"
                     fontSize={10}
-                    fontWeight={'bold'}
-                    color={h.amount==0?'red':'blue'}
+                    fontWeight={"bold"}
+                    color={h.amount == 0 ? "red" : 'blue'}
                   >
-                    {h.amount!=0?'+':'-'}{h.amount}
-                  </Typography>
-                </Stack>
-              );
-            })}
+                    +
+                    {h.amount}
+                  </Typography> */}
+                  </>
+                );
+              })}
+          </Stack>
         </Stack>
 
         <Stack

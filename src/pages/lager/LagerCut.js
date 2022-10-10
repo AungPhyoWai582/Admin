@@ -402,6 +402,7 @@ const LagerCut = () => {
                             >
                               <Typography width={20}>
                                 {num.toString().length === 1 ? "0" + num : num}
+                                {/* {num} */}
                                 {/* {viewLager.numbers
                                   .map((lag) => lag.number)
                                   .includes(col.toString() + row.toString())
@@ -428,10 +429,10 @@ const LagerCut = () => {
                               <Typography width={{ xs: 40, sm: 60, md: 80 }}>
                                 {viewLager.numbers
                                   .map((lag) => lag.number)
-                                  .includes(num.toString())
+                                  .includes(num.toString().length===1?"0"+num.toString():num.toString())
                                   ? viewLager.numbers[
                                       viewLager.numbers.findIndex(
-                                        (obj) => obj.number == num.toString()
+                                        (obj) => obj.number == num.toString().length===1?"0"+num.toString():num.toString()
                                       )
                                     ].amount.replace(
                                       /\B(?=(\d{3})+(?!\d))/g,
