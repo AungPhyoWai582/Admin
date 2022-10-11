@@ -141,6 +141,7 @@ const BetPage = () => {
   const [lagerBreak, setLagerBreak] = useState("0");
   const [demoLager, setDemolager] = useState({
     numbers: [],
+    extraNumb: [],
     totalAmount: 0,
     average: 0,
     originalBreak: 0,
@@ -889,7 +890,9 @@ const BetPage = () => {
     setCall({ ...call, numbers: afterDelete });
     // setAutoCompleteCtrl(false);
   };
-
+  const mastercallDelete = (e) => {
+    console.log(e);
+  };
   const editHandle = (cal, key) => {
     // console.log(key);
     setEditCtlBtn(true);
@@ -928,11 +931,10 @@ const BetPage = () => {
   const setBreak = () => {
     const avg = (Number(demoLager.totalAmount) / Number(lagerBreak)).toString();
     console.log(avg);
-    setDemolager({ ...demoLager, originalBreak: lagerBreak, average: avg });
 
     console.log(lagerBreak);
     const extraArray = [];
-    demoLager.map((demol, key) => {
+    demoLager.numbers.map((demol, key) => {
       if (Number(demol.amount) > Number(lagerBreak)) {
         // console.log(Number(demol.amount) - Number(lagerBreak));
         let obj = {
@@ -941,7 +943,13 @@ const BetPage = () => {
         };
         extraArray.push(obj);
       }
-      // console.log(array);
+      console.log(extraArray);
+      setDemolager({
+        ...demoLager,
+        originalBreak: lagerBreak,
+        average: avg,
+        extraNumb: extraArray,
+      });
     });
     setCallDemo(extraArray);
     // setDemolager(callDemo);
@@ -1453,17 +1461,10 @@ const BetPage = () => {
           // padding={1}
           // justifyContent={"space-between"}
         >
-          {/* <Stack justifyContent="normal" width={"100%"}>
-            <Stack width={"30%"}>
-              <Button variant="contained" size="small">
-                Delete
-              </Button>
-            </Stack>
-          </Stack> */}
-          {/* {agentcallcrud && agentcallcrud.length === null */}
-          {
-            !mastercallcrud.numbers.length &&
-              callDemo.map((calc, key) => {
+          {demoLager &&
+            mastercallcrud.id === "" &&
+            demoLager.extraNumb.map((calc, key) => {
+              return (
                 <Stack
                   borderLeft={0.5}
                   borderRight={0.5}
@@ -1471,31 +1472,30 @@ const BetPage = () => {
                   // direction={"row"}
                   justifyContent={"space-around"}
                 >
-                  <BetListCom call={calc} key={key} />;
-                </Stack>;
-              })
-            // : autocompleteCtrl === true &&
-            //   agentcallcrud.numbers.map((calcrud, key) => {
-            //     return (
-            //       <BetListCom call={calcrud}>
-            //         <Stack
-            //           direction={"row"}
-            //           onClick={() => editHandle(calcrud, key)}
-            //         >
-            //           <IconButton size="small">
-            //             <Edit fontSize="6" />
-            //           </IconButton>
-            //           <IconButton
-            //             size="small"
-            //             onClick={() => agentcallDelete(key, calcrud)}
-            //           >
-            //             <Delete fontSize="6" />
-            //           </IconButton>
-            //         </Stack>
-            //       </BetListCom>
-            //     );
-            //   })
-          }
+                  <BetListCom call={calc} key={key} />
+                </Stack>
+              );
+            })}
+          {mastercallcrud.numbers.map((calcrud, key) => {
+            return (
+              <BetListCom call={calcrud}>
+                <Stack direction={"row"}>
+                  <IconButton
+                    size="small"
+                    onClick={() => editHandle(calcrud, key)}
+                  >
+                    <Edit fontSize="6" />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    onClick={() => mastercallDelete(key, calcrud)}
+                  >
+                    <Delete fontSize="6" />
+                  </IconButton>
+                </Stack>
+              </BetListCom>
+            );
+          })}
         </Stack>
       </Stack>
       <Stack
@@ -1555,7 +1555,7 @@ const BetPage = () => {
             </Stack>
           </Stack>
           <Stack overflow={"scroll"}>
-            <LagerTable lid={lotteryId} demo={demoLager} hot={hot_tees} />
+            <LagerTable lid={lotteryId} demo={demoLager} hot={hot} />
           </Stack>
         </Stack>
       </Dialog>

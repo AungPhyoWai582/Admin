@@ -17,7 +17,7 @@ import React, { useState } from "react";
 //   })
 // );
 const LagerTable = ({ demo, hot }) => {
-  console.log(hot);
+  console.log(hot, demo);
 
   return (
     <Stack margin={1}>
@@ -36,7 +36,11 @@ const LagerTable = ({ demo, hot }) => {
           <Typography fontWeight={"bold"} color={red[500]} textAlign={"center"}>
             Count : {demo.numbers ? demo.numbers.length.toString() : 0}
           </Typography>
-          <Typography fontWeight={"bold"} color={red[500]} textAlign={"center"}>
+          <Typography
+            fontWeight={"bold"}
+            color={`${demo.average > 27 ? "black" : "red"}`}
+            textAlign={"center"}
+          >
             Average : {demo.average ? demo.average : "0"} %
           </Typography>
         </>
@@ -76,7 +80,14 @@ const LagerTable = ({ demo, hot }) => {
                           borderCollapse: "collapse",
                         }}
                       >
-                        <Typography width={20}>
+                        <Typography
+                          width={20}
+                          color={`${
+                            hot.map((h) => h).includes(num.toString())
+                              ? "red"
+                              : "black"
+                          }`}
+                        >
                           {num.toString().length === 1 ? "0" + num : num}
                           {/* {viewLager.numbers
                                   .map((lag) => lag.number)
@@ -104,8 +115,10 @@ const LagerTable = ({ demo, hot }) => {
                         <Typography
                           width={{ xs: 40, sm: 60, md: 80 }}
                           color={`${
-                            Number(demo.originalBreak) >
-                            Number(demo.numbers.map((d) => d.amount))
+                            demo.numbers.map(
+                              (d) =>
+                                Number(d.amount) >= Number(demo.originalBreak)
+                            )
                               ? "red"
                               : "black"
                           }`}
