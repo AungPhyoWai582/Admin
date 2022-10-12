@@ -140,6 +140,13 @@ const BetPage = () => {
   //Lager Break
   const [lagerBreak, setLagerBreak] = useState("0");
   const [demoLager, setDemolager] = useState({
+<<<<<<< HEAD
+=======
+    numbers: [],
+    extraNumb: [],
+    totalAmount: 0,
+    average: 0,
+>>>>>>> 2487d0e353506934432f04a088eef8d068dfa906
     originalBreak: 0,
     average: 0,
     totalAmount: 0,
@@ -2117,6 +2124,12 @@ const BetPage = () => {
 
   const setBreak = () => {
     const avg = (Number(demoLager.totalAmount) / Number(lagerBreak)).toString();
+<<<<<<< HEAD
+=======
+    console.log(avg);
+
+    console.log(lagerBreak);
+>>>>>>> 2487d0e353506934432f04a088eef8d068dfa906
     const extraArray = [];
     demoLager.numbers.map((demol, key) => {
       if (Number(demol.amount) > Number(lagerBreak)) {
@@ -2127,8 +2140,18 @@ const BetPage = () => {
         };
         extraArray.push(obj);
       }
+<<<<<<< HEAD
       // console.log(extraArray);
       
+=======
+      console.log(extraArray);
+      setDemolager({
+        ...demoLager,
+        originalBreak: lagerBreak,
+        average: avg,
+        extraNumb: extraArray,
+      });
+>>>>>>> 2487d0e353506934432f04a088eef8d068dfa906
     });
     setDemolager({
       ...demoLager,
@@ -2782,6 +2805,7 @@ const BetPage = () => {
       </Stack>
 
       <Dialog fullScreen open={lagerOpen}>
+<<<<<<< HEAD
         <Stack alignItems={"end"}>
           <IconButton onClick={() => setLagerOpen(false)}>
             <Close />
@@ -2803,6 +2827,34 @@ const BetPage = () => {
             >
               Set
             </Button>
+=======
+        <Stack direction={"column"}>
+          <Stack direction={"row"} justifyContent={"space-between"}>
+            <Stack direction={"row"} padding={1}>
+              <TextField
+                value={lagerBreak}
+                label={"Break %"}
+                size={"small"}
+                onChange={(e) => setLagerBreak(e.target.value)}
+              />
+              <Button
+                size="small"
+                variant={"contained"}
+                color={"success"}
+                onClick={setBreak}
+              >
+                Set
+              </Button>
+            </Stack>
+            <Stack>
+              <IconButton onClick={() => setLagerOpen(false)}>
+                <Close />
+              </IconButton>
+            </Stack>
+          </Stack>
+          <Stack overflow={"scroll"}>
+            <LagerTable lid={lotteryId} demo={demoLager} hot={hot} />
+>>>>>>> 2487d0e353506934432f04a088eef8d068dfa906
           </Stack>
           <LagerTable hot={hot} demo={demoLager}/>
         </Stack>
