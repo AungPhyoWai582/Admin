@@ -139,7 +139,13 @@ const BetPage = () => {
 
   //Lager Break
   const [lagerBreak, setLagerBreak] = useState("0");
-  const [demoLager, setDemolager] = useState();
+  const [demoLager, setDemolager] = useState({
+    originalBreak: 0,
+    average: 0,
+    totalAmount: 0,
+    extraNumb: [],
+    numbers: [],
+  });
   const [callDemo, setCallDemo] = useState([]);
   //calllist control state
   const [calllistctrl, setCalllistctrl] = useState(false);
@@ -2071,7 +2077,9 @@ const BetPage = () => {
     setCall({ ...call, numbers: afterDelete });
     // setAutoCompleteCtrl(false);
   };
-
+  const mastercallDelete = (e) => {
+    console.log(e);
+  };
   const editHandle = (cal, key) => {
     // console.log(key);
     setEditCtlBtn(true);
@@ -2108,8 +2116,9 @@ const BetPage = () => {
   };
 
   const setBreak = () => {
+    const avg = (Number(demoLager.totalAmount) / Number(lagerBreak)).toString();
     const extraArray = [];
-    demoLager.map((demol, key) => {
+    demoLager.numbers.map((demol, key) => {
       if (Number(demol.amount) > Number(lagerBreak)) {
         // console.log(Number(demol.amount) - Number(lagerBreak));
         let obj = {
@@ -2118,9 +2127,16 @@ const BetPage = () => {
         };
         extraArray.push(obj);
       }
-      // console.log(array);
+      // console.log(extraArray);
+      
     });
-    setCallDemo(extraArray);
+    setDemolager({
+      ...demoLager,
+      originalBreak: lagerBreak,
+      average: avg,
+      extraNumb: extraArray,
+    });
+    // setCallDemo({...demoLager, extraNumb: extraArray});
     // setDemolager(callDemo);
     setLagerOpen(false);
   };
@@ -2316,7 +2332,7 @@ const BetPage = () => {
             color={"success"}
             onClick={() => {
               setLagerOpen(true);
-              setDemolager(lager.in.numbers);
+              setDemolager({...demoLager,totalAmount: lager.in.totalAmount,numbers: lager.in.numbers});
             }}
           >
             <Typography
@@ -2697,17 +2713,10 @@ const BetPage = () => {
           // padding={1}
           // justifyContent={"space-between"}
         >
-          {/* <Stack justifyContent="normal" width={"100%"}>
-            <Stack width={"30%"}>
-              <Button variant="contained" size="small">
-                Delete
-              </Button>
-            </Stack>
-          </Stack> */}
-          {/* {agentcallcrud && agentcallcrud.length === null */}
-          {
-            !mastercallcrud.numbers.length &&
-              callDemo.map((calc, key) => {
+          {demoLager &&
+            mastercallcrud.id === "" &&
+            demoLager.extraNumb.map((calc, key) => {
+              return (
                 <Stack
                   borderLeft={0.5}
                   borderRight={0.5}
@@ -2715,31 +2724,30 @@ const BetPage = () => {
                   // direction={"row"}
                   justifyContent={"space-around"}
                 >
-                  <BetListCom call={calc} key={key} />;
-                </Stack>;
-              })
-            // : autocompleteCtrl === true &&
-            //   agentcallcrud.numbers.map((calcrud, key) => {
-            //     return (
-            //       <BetListCom call={calcrud}>
-            //         <Stack
-            //           direction={"row"}
-            //           onClick={() => editHandle(calcrud, key)}
-            //         >
-            //           <IconButton size="small">
-            //             <Edit fontSize="6" />
-            //           </IconButton>
-            //           <IconButton
-            //             size="small"
-            //             onClick={() => agentcallDelete(key, calcrud)}
-            //           >
-            //             <Delete fontSize="6" />
-            //           </IconButton>
-            //         </Stack>
-            //       </BetListCom>
-            //     );
-            //   })
-          }
+                  <BetListCom call={calc} key={key} />
+                </Stack>
+              );
+            })}
+          {mastercallcrud.numbers.map((calcrud, key) => {
+            return (
+              <BetListCom call={calcrud}>
+                <Stack direction={"row"}>
+                  <IconButton
+                    size="small"
+                    onClick={() => editHandle(calcrud, key)}
+                  >
+                    <Edit fontSize="6" />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    onClick={() => mastercallDelete(key, calcrud)}
+                  >
+                    <Delete fontSize="6" />
+                  </IconButton>
+                </Stack>
+              </BetListCom>
+            );
+          })}
         </Stack>
       </Stack>
       <Stack
@@ -2796,7 +2804,7 @@ const BetPage = () => {
               Set
             </Button>
           </Stack>
-          <LagerTable lid={lotteryId} />
+          <LagerTable hot={hot} demo={demoLager}/>
         </Stack>
       </Dialog>
     </Stack>
