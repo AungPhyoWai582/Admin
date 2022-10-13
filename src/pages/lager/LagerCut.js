@@ -364,6 +364,7 @@ const LagerCut = () => {
             boxShadow={1}
             direction={"column"}
             bgcolor={"white"}
+            overflow={"scroll"}
           >
             {viewLager.numbers && (
               <Table
@@ -371,7 +372,6 @@ const LagerCut = () => {
                   border: 2,
                   borderColor: grey[300],
                   // height: "500vh",
-                  overflow: "scroll",
                 }}
                 size="small"
               >
@@ -429,10 +429,18 @@ const LagerCut = () => {
                               <Typography width={{ xs: 40, sm: 60, md: 80 }}>
                                 {viewLager.numbers
                                   .map((lag) => lag.number)
-                                  .includes(num.toString().length===1?"0"+num.toString():num.toString())
+                                  .includes(
+                                    num.toString().length === 1
+                                      ? "0" + num.toString()
+                                      : num.toString()
+                                  )
                                   ? viewLager.numbers[
-                                      viewLager.numbers.findIndex(
-                                        (obj) => obj.number == num.toString().length===1?"0"+num.toString():num.toString()
+                                      viewLager.numbers.findIndex((obj) =>
+                                        (obj.number ==
+                                          num.toString().length) ===
+                                        1
+                                          ? "0" + num.toString()
+                                          : num.toString()
                                       )
                                     ].amount.replace(
                                       /\B(?=(\d{3})+(?!\d))/g,
