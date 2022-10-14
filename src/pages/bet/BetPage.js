@@ -2128,7 +2128,6 @@ const BetPage = () => {
         extraArray.push(obj);
       }
       // console.log(extraArray);
-      
     });
     setDemolager({
       ...demoLager,
@@ -2332,7 +2331,11 @@ const BetPage = () => {
             color={"success"}
             onClick={() => {
               setLagerOpen(true);
-              setDemolager({...demoLager,totalAmount: lager.in.totalAmount,numbers: lager.in.numbers});
+              setDemolager({
+                ...demoLager,
+                totalAmount: lager.in.totalAmount,
+                numbers: lager.in.numbers,
+              });
             }}
           >
             <Typography
@@ -2804,7 +2807,7 @@ const BetPage = () => {
               Set
             </Button>
           </Stack>
-          <LagerTable hot={hot} demo={demoLager}/>
+          <LagerTable hot={hot} demo={demoLager} />
         </Stack>
       </Dialog>
     </Stack>

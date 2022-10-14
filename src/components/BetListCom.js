@@ -5,7 +5,7 @@ import React from "react";
 
 const BetListCom = ({ call, key, onClick, children }) => {
   // console.log(setEdtiNum);
-  // console.log(call);
+  console.log(children);
   return (
     <>
       <Stack
