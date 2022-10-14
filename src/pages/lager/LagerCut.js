@@ -51,9 +51,9 @@ const LagerCut = () => {
   const [breakPercent, setBreakPercent] = useState(0);
   const [useEffCtrl, setUseEffCtrl] = useState(false);
   const [customers, setCustomers] = useState([]);
-  const [customer, setCustomer] = useState({ id: "", name: "" });
+  const [customer, setCustomer] = useState("");
 
-  const [value, setValue] = useState("main");
+  // const [customerValue, setCustomerValue] = useState(customers[0]._id);
 
   const tableStyles = {
     border: "1px solid black",
@@ -69,6 +69,7 @@ const LagerCut = () => {
     }).then((res) => {
       console.log(res.data);
       setCustomers(res.data);
+      setCustomer(res.data[0]._id)
     });
     Axios.get(`/lagers/${lotteryId}`, {
       headers: {
@@ -105,49 +106,6 @@ const LagerCut = () => {
   }, [useEffCtrl]);
   console.log(outList);
 
-  // const onChangeHandler = (e) => console.log(e.target.value);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-    if (newValue === "main") {
-      setCustomer("");
-      setViewLager({
-        ...viewLager,
-        numbers: lager.in.numbers,
-        totalAmount: lager.in.totalAmount,
-      });
-    }
-    if (newValue === "out") {
-      setViewLager({
-        ...viewLager,
-        numbers: lager.out.numbers,
-        totalAmount: lager.out.totalAmount,
-      });
-    }
-  };
-
-  // const onSelect = (e) => {
-  //   const { value } = e.target;
-  //   console.log(value);
-  //   setCustomer(value);
-  //   if (value === "All") {
-  //     console.log(lager.out.numbers);
-  //     setViewLager({
-  //       ...viewLager,
-  //       numbers: lager.out.numbers,
-  //       totalAmount: lager.out.totalAmount,
-  //     });
-  //   } else {
-  //     const view = outList.find((out) => out.customer === value.toString());
-  //     setViewLager({
-  //       ...viewLager,
-  //       break: view.breakPercent,
-  //       mainAmount: view.mainAmount,
-  //       numbers: view.numbers,
-  //       totalAmount: view.totalAmount,
-  //     });
-  //   }
-  // };
 
   console.log(customer);
   const setBreak = () => {
@@ -190,29 +148,29 @@ const LagerCut = () => {
       cutAmount: total,
       mainAmount: lager.in.totalAmount,
     });
-    console.log(cutLag);
   };
+
 
   const saveCut = () => {
     let obj = {
-      customer: customer.id,
-      breakPercent: breakPercent,
-      mainAmount: lager.in.totalAmount,
-      numbers: viewLager.numbers,
+      customer: customer,
+      breakPercent: cutLag.breakPercent,
+      mainAmount: cutLag.mainAmount,
+      numbers: cutLag.numbers,
     };
     console.log(obj);
-    // Axios.post(`/outcall/${lotteryId}`, obj, {
-    //   headers: {
-    //     authorization: `Bearer ` + localStorage.getItem("access-token"),
-    //   },
-    // })
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     setCustomer("");
-    //     setBreakPercent(0);
-    //     setUseEffCtrl(true);
-    //   })
-    //   .catch((err) => console.log(err));
+    Axios.post(`/outcall/${lotteryId}`, obj, {
+      headers: {
+        authorization: `Bearer ` + localStorage.getItem("access-token"),
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+        setCustomer("");
+        setBreakPercent(0);
+        setUseEffCtrl(true);
+      })
+      .catch((err) => console.log(err));
   };
   console.log(customers);
 
@@ -255,108 +213,6 @@ const LagerCut = () => {
           </Button>
         </Stack>
         <Stack>
-          <Stack direction={"row"}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              textColor="secondary"
-              indicatorColor="secondary"
-              aria-label="secondary tabs example"
-            >
-              <Tab value="main" label="Main" />
-              <Tab value="out" label="Out Lists" />
-            </Tabs>
-            {/* <FormControl size="small"> */}
-
-            {/* </FormControl> */}
-          </Stack>
-          {/* <Stack>
-            {value === "main" && (
-              <Stack
-                // width={"30%"}
-                padding={1}
-                alignItems="center"
-                // border={1}
-                // margin="auto"
-                spacing={1}
-                direction={"row"}
-              >
-                <FormControlLabel
-                  label={"Customer : "}
-                  labelPlacement="start"
-                  // sx={{ width: "100%" }}
-                  control={
-                    <Select
-                      sx={{ width: 150, height: 30, backgroundColor: teal[50] }}
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={customer.name}
-                      defaultValue={"All"}
-                      onChange={(e) =>
-                        console.log(e.target.value, e.target.name)
-                      }
-                    >
-                      {customers.map((c) => (
-                        <MenuItem value={c._id} name={c.name}>
-                          {c.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  }
-                />
-                <Button size="small" color="primary" variant="outlined">
-                  Copy
-                </Button>
-                <Button
-                  size="small"
-                  color="success"
-                  variant="contained"
-                  onClick={saveCut}
-                >
-                  Save <SaveAlt fontSize="10px" />
-                </Button>
-                <Typography>Numbers : {viewLager.numbers.length}</Typography>
-              </Stack>
-            )}
-            {value === "out" && (
-              <Stack
-                // width={"30%"}
-                // fullWidth
-                padding={1}
-                alignItems="center"
-                // border={1}
-                // margin="auto"
-                // justifyContent={"space-around"}
-                spacing={1}
-                direction={"row"}
-              >
-                <FormControlLabel
-                  label={"Customer : "}
-                  labelPlacement="start"
-                  // sx={{ width: "100%" }}
-                  control={
-                    <Select
-                      sx={{ width: 150, height: 30, backgroundColor: teal[50] }}
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={customer}
-                      defaultValue={"All"}
-                      // onChange={onSelect}
-                    >
-                      {customers.map((c) => (
-                        <MenuItem value={c._id}>{c.name}</MenuItem>
-                      ))}
-                    </Select>
-                  }
-                />
-                <Button size="small" color="primary" variant="outlined">
-                  Copy
-                </Button>
-
-                <Typography>Numbers : {viewLager.numbers.length}</Typography>
-              </Stack>
-            )}
-          </Stack> */}
           <Stack
             border={0.5}
             borderRadius={1}
@@ -471,7 +327,7 @@ const LagerCut = () => {
             >
               Total Cash : {viewLager.totalAmount}
             </Typography>
-            {value === "out" && (
+            {/* {value === "out" && (
               <>
                 {" "}
                 <Typography
@@ -489,7 +345,7 @@ const LagerCut = () => {
                   Main Cash : {viewLager.mainAmount ? viewLager.mainAmount : 0}
                 </Typography>
               </>
-            )}
+            )} */}
             <Typography
               fontWeight={"bold"}
               color={red[500]}
@@ -518,10 +374,11 @@ const LagerCut = () => {
               sx={{ width: 100, height: 30, backgroundColor: teal[50] }}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
+              name={customer.name}
               value={customer.name}
               defaultValue={"All"}
               onChange={
-                (e) => setCustomer({ id: e.target.value, name: e.target.name })
+                (e) => setCustomer(e.target.value)
                 // setCutLag(...cutLag, { bra })
               }
             >
@@ -601,7 +458,7 @@ const LagerCut = () => {
             >
               cancel
             </Button>
-            <Button variant="contained" size="small" color="primary">
+            <Button variant="contained" size="small" color="primary" onClick={saveCut}>
               save
             </Button>
           </Stack>
