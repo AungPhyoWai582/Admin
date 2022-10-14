@@ -106,7 +106,7 @@ const BetPage = () => {
     master: "",
     numbers: [],
   });
-  const [outCalls, setOutCalls] = useState([]);
+  // const [outCalls, setOutCalls] = useState([]);
   // const [callList, setCallList] = useState([]);
 
   const [masters, setMasters] = useState([]);
@@ -251,7 +251,7 @@ const BetPage = () => {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
-        setOutCalls(res.data.data);
+        setMasterOutCall(res.data.data);
 
         setInOutCtl(false);
         // setCalllistctrl(false);
@@ -278,7 +278,7 @@ const BetPage = () => {
     // setCalllistctrl(false);
   }, [calllistctrl, autocompleteCtrl]);
 
-  console.log(masterTotalData);
+  console.log(masterOutCalls);
 
   // out Customer select
   const OnSelect = (e) => {
@@ -2686,24 +2686,66 @@ const BetPage = () => {
                   );
                 })
                 .reverse()}
-          {in_out === "Out" &&
-            singleCusCall.Lagnumbers &&
-            singleCusCall.Lagnumbers.map((cuscall, key) => {
-              return (
-                <Stack
-                  direction={"row"}
-                  // width={{ sx: 180 }}
-                  marginY={0.3}
-                  justifyContent={{
-                    sx: "space-between",
-                    sm: "space-around",
-                    md: "space-around",
-                  }}
-                >
-                  <BetListCom call={cuscall} key={key}></BetListCom>
-                </Stack>
-              );
-            })}
+          {in_out === "Out" && singleCusCall.Lagnumbers.length
+            ? singleCusCall.Lagnumbers.map((cuscall, key) => {
+                return (
+                  <Stack
+                    direction={"row"}
+                    // width={{ sx: 180 }}
+                    marginY={0.3}
+                    justifyContent={{
+                      sx: "space-between",
+                      sm: "space-around",
+                      md: "space-around",
+                    }}
+                  >
+                    <BetListCom call={cuscall} key={key}></BetListCom>
+                  </Stack>
+                );
+              })
+            : masterOutCalls
+                .filter(
+                  (mso, key) =>
+                    mso.customer._id.toString() ===cusval.toString()
+                )
+                .map((cal, key) => {
+                  return (
+                    <Stack
+                      bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
+                      borderLeft={0.5}
+                      borderRight={0.5}
+                      justifyContent={"space-around"}
+                      // component={"button"}
+                      sx={{ cursor: "pointer" }}
+                      // onClick={() => {
+                      //   setMasterCallCrud({
+                      //     id: cal._id,
+                      //     numbers: cal.numbers,
+                      //   });
+                      //   setCallTotal(cal.totalAmount);
+                      //   setAutoCompleteCtrl(true);
+                      // }}
+                    >
+                      {cal.numbers.map((ca, key) => {
+                        return (
+                          <Stack
+                            direction={"row"}
+                            // width={{ sx: 180 }}
+                            marginY={0.3}
+                            justifyContent={{
+                              sx: "space-between",
+                              sm: "space-around",
+                              md: "space-around",
+                            }}
+                          >
+                            <BetListCom call={ca} key={key}></BetListCom>
+                          </Stack>
+                        );
+                      })}
+                    </Stack>
+                  );
+                })
+                .reverse()}
         </Stack>
         <Stack
           alignItems={"center"}

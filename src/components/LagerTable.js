@@ -123,14 +123,25 @@ const LagerTable = ({ demo, hot }) => {
                           }`}
                         >
                           {demo.numbers
-                            .map((lag) => lag.number)
-                            .includes(num.toString())
-                            ? demo.numbers[
-                                demo.numbers.findIndex(
-                                  (obj) => obj.number == num.toString()
-                                )
-                              ].amount.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                            : "0"}
+                                  .map((lag) => lag.number)
+                                  .includes(
+                                    num.toString().length === 1
+                                      ? "0" + num.toString()
+                                      : num.toString()
+                                  )
+                                  ? demo.numbers[
+                                      demo.numbers.findIndex((obj) =>
+                                        (obj.number ==
+                                          num.toString().length) ===
+                                        1
+                                          ? "0" + num.toString()
+                                          : num.toString()
+                                      )
+                                    ].amount.replace(
+                                      /\B(?=(\d{3})+(?!\d))/g,
+                                      ","
+                                    )
+                                  : "0"}
                         </Typography>
                       </TableCell>
                     </>
