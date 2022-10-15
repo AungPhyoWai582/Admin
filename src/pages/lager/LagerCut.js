@@ -295,7 +295,7 @@ const LagerCut = () => {
                                           ((num.toString().length) ==
                                         1
                                           ? "0" + num
-                                          : num.toString().toString()))
+                                          : num.toString()).toString())
                                       )
                                     ].amount.replace(
                                       /\B(?=(\d{3})+(?!\d))/g,
