@@ -69,7 +69,7 @@ const LagerCut = () => {
     }).then((res) => {
       console.log(res.data);
       setCustomers(res.data);
-      setCustomer(res.data[0]._id)
+      setCustomer(res.data[0]._id);
     });
     Axios.get(`/lagers/${lotteryId}`, {
       headers: {
@@ -105,7 +105,6 @@ const LagerCut = () => {
     });
   }, [useEffCtrl]);
   console.log(outList);
-
 
   console.log(customer);
   const setBreak = () => {
@@ -149,7 +148,6 @@ const LagerCut = () => {
       mainAmount: lager.in.totalAmount,
     });
   };
-
 
   const saveCut = () => {
     let obj = {
@@ -245,6 +243,7 @@ const LagerCut = () => {
                     >
                       {Array.from(Array(4), (_, x) => x).map((row, key) => {
                         let num = row * 25 + col;
+                        console.log((num.toString().length === 1 ? "0" + num : num).toString())
                         return (
                           <>
                             <TableCell
@@ -257,7 +256,7 @@ const LagerCut = () => {
                               }}
                             >
                               <Typography width={20}>
-                                {num.toString().length === 1 ? "0" + num : num}
+                                {num.toString().length === 1 ? "0" + num : num.toString()}
                                 {/* {num} */}
                                 {/* {viewLager.numbers
                                   .map((lag) => lag.number)
@@ -287,16 +286,16 @@ const LagerCut = () => {
                                   .map((lag) => lag.number)
                                   .includes(
                                     num.toString().length === 1
-                                      ? "0" + num.toString()
+                                      ? "0" + num
                                       : num.toString()
                                   )
                                   ? viewLager.numbers[
                                       viewLager.numbers.findIndex((obj) =>
-                                        (obj.number ==
-                                          num.toString().length) ===
+                                        (obj.number.toString() ===
+                                          ((num.toString().length) ==
                                         1
-                                          ? "0" + num.toString()
-                                          : num.toString()
+                                          ? "0" + num
+                                          : num.toString().toString()))
                                       )
                                     ].amount.replace(
                                       /\B(?=(\d{3})+(?!\d))/g,
@@ -458,7 +457,12 @@ const LagerCut = () => {
             >
               cancel
             </Button>
-            <Button variant="contained" size="small" color="primary" onClick={saveCut}>
+            <Button
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={saveCut}
+            >
               save
             </Button>
           </Stack>
