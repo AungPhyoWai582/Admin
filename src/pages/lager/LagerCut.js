@@ -167,6 +167,7 @@ const LagerCut = () => {
         setCustomer("");
         setBreakPercent(0);
         setUseEffCtrl(true);
+        setLagModCtl(false)
       })
       .catch((err) => console.log(err));
   };
