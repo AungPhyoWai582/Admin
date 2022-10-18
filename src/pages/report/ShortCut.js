@@ -19,6 +19,7 @@ import {
   Paper,
   TableContainer,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import { blue, green, grey } from "@mui/material/colors";
 import React from "react";
@@ -48,8 +49,6 @@ const ShortCup = () => {
 
   //in/out autocomplete
   const [InOutControl, setInOutControl] = useState("In");
-  const [inLag, setInLag] = useState([]);
-  const [outLag, setOutLag] = useState([]);
   const changeInOut = (e) => {
     setSelectChoice(e.target.innerText);
   };
@@ -63,7 +62,7 @@ const ShortCup = () => {
   const [selectChoice, setSelectChoice] = useState();
 
   //in out control
-  const [inoutctl, setInoutctl] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     Axios.get(`/masters`, {
@@ -102,6 +101,7 @@ const ShortCup = () => {
   // For Search Function
   const searchReport = () => {
     console.log(autoCompleteValue, timeselect);
+    setLoading(true);
     if (InOutControl === "In") {
       Axios.get(
         `/reports/members-collections?&start_date=${startDate}&end_date=${endDate}&customer=${autoCompleteValue}&time=${timeselect}`,
@@ -118,6 +118,7 @@ const ShortCup = () => {
           console.log(me, memberReport);
           // setReport(res.data.report);
           setReportIn({ me: me, memberReport: memberReport });
+          setLoading(false);
         })
         .catch((err) => setReportIn({ me: {}, memberReport: [] }));
     }
@@ -134,6 +135,7 @@ const ShortCup = () => {
           console.log(res.data.report);
           const { calls, totalOut } = res.data.report;
           setReportOut({ calls: calls, totalOut: totalOut });
+          setLoading(false);
         })
         .catch((err) => console.log(err));
     }
@@ -333,6 +335,22 @@ const ShortCup = () => {
               </TableCell>
             </TableRow>
           </TableHead>
+          {loading && (
+            <TableRow>
+              <TableCell colSpan={7}>
+                <Typography
+                  padding={1}
+                  fontSize={18}
+                  fontWeight={500}
+                  color={"red"}
+                  textAlign="center"
+                  gridColumn={3}
+                >
+                  <CircularProgress color="success" />
+                </Typography>
+              </TableCell>
+            </TableRow>
+          )}
           {InOutControl === "In" && (
             <TableBody>
               {reportIn.memberReport && reportIn.memberReport.length ? (
@@ -381,23 +399,23 @@ const ShortCup = () => {
                 })
               ) : (
                 <TableRow>
-                <TableCell colSpan={7}>
-                  <Typography
-                    padding={1}
-                    fontSize={18}
-                    fontWeight={500}
-                    color={"red"}
-                    textAlign="center"
-                    gridColumn={3}
-                  >
-                    Reports Not Found !!!
-                  </Typography>
-                </TableCell>
-              </TableRow>
+                  <TableCell colSpan={7}>
+                    <Typography
+                      padding={1}
+                      fontSize={18}
+                      fontWeight={500}
+                      color={"red"}
+                      textAlign="center"
+                      gridColumn={3}
+                    >
+                      Reports Not Found !!!
+                    </Typography>
+                  </TableCell>
+                </TableRow>
               )}
             </TableBody>
           )}
-          
+
           {InOutControl === "Out" && (
             <TableBody>
               {reportOut.calls && reportOut.calls.length ? (

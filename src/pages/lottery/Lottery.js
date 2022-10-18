@@ -44,6 +44,7 @@ const Lottery = () => {
 
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("add");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setPlay(true);
@@ -80,6 +81,7 @@ const Lottery = () => {
   };
 
   const AddLottery = () => {
+    setLoading(true);
     console.log(lotCreate);
     let obj = {};
 
@@ -96,11 +98,13 @@ const Lottery = () => {
         });
         setEffCtrl(true);
         setOpen(false);
+        setLoading(false);
       })
       .catch((err) => Alert(err));
   };
 
   const updateLottery = () => {
+    setLoading(true);
     console.log(lotCreate);
     Axios.put(`/lotterys/${lotCreate.id}`, lotCreate)
       .then((res) => {
@@ -113,6 +117,7 @@ const Lottery = () => {
         setEffCtrl(true);
         setOpen(false);
         setType("add");
+        setLoading(false);
       })
       .catch((err) => Alert(err));
   };
@@ -270,6 +275,7 @@ const Lottery = () => {
             .reverse()}
       </Stack>
       <LotteryCRUD
+        loading={loading}
         type={type}
         open={open}
         lotCreate={lotCreate}

@@ -1,3 +1,5 @@
+import { Save } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 import {
   Drawer,
   FormControlLabel,
@@ -24,15 +26,11 @@ const LotteryCRUD = ({
   switchControll,
   updateLottery,
   AddLottery,
+  loading,
 }) => {
   console.log(lotCreate);
   return (
-    <Drawer
-      anchor="top"
-      open={open}
-    
-      onClose={() => setOpen(false)}
-    >
+    <Drawer anchor="top" open={open} onClose={() => setOpen(false)}>
       <Box
         justifyContent={"center"}
         alignSelf={"center"}
@@ -40,12 +38,16 @@ const LotteryCRUD = ({
         overflow="auto"
         width={{ xs: "90%", sm: "90%", md: "50%", xl: "50%" }}
       >
-        <Typography variant="h6" fontWeight={700} textAlign="center" color={teal[500]}>
+        <Typography
+          variant="h6"
+          fontWeight={700}
+          textAlign="center"
+          color={teal[500]}
+        >
           Create Lottery
         </Typography>
         <Stack boxShadow={1}>
-
-        <Stack
+          <Stack
             spacing={2}
             padding={1.5}
             direction="row"
@@ -125,8 +127,6 @@ const LotteryCRUD = ({
             />
           </Stack>
 
-         
-
           <Stack
             spacing={1.5}
             direction="row"
@@ -145,30 +145,34 @@ const LotteryCRUD = ({
               }}
               variant="outlined"
               color="error"
-            //   sx={{ backgroundColor:green[500], color: red[500] }}
+              //   sx={{ backgroundColor:green[500], color: red[500] }}
             >
               Cancel
             </Button>
 
             {type === "add" && (
-              <Button
+              <LoadingButton
                 variant="outlined"
                 color="success"
+                loading={loading}
                 // sx={{ backgroundColor:green[500], color: red[500] }}
                 onClick={AddLottery}
               >
                 Create
-              </Button>
+              </LoadingButton>
             )}
             {type === "edit" && (
-              <Button
+              <LoadingButton
                 variant="outlined"
+                loading={loading}
+                // loadingPosition='start'
+                // startIcon={<Save />}
                 // sx={{ backgroundColor:green[500], color: red[500] }}
                 color="secondary"
                 onClick={updateLottery}
               >
                 Update
-              </Button>
+              </LoadingButton>
             )}
           </Stack>
         </Stack>
