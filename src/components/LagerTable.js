@@ -1,6 +1,6 @@
 import { Height } from "@mui/icons-material";
 import { Stack, Table, TableCell, TableRow, Typography } from "@mui/material";
-import { grey, red,blue } from "@mui/material/colors";
+import { grey, red, blue } from "@mui/material/colors";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 
@@ -123,25 +123,20 @@ const LagerTable = ({ demo, hot }) => {
                           }`}
                         >
                           {demo.numbers
-                                  .map((lag) => lag.number)
-                                  .includes(
-                                    num.toString().length === 1
-                                      ? "0" + num.toString()
-                                      : num.toString()
-                                  )
-                                  ? demo.numbers[
-                                      demo.numbers.findIndex((obj) =>
-                                        (obj.number ==
-                                          num.toString().length) ===
-                                        1
-                                          ? "0" + num.toString()
-                                          : num.toString()
-                                      )
-                                    ].amount.replace(
-                                      /\B(?=(\d{3})+(?!\d))/g,
-                                      ","
-                                    )
-                                  : "0"}
+                            .map((lag) => lag.number)
+                            .includes(
+                              num.toString().length === 1
+                                ? "0" + num.toString()
+                                : num.toString()
+                            )
+                            ? demo.numbers[
+                                demo.numbers.findIndex((obj) =>
+                                  (obj.number == num.toString().length) === 1
+                                    ? "0" + num.toString()
+                                    : num.toString()
+                                )
+                              ].amount.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                            : "0"}
                         </Typography>
                       </TableCell>
                     </>
