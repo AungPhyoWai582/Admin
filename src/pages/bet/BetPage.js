@@ -155,7 +155,7 @@ const BetPage = () => {
     Total: 0,
   });
   // in outt
-  const [in_out, set_in_out] = useState("Out");
+  const [in_out, set_in_out] = useState("In");
   const [customers, setCustomers] = useState([]);
   const [cusval, setCusval] = useState("");
   const [singleCusCall, setSingleCusCall] = useState({

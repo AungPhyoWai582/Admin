@@ -83,8 +83,8 @@ const LagerCut = () => {
           setLager(lag);
           setViewLager({
             ...viewLager,
-            numbers: lag.in.numbers,
-            totalAmount: lag.in.totalAmount,
+            numbers: lag.numbers,
+            totalAmount: lag.totalAmount,
           });
           setUseEffCtrl(false);
         }
@@ -110,8 +110,8 @@ const LagerCut = () => {
   const setBreak = () => {
     setLagModCtl(true);
     console.log(breakPercent);
-    const numbers = [...lager.in.numbers];
-    const Tamount = lager.in.totalAmount;
+    const numbers = [...lager.numbers];
+    const Tamount = lager.totalAmount;
     console.log(numbers, Tamount);
     const data = numbers.map((num) => {
       return {
@@ -145,7 +145,7 @@ const LagerCut = () => {
       numbers: breakData,
       breakPercent: breakPercent,
       cutAmount: total,
-      mainAmount: lager.in.totalAmount,
+      mainAmount: lager.totalAmount,
     });
   };
 
