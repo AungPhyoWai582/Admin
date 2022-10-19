@@ -7,6 +7,7 @@ import {
   Delete,
   Edit,
 } from "@mui/icons-material";
+import BorderColorTwoToneIcon from "@mui/icons-material/BorderColorTwoTone";
 import {
   Alert,
   AlertTitle,
@@ -74,6 +75,7 @@ import {
 } from "./Betsign";
 import LagerTable from "../../components/LagerTable";
 import { calculateHotTee } from "./BetPage.method";
+import ModalBox from "../../components/modal/ModalBox";
 
 const BetPage = () => {
   // For input refs
@@ -81,9 +83,16 @@ const BetPage = () => {
   const textFieldForAmount = useRef(null);
 
   const [inOutCtl, setInOutCtl] = useState(false);
+
+  //masterapi ctl
+  const [mastercallAPIctl, setMastercallAPI] = useState(false);
   // const [singleBetCleanctlr, setSingleBetCleanctlr] = useState(false);
   const [callTotal, setCallTotal] = useState(0);
   const [calltotalCtrl, setCalltotalCtrl] = useState(false);
+
+  // delButton control
+  const [delButtCtl, setDelButtCtl] = useState(false);
+  const [confirmCtl, setComfirmCtl] = useState(false);
 
   //loading
   const [loading, setLoading] = useState(false);
@@ -155,7 +164,7 @@ const BetPage = () => {
     Total: 0,
   });
   // in outt
-  const [in_out, set_in_out] = useState("Out");
+  const [in_out, set_in_out] = useState("In");
   const [customers, setCustomers] = useState([]);
   const [cusval, setCusval] = useState("");
   const [singleCusCall, setSingleCusCall] = useState({
@@ -273,10 +282,11 @@ const BetPage = () => {
       //  }
     }
     // setInOutCtl(false);
-    setCalllistctrl(false);
-    setAutoCompleteCtrl(false);
     // setCalllistctrl(false);
-  }, [calllistctrl, autocompleteCtrl]);
+    setAutoCompleteCtrl(false);
+    setMastercallAPI(false);
+    // setCalllistctrl(false);
+  }, [autocompleteCtrl, mastercallAPIctl]);
 
   console.log(masterOutCalls);
 
@@ -2007,7 +2017,7 @@ const BetPage = () => {
       setBeterrorcontrol(true);
     }
   };
-
+  // console.log(mastercallcrud);
   const handleFiles = (e) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -2059,9 +2069,10 @@ const BetPage = () => {
           });
           setSuccess(true);
           setLoading(true);
-          setCalllistctrl(true);
+          // setCalllistctrl(true);
           setCalltotalCtrl(true);
-          setAutoCompleteCtrl(true);
+          // setAutoCompleteCtrl(true);
+          setMastercallAPI(true);
         })
         .then((res) => {
           setSuccess(false);
@@ -2077,8 +2088,18 @@ const BetPage = () => {
     setCall({ ...call, numbers: afterDelete });
     // setAutoCompleteCtrl(false);
   };
-  const mastercallDelete = (e) => {
-    console.log(e);
+  const mastercallDelete = (callid) => {
+    Axios.delete(`/call/${lotteryId}/${callid}`, {
+      headers: {
+        authorization: `Bearer ` + localStorage.getItem("access-token"),
+      },
+    })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   const editHandle = (cal, key) => {
     // console.log(key);
@@ -2433,7 +2454,9 @@ const BetPage = () => {
             </IconButton>
           ) : (
             <IconButton
-              onClick={(e) => bet(e, in_out)}
+              onClick={(e) => {
+                bet(e, in_out);
+              }}
               size={"small"}
               sx={{ bgcolor: green[700] }}
             >
@@ -2443,8 +2466,16 @@ const BetPage = () => {
         </Stack>
       </Stack>
 
-      <Stack justifyContent={"right"} width={"100%"}>
-        <Pagination
+      <Stack
+        position={"relative"}
+        display={`${!delButtCtl && "none"}`}
+        justifyContent={"right"}
+        width={"100%"}
+        direction={"row"}
+        padding={1}
+        spacing={1}
+      >
+        {/* <Pagination
           size="small"
           page={call.numbers}
           count={call.numbers}
@@ -2453,11 +2484,89 @@ const BetPage = () => {
           renderItem={(item) => (
             <PaginationItem
               size="small"
+              sx={{ alignItems: "center" }}
               components={{ previous: ArrowBack, next: ArrowForward }}
               {...item}
             />
           )}
-        />
+        /> */}
+
+        <Button
+          sx={{
+            height: 30,
+            textTransform: "none",
+            textAlign: "center",
+          }}
+          variant={"contained"}
+          color={"success"}
+          onClick={() => {
+            setDelButtCtl(false);
+
+            setMasterCallCrud({ id: "", numbers: [] });
+          }}
+        >
+          <span style={{ fontSize: 16, paddingInline: 1 }}>Close</span>
+        </Button>
+        <Button
+          sx={{
+            height: 30,
+            textTransform: "none",
+          }}
+          variant={"contained"}
+          color={"success"}
+          onClick={() => setComfirmCtl(true)}
+        >
+          <span style={{ fontSize: 16, paddingInline: 1 }}>Call Delete</span>
+        </Button>
+        <ModalBox open={confirmCtl} setOpen={setComfirmCtl}>
+          <Typography
+            padding={1}
+            textAlign={"center"}
+            fontWeight={700}
+            letterSpacing={0.8}
+          >
+            Do you want to <span style={{ color: "red" }}>DELETE</span> your
+            call ?
+          </Typography>
+          <Stack
+            direction={"row"}
+            spacing={2}
+            justifyContent={"center"}
+            margin={1}
+          >
+            <Button
+              sx={{
+                textTransform: "inherit",
+                letterSpacing: 0.8,
+                fontWeight: 700,
+              }}
+              variant={"contained"}
+              size={"small"}
+              onClick={() => setComfirmCtl(false)}
+              color={"success"}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant={"contained"}
+              size={"small"}
+              color={"error"}
+              sx={{
+                textTransform: "inherit",
+                letterSpacing: 0.8,
+                fontWeight: 700,
+              }}
+              onClick={() => {
+                mastercallDelete(mastercallcrud.id);
+                setComfirmCtl(false);
+                setMastercallAPI(true);
+                setMasterCallCrud({ id: "", numbers: [] });
+              }}
+            >
+              Ok
+            </Button>
+          </Stack>
+        </ModalBox>
       </Stack>
 
       <Stack direction={"row"} spacing={{ xs: 0.5, sm: 1, md: 1 }}>
@@ -2589,7 +2698,7 @@ const BetPage = () => {
           // position={"initial"}
           // direction={"column"}
           alignItems={"center"}
-          width={"40%"}
+          width={"35%"}
           maxHeight={400}
           minHeight={400}
           overflow={"auto"}
@@ -2664,6 +2773,7 @@ const BetPage = () => {
                         });
                         setCallTotal(cal.totalAmount);
                         setAutoCompleteCtrl(true);
+                        setDelButtCtl(true);
                       }}
                     >
                       {cal.numbers.map((ca, key) => {
@@ -2706,7 +2816,7 @@ const BetPage = () => {
             : masterOutCalls
                 .filter(
                   (mso, key) =>
-                    mso.customer._id.toString() ===cusval.toString()
+                    mso.customer._id.toString() === cusval.toString()
                 )
                 .map((cal, key) => {
                   return (
@@ -2776,20 +2886,20 @@ const BetPage = () => {
           {mastercallcrud.numbers.map((calcrud, key) => {
             return (
               <BetListCom call={calcrud}>
-                <Stack direction={"row"}>
-                  <IconButton
-                    size="small"
-                    onClick={() => editHandle(calcrud, key)}
-                  >
-                    <Edit fontSize="6" />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    onClick={() => mastercallDelete(key, calcrud)}
-                  >
-                    <Delete fontSize="6" />
-                  </IconButton>
-                </Stack>
+                {/* <Stack direction={"row"}> */}
+                <IconButton
+                  size="small"
+                  onClick={() => editHandle(calcrud, key)}
+                >
+                  <Edit fontSize={"6px"} />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  onClick={() => mastercallDelete(key, calcrud)}
+                >
+                  <Delete fontSize={"6px"} />
+                </IconButton>
+                {/* </Stack> */}
               </BetListCom>
             );
           })}

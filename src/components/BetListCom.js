@@ -7,24 +7,26 @@ const BetListCom = ({ call, key, onClick, children }) => {
   // console.log(setEdtiNum);
   console.log(children);
   return (
-    <>
+    <Stack direction={"row"} width={"100%"}>
       <Stack
-        marginX={0.5}
+        // marginX={0.5}
         direction={"row"}
         width={{ xs: 150, sm: 230, md: 300 }}
-        spacing={{ xs: 5, sm: 3, md: 1 }}
+        spacing={{ xs: 3, sm: 3, md: 1 }}
         // boxShadow={1}
         alignItems={"center"}
       >
         <Typography marginX={0.3} width={"20%"} textAlign={"right"}>
           {call.number}
         </Typography>
-        <Typography marginX={0.3} width={"40%"} textAlign={"end"}>
-          {call.amount}
-        </Typography>
-        {children}
+        <Stack direction={"row"} alignItems={"center"} spacing={0.5}>
+          <Typography marginX={0.3} width={"30%"} textAlign={"center"}>
+            {call.amount}
+          </Typography>
+          {children}
+        </Stack>
       </Stack>
-    </>
+    </Stack>
   );
 };
 
