@@ -2096,6 +2096,9 @@ const BetPage = () => {
     })
       .then((res) => {
         console.log(res);
+        setMastercallAPI(true);
+        setMasterCallCrud({ id: "", numbers: [] });
+        setComfirmCtl(false);
       })
       .catch((err) => {
         console.log(err);
@@ -2558,9 +2561,6 @@ const BetPage = () => {
               }}
               onClick={() => {
                 mastercallDelete(mastercallcrud.id);
-                setComfirmCtl(false);
-                setMastercallAPI(true);
-                setMasterCallCrud({ id: "", numbers: [] });
               }}
             >
               Ok

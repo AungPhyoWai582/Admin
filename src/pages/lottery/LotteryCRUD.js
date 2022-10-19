@@ -165,8 +165,8 @@ const LotteryCRUD = ({
               <LoadingButton
                 variant="outlined"
                 loading={loading}
-                // loadingPosition='start'
-                // startIcon={<Save />}
+                loadingPosition='start'
+                // startIcon={<Save disabled />}
                 // sx={{ backgroundColor:green[500], color: red[500] }}
                 color="secondary"
                 onClick={updateLottery}
