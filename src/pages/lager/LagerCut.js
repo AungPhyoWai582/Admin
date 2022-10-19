@@ -15,6 +15,7 @@ import {
   FormControl,
   Select,
   MenuItem,
+  CircularProgress,
 } from "@mui/material";
 import React from "react";
 
@@ -27,6 +28,7 @@ import Axios from "../../shared/Axios";
 import { SaveAlt } from "@mui/icons-material";
 import ModalBox from "../../components/modal/ModalBox";
 import BetListCom from "../../components/BetListCom";
+import { LoadingButton } from "@mui/lab";
 
 const LagerCut = () => {
   //lager Cut Mod CTL
@@ -52,6 +54,7 @@ const LagerCut = () => {
   const [useEffCtrl, setUseEffCtrl] = useState(false);
   const [customers, setCustomers] = useState([]);
   const [customer, setCustomer] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // const [customerValue, setCustomerValue] = useState(customers[0]._id);
 
@@ -83,8 +86,8 @@ const LagerCut = () => {
           setLager(lag);
           setViewLager({
             ...viewLager,
-            numbers: lag.in.numbers,
-            totalAmount: lag.in.totalAmount,
+            numbers: lag.numbers,
+            totalAmount: lag.totalAmount,
           });
           setUseEffCtrl(false);
         }
@@ -110,8 +113,8 @@ const LagerCut = () => {
   const setBreak = () => {
     setLagModCtl(true);
     console.log(breakPercent);
-    const numbers = [...lager.in.numbers];
-    const Tamount = lager.in.totalAmount;
+    const numbers = [...lager.numbers];
+    const Tamount = lager.totalAmount;
     console.log(numbers, Tamount);
     const data = numbers.map((num) => {
       return {
@@ -145,11 +148,12 @@ const LagerCut = () => {
       numbers: breakData,
       breakPercent: breakPercent,
       cutAmount: total,
-      mainAmount: lager.in.totalAmount,
+      mainAmount: lager.totalAmount,
     });
   };
 
   const saveCut = () => {
+    setLoading(true);
     let obj = {
       customer: customer,
       breakPercent: cutLag.breakPercent,
@@ -167,6 +171,8 @@ const LagerCut = () => {
         setCustomer("");
         setBreakPercent(0);
         setUseEffCtrl(true);
+        setLoading(false);
+        setLagModCtl(false);
       })
       .catch((err) => console.log(err));
   };
@@ -243,7 +249,12 @@ const LagerCut = () => {
                     >
                       {Array.from(Array(4), (_, x) => x).map((row, key) => {
                         let num = row * 25 + col;
-                        console.log((num.toString().length === 1 ? "0" + num : num).toString())
+                        console.log(
+                          (num.toString().length === 1
+                            ? "0" + num
+                            : num
+                          ).toString()
+                        );
                         return (
                           <>
                             <TableCell
@@ -256,7 +267,9 @@ const LagerCut = () => {
                               }}
                             >
                               <Typography width={20}>
-                                {num.toString().length === 1 ? "0" + num : num.toString()}
+                                {num.toString().length === 1
+                                  ? "0" + num
+                                  : num.toString()}
                                 {/* {num} */}
                                 {/* {viewLager.numbers
                                   .map((lag) => lag.number)
@@ -290,12 +303,13 @@ const LagerCut = () => {
                                       : num.toString()
                                   )
                                   ? viewLager.numbers[
-                                      viewLager.numbers.findIndex((obj) =>
-                                        (obj.number.toString() ===
-                                          ((num.toString().length) ==
-                                        1
-                                          ? "0" + num
-                                          : num.toString()).toString())
+                                      viewLager.numbers.findIndex(
+                                        (obj) =>
+                                          obj.number.toString() ===
+                                          (num.toString().length == 1
+                                            ? "0" + num
+                                            : num.toString()
+                                          ).toString()
                                       )
                                     ].amount.replace(
                                       /\B(?=(\d{3})+(?!\d))/g,
@@ -457,14 +471,24 @@ const LagerCut = () => {
             >
               cancel
             </Button>
-            <Button
+            <LoadingButton
               variant="contained"
               size="small"
+              loading={loading}
               color="primary"
               onClick={saveCut}
             >
               save
-            </Button>
+            </LoadingButton>
+            {/* <Button
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={saveCut}
+              startIcon={<CircularProgress sx={{fontSize:'small'}} color="success" />}
+            >
+              save
+            </Button> */}
           </Stack>
         </Stack>
       </ModalBox>

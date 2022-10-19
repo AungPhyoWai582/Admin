@@ -128,6 +128,7 @@ const Daily = () => {
         stickyHeader
       >
         <TableHead sx={{ bgcolor: "success.light", fontSize: 12 }}>
+          <TableRow></TableRow>
           <TableRow>
             <TableCell sx={{ fontWeight: "bold", fontSize: 12 }}>
               Date
@@ -155,10 +156,10 @@ const Daily = () => {
                     <TableCell sx={{ overflow: "scroll/" }}>
                       {`${date.getDate()}/${date.getMonth()}/${date.getYear()}`}
                     </TableCell>
-                    <TableCell>{lg.in.totalAmount.toString()}</TableCell>
+                    <TableCell>{lg.totalAmount.toString()}</TableCell>
                     <TableCell>0</TableCell>
 
-                    <TableCell>{lg.in.win}</TableCell>
+                    <TableCell>{lg.win}</TableCell>
                     <TableCell>
                       <NavLink
                         to={"/reports/daily/members"}
