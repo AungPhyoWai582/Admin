@@ -50,6 +50,7 @@ const Lottery = () => {
     setPlay(true);
     Axios.get("/lotterys")
       .then((res) => {
+        console.log(res.data.lotteries)
         setLottery(res.data.lotteries);
         setEffCtrl(false);
       })

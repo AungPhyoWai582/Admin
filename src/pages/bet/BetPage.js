@@ -136,7 +136,7 @@ const BetPage = () => {
   const [mastercallcrud, setMasterCallCrud] = useState({ id: "", numbers: [] });
   const [keydemo, setKeyDemo] = useState();
   //For twoD sign state
-  const [autoCompleteValue, setAutoCompleteValue] = useState("");
+  const [autoCompleteValue, setAutoCompleteValue] = useState();
 
   const [onchange, setOnchange] = useState({
     number: "",
@@ -166,42 +166,11 @@ const BetPage = () => {
   // in outt
   const [in_out, set_in_out] = useState("In");
   const [customers, setCustomers] = useState([]);
-  const [cusval, setCusval] = useState("");
+  const [cusval, setCusval] = useState();
   const [singleCusCall, setSingleCusCall] = useState({
     Lagnumbers: "",
     Total: [],
   });
-
-  useEffect(() => {
-    if (in_out === "In") {
-      Axios.get(`/masters`, {
-        headers: {
-          authorization: `Bearer ` + localStorage.getItem("access-token"),
-        },
-      })
-
-        .then((res) => {
-          if (masters) {
-            const masters = res.data.data;
-            setMasters([...masters]);
-            setAutoCompleteValue(masters[0]);
-            setCalllistctrl(false);
-          }
-        })
-        .catch((err) => console.log(err));
-    }
-    if (in_out === "Out") {
-      Axios.get(`customers`, {
-        headers: {
-          authorization: `Bearer ` + localStorage.getItem("access-token"),
-        },
-      }).then((res) => {
-        setCustomers(res.data);
-      });
-    }
-
-    // setHotNumbers( calculateHotTee(JSON.parse(localStorage.getItem('user-info')),hot_tees,lager.in.numbers,lager.in.totalAmount))
-  }, [inOutCtl]);
 
   useEffect(() => {
     Axios.get(`/lagers/${lotteryId}`, {
@@ -218,7 +187,42 @@ const BetPage = () => {
         // setSuccess(false);
       })
       .catch((err) => console.log(err));
+    if (in_out === "In") {
+      Axios.get(`/masters`, {
+        headers: {
+          authorization: `Bearer ` + localStorage.getItem("access-token"),
+        },
+      })
 
+        .then((res) => {
+          if (masters) {
+            const masters = res.data.data;
+            setMasters([...masters]);
+            setCalllistctrl(false);
+            if (masters) {
+              setAutoCompleteValue(masters[0]);
+            }
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+    if (in_out === "Out") {
+      Axios.get(`customers`, {
+        headers: {
+          authorization: `Bearer ` + localStorage.getItem("access-token"),
+        },
+      }).then((res) => {
+        setCustomers(res.data);
+        setCusval(res.data[0])
+      });
+
+      
+      setInOutCtl(false);
+    }
+    // setHotNumbers( calculateHotTee(JSON.parse(localStorage.getItem('user-info')),hot_tees,lager.in.numbers,lager.in.totalAmount))
+  }, [inOutCtl]);
+
+  useEffect(() => {
     if (in_out === "In") {
       Axios.get(`/call/${lotteryId}`, {
         headers: {
@@ -228,31 +232,23 @@ const BetPage = () => {
         setMastercalls(res.data.data);
       });
 
-      Axios.get(
-        `/call/${lotteryId}/call-numbers-total/${autoCompleteValue._id}`,
-        {
-          headers: {
-            authorization: `Bearer ` + localStorage.getItem("access-token"),
-          },
-        }
-      ).then((res) => {
-        console.log(res.data);
+      if (autoCompleteValue) {
+        Axios.get(
+          `/call/${lotteryId}/call-numbers-total/${autoCompleteValue._id}`,
+          {
+            headers: {
+              authorization: `Bearer ` + localStorage.getItem("access-token"),
+            },
+          }
+        ).then((res) => {
+          // console.log(res.data);
 
-        setMasterTotalData({
-          Data: res.data.numsData,
-          Total: res.data.numsTotal,
+          setMasterTotalData({
+            Data: res.data.numsData,
+            Total: res.data.numsTotal,
+          });
         });
-      });
-      console.log(autoCompleteValue);
-      // setHotNumbers(
-      //   calculateHotTee(
-      //     autoCompleteValue,
-      //     hot_tees,
-      //     masterTotalData.Data,
-      //     masterTotalData.Total
-      //   )
-      // );
-      // setAutoCompleteCtrl(false);
+      }
     }
     if (in_out === "Out") {
       Axios.get(`/outcall/${lotteryId}`, {
@@ -260,42 +256,34 @@ const BetPage = () => {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
+        console.log(res.data.data);
         setMasterOutCall(res.data.data);
 
-        setInOutCtl(false);
+        // setInOutCtl(false);
         // setCalllistctrl(false);
-        //  setMastercalls(res.data.data);
+        // setMastercalls(res.data.data);
       });
-      //  if (call.master) {
-      //    console.log(call.master);
-      //    Axios.get(`/call/${lotteryId}/call-numbers-total/${call.master}`, {
-      //      headers: {
-      //        authorization: `Bearer ` + localStorage.getItem("access-token"),
-      //      },
-      //    }).then((res) => {
-      //      console.log(res.data);
-      //      setMasterTotalData({
-      //        Data: res.data.numsData,
-      //        Total: res.data.numsTotal,
-      //      });
-      //    });
-      //  }
+
+      // if(cusval){
+      //   console.log(cusval)
+      // }
     }
-    // setInOutCtl(false);
-    // setCalllistctrl(false);
     setAutoCompleteCtrl(false);
     setMastercallAPI(false);
-    // setCalllistctrl(false);
+    setCalllistctrl(false);
   }, [autocompleteCtrl, mastercallAPIctl]);
 
-  console.log(masterOutCalls);
+  console.log(mastercalls);
+
+  console.log(autoCompleteValue);
 
   // out Customer select
   const OnSelect = (e) => {
     const { value } = e.target;
+    console.log(value)
 
     setCusval(value);
-    setInOutCtl(true);
+    setMastercallAPI(true);
   };
 
   //setTimeout Alert
@@ -314,7 +302,7 @@ const BetPage = () => {
         ? setOnchange({ ...onchange, number: value })
         : setOnchange({ ...onchange, amount: value });
     }
-    console.log(onchange);
+    // console.log(onchange);
   };
 
   const choice = (e) => {
@@ -2046,19 +2034,22 @@ const BetPage = () => {
 
   const bet = (e, in_out) => {
     e.preventDefault();
+    setLoading(true);
 
     if (call.numbers.length === 0 && loading === false && in_out === "Out") {
       setBeterrorcontrol(true);
+      setLoading(false);
       return;
     }
 
     if (in_out === "In") {
-      Axios.post(`/call/${lotteryId}`, call, {
+      Axios.post(`/call/${lotteryId}`, {master:autoCompleteValue._id,numbers:call.numbers}, {
         headers: {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       })
         .then((res) => {
+          console.log(res.data.data);
           setCall({
             master: "",
             numbers: [],
@@ -2068,16 +2059,17 @@ const BetPage = () => {
             amount: "",
           });
           setSuccess(true);
-          setLoading(true);
+          // setInOutCtl(true);
+          setLoading(false);
           // setCalllistctrl(true);
-          setCalltotalCtrl(true);
+          // setCalltotalCtrl(true);
           // setAutoCompleteCtrl(true);
           setMastercallAPI(true);
         })
-        .then((res) => {
-          setSuccess(false);
-          setLoading(false);
-        })
+        // .then((res) => {
+        //   setSuccess(false);
+        //   setLoading(false);
+        // })
         .catch((err) => console.log(err));
     }
   };
@@ -2096,9 +2088,11 @@ const BetPage = () => {
     })
       .then((res) => {
         console.log(res);
-        setMastercallAPI(true);
+        // setMastercallAPI(true);
         setMasterCallCrud({ id: "", numbers: [] });
         setComfirmCtl(false);
+        // setInOutCtl(true);
+        setMastercallAPI(true);
       })
       .catch((err) => {
         console.log(err);
@@ -2176,6 +2170,8 @@ const BetPage = () => {
 
   // console.log(cusval);
 
+  const [value, setValue] = React.useState(masters[0]);
+  const [inputValue, setInputValue] = React.useState("");
   return (
     <Stack height={"100%"} bgcolor={"white"}>
       {success && (
@@ -2281,14 +2277,17 @@ const BetPage = () => {
         <Stack direction={"row"} spacing={1}>
           {(in_out === "In" && (
             <Autocomplete
+              id="controllable-states-demo"
               size="small"
               // options={selectChoice && selectChoice === "Out" ? agents : "0"}
               options={masters}
+              // inputValue={autoCompleteValue}
+              // defaultValue={autoCompleteValue}
               isOptionEqualToValue={(option, value) =>
                 option.username === value.username
               }
               sx={{ width: 150 }}
-              getOptionLabel={(cus) => getAutoChoCus(cus)}
+              getOptionLabel={(cus) => cus.username}
               onChange={(e, value) => {
                 console.log(value);
                 setAutoCompleteValue(value);
@@ -2328,7 +2327,7 @@ const BetPage = () => {
                     onChange={(e) => OnSelect(e)}
                   >
                     {customers.map((c) => (
-                      <MenuItem sx={{ width: 200 }} value={c._id}>
+                      <MenuItem sx={{ width: 200 }} value={c}>
                         {c.name}
                       </MenuItem>
                     ))}
@@ -2569,114 +2568,116 @@ const BetPage = () => {
         </ModalBox>
       </Stack>
 
-      <Stack direction={"row"} spacing={{ xs: 0.5, sm: 1, md: 1 }}>
-        <Stack
-          // display={{ md: "none" }}
-          bgcolor={grey[300]}
-          spacing={1}
-          flexDirection={"column"}
-          flexWrap={"wrap"}
-          padding={1}
-          overflow="scroll"
-          justifyContent={{ xs: "start", sm: "start", md: "start" }}
-          width={{ xs: "20%", sm: "20%", md: "25%" }}
-        >
+      {(autoCompleteValue||cusval) && (
+        <Stack direction={"row"} spacing={{ xs: 0.5, sm: 1, md: 1 }}>
           <Stack
-            width={"100%"}
-            flexDirection={"row"}
-            flexWrap="wrap"
-            alignItems={"center"}
-            // borderRadius={1}
-            // bgcolor={green[300]}
-            // paddingLeft={0.5}
+            // display={{ md: "none" }}
+            bgcolor={grey[300]}
+            spacing={1}
+            flexDirection={"column"}
+            flexWrap={"wrap"}
+            padding={1}
+            overflow="scroll"
+            justifyContent={{ xs: "start", sm: "start", md: "start" }}
+            width={{ xs: "20%", sm: "20%", md: "25%" }}
           >
-            <Typography
-              color={"black"}
-              fontSize={13}
-              align="center"
-              fontWeight={600}
-              textAlign={"center"}
-              alignItems="center"
+            <Stack
+              width={"100%"}
+              flexDirection={"row"}
+              flexWrap="wrap"
+              alignItems={"center"}
+              // borderRadius={1}
+              // bgcolor={green[300]}
+              // paddingLeft={0.5}
             >
-              Hot Limit :
-            </Typography>
-            <Typography
-              // width="100%"
-              textAlign={"center"}
-              alignItems="center"
-              fontSize={12}
-              fontWeight={"bold"}
-              color={"blue"}
+              <Typography
+                color={"black"}
+                fontSize={13}
+                align="center"
+                fontWeight={600}
+                textAlign={"center"}
+                alignItems="center"
+              >
+                Hot Limit :
+              </Typography>
+              <Typography
+                // width="100%"
+                textAlign={"center"}
+                alignItems="center"
+                fontSize={12}
+                fontWeight={"bold"}
+                color={"blue"}
+              >
+                {(masterTotalData.Total * autoCompleteValue.hot_limit) / 100}
+              </Typography>
+            </Stack>
+            <Stack
+              width={"100%"}
+              flexDirection={"row"}
+              flexWrap="wrap"
+              alignItems={"center"}
+              // borderRadius={1}
+              // bgcolor={green[300]}
+              // paddingLeft={0.5}
             >
-              {(masterTotalData.Total * autoCompleteValue.hot_limit) / 100}
-            </Typography>
-          </Stack>
-          <Stack
-            width={"100%"}
-            flexDirection={"row"}
-            flexWrap="wrap"
-            alignItems={"center"}
-            // borderRadius={1}
-            // bgcolor={green[300]}
-            // paddingLeft={0.5}
-          >
-            <Typography
-              color={"black"}
-              fontSize={13}
-              align="center"
-              fontWeight={600}
-              textAlign={"center"}
-              alignItems="center"
+              <Typography
+                color={"black"}
+                fontSize={13}
+                align="center"
+                fontWeight={600}
+                textAlign={"center"}
+                alignItems="center"
+              >
+                Super Hot :
+              </Typography>
+              <Typography
+                // width="100%"
+                textAlign={"center"}
+                alignItems="center"
+                fontSize={12}
+                fontWeight={"bold"}
+                color={"blue"}
+              >
+                {masterTotalData.Total *
+                  (autoCompleteValue.superhot_limit / 100)}
+              </Typography>
+            </Stack>
+            <Stack
+              width={"100%"}
+              flexDirection={"row"}
+              flexWrap="wrap"
+              alignItems={"center"}
+              // borderRadius={1}
+              // bgcolor={green[300]}
             >
-              Super Hot :
-            </Typography>
-            <Typography
-              // width="100%"
-              textAlign={"center"}
-              alignItems="center"
-              fontSize={12}
-              fontWeight={"bold"}
-              color={"blue"}
-            >
-              {(masterTotalData.Total * autoCompleteValue.superhot_limit) / 100}
-            </Typography>
-          </Stack>
-          <Stack
-            width={"100%"}
-            flexDirection={"row"}
-            flexWrap="wrap"
-            alignItems={"center"}
-            // borderRadius={1}
-            // bgcolor={green[300]}
-          >
-            {hot &&
-              hot.map((h, key) => {
-                console.log(h);
-                return (
-                  // <Stack
-                  //   width={"100%"}
-                  //   flexDirection={"row"}
-                  //   flexWrap="wrap"
-                  //   alignItems={"center"}
-                  //   borderRadius={1}
-                  //   bgcolor={green[300]}
-                  //   paddingLeft={0.5}
-                  // >
-                  <>
-                    <Typography
-                      color={"red"}
-                      fontSize={14}
-                      align="center"
-                      // bgcolor={'green'}
-                      fontWeight={600}
-                      // width="100%"
-                      textAlign={"center"}
-                      alignItems="center"
-                      // display='flex'
-                    >
-                      {h}&nbsp;
-                    </Typography>
-                    {/* <Typography
+              {hot &&
+                hot.map((h, key) => {
+                  console.log(h);
+                  return (
+                    // <Stack
+                    //   width={"100%"}
+                    //   flexDirection={"row"}
+                    //   flexWrap="wrap"
+                    //   alignItems={"center"}
+                    //   borderRadius={1}
+                    //   bgcolor={green[300]}
+                    //   paddingLeft={0.5}
+                    // >
+                    <>
+                      <Typography
+                        color={"red"}
+                        fontSize={14}
+                        align="center"
+                        // bgcolor={'green'}
+                        fontWeight={600}
+                        // width="100%"
+                        textAlign={"center"}
+                        alignItems="center"
+                        // display='flex'
+                      >
+                        {h}&nbsp;
+                      </Typography>
+                      {/* <Typography
                     // width="100%"
                     textAlign={"center"}
                     alignItems="center"
@@ -2687,117 +2688,121 @@ const BetPage = () => {
                     +
                     {h.amount}
                   </Typography> */}
-                  </>
-                );
-              })}
-          </Stack>
-        </Stack>
-
-        <Stack
-          // display={"block"}
-          // position={"initial"}
-          // direction={"column"}
-          alignItems={"center"}
-          width={"35%"}
-          maxHeight={400}
-          minHeight={400}
-          overflow={"auto"}
-          // boxShadow={1}
-          // borderBottom={1}
-          // padding={1}
-          // spacing={1}
-        >
-          {in_out === "In" && call.numbers.length // autocompleteCtrl === false
-            ? call.numbers
-                .map((cal, key) => (
-                  // <Stack
-                  //   width={"100%"}
-                  //   alignItems={"center"}
-                  //   bgcolor={"ActiveBorder"}
-                  // >
-                  <>
-                    <Stack
-                      direction={"row"}
-                      // width={{ sx: 180 }}
-                      marginY={0.3}
-                      justifyContent={{
-                        sx: "space-between",
-                        sm: "space-around",
-                        md: "space-around",
-                      }}
-                    >
-                      <BetListCom call={cal} key={key}>
-                        <IconButton
-                          size="small"
-                          onClick={() => mscallcrud(cal, key)}
-                        >
-                          <Typography
-                            fontSize={8}
-                            textAlign={"center"}
-                            width={20}
-                            color={green[900]}
-                          >
-                            {key + 1}
-                          </Typography>
-                          <Delete
-                            sx={{ textalign: "center" }}
-                            fontSize="small"
-                          />
-                        </IconButton>
-                      </BetListCom>
-                    </Stack>
-                  </>
-                ))
-                .reverse()
-            : // autocompleteCtrl &&
-              //   autoCompleteValue &&
-
-              mastercalls
-                .filter(
-                  (ms, key) =>
-                    ms.master._id.toString() == call.master.toString()
-                )
-                .map((cal, key) => {
-                  return (
-                    <Stack
-                      bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
-                      borderLeft={0.5}
-                      borderRight={0.5}
-                      justifyContent={"space-around"}
-                      // component={"button"}
-                      sx={{ cursor: "pointer" }}
-                      onClick={() => {
-                        setMasterCallCrud({
-                          id: cal._id,
-                          numbers: cal.numbers,
-                        });
-                        setCallTotal(cal.totalAmount);
-                        setAutoCompleteCtrl(true);
-                        setDelButtCtl(true);
-                      }}
-                    >
-                      {cal.numbers.map((ca, key) => {
-                        return (
-                          <Stack
-                            direction={"row"}
-                            // width={{ sx: 180 }}
-                            marginY={0.3}
-                            justifyContent={{
-                              sx: "space-between",
-                              sm: "space-around",
-                              md: "space-around",
-                            }}
-                          >
-                            <BetListCom call={ca} key={key}></BetListCom>
-                          </Stack>
-                        );
-                      })}
-                    </Stack>
+                    </>
                   );
-                })
-                .reverse()}
-          {in_out === "Out" && singleCusCall.Lagnumbers.length
-            ? singleCusCall.Lagnumbers.map((cuscall, key) => {
+                })}
+            </Stack>
+          </Stack>
+
+          <Stack
+            // display={"block"}
+            // position={"initial"}
+            // direction={"column"}
+            alignItems={"center"}
+            width={"35%"}
+            maxHeight={400}
+            minHeight={400}
+            overflow={"auto"}
+            // boxShadow={1}
+            // borderBottom={1}
+            // padding={1}
+            // spacing={1}
+          >
+            {in_out === "In" && (call.numbers.length // autocompleteCtrl === false
+              ? call.numbers
+                  .map((cal, key) => (
+                    // <Stack
+                    //   width={"100%"}
+                    //   alignItems={"center"}
+                    //   bgcolor={"ActiveBorder"}
+                    // >
+                    <>
+                      <Stack
+                        direction={"row"}
+                        // width={{ sx: 180 }}
+                        marginY={0.3}
+                        justifyContent={{
+                          sx: "space-between",
+                          sm: "space-around",
+                          md: "space-around",
+                        }}
+                      >
+                        <BetListCom call={cal} key={key}>
+                          <IconButton
+                            size="small"
+                            onClick={() => mscallcrud(cal, key)}
+                          >
+                            <Typography
+                              fontSize={8}
+                              textAlign={"center"}
+                              width={20}
+                              color={green[900]}
+                            >
+                              {key + 1}
+                            </Typography>
+                            <Delete
+                              sx={{ textalign: "center" }}
+                              fontSize="small"
+                            />
+                          </IconButton>
+                        </BetListCom>
+                      </Stack>
+                    </>
+                  ))
+                  .reverse()
+              : // autocompleteCtrl &&
+                //   autoCompleteValue &&
+
+                mastercalls
+                  .filter(
+                    (ms, key) =>
+                      ms.master._id.toString() ==
+                      autoCompleteValue._id.toString()
+                  )
+                  .map((cal, key) => {
+                    return (
+                      <Stack
+                        bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
+                        borderLeft={0.5}
+                        borderRight={0.5}
+                        justifyContent={"space-around"}
+                        // component={"button"}
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setMasterCallCrud({
+                            id: cal._id,
+                            numbers: cal.numbers,
+                          });
+                          setCallTotal(cal.totalAmount);
+                          setAutoCompleteCtrl(true);
+                          setDelButtCtl(true);
+                        }}
+                      >
+                        {cal.numbers.map((ca, key) => {
+                          return (
+                            <Stack
+                              direction={"row"}
+                              // width={{ sx: 180 }}
+                              marginY={0.3}
+                              justifyContent={{
+                                sx: "space-between",
+                                sm: "space-around",
+                                md: "space-around",
+                              }}
+                            >
+                              <BetListCom call={ca} key={key}></BetListCom>
+                            </Stack>
+                          );
+                        })}
+                      </Stack>
+                    );
+                  })
+                  .reverse())
+            }
+
+
+            {in_out === "Out" &&
+            singleCusCall.Lagnumbers.length? singleCusCall.Lagnumbers.map((cuscall, key) => {
                 return (
                   <Stack
                     direction={"row"}
@@ -2813,98 +2818,99 @@ const BetPage = () => {
                   </Stack>
                 );
               })
-            : masterOutCalls
-                .filter(
-                  (mso, key) =>
-                    mso.customer._id.toString() === cusval.toString()
-                )
-                .map((cal, key) => {
-                  return (
-                    <Stack
-                      bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
-                      borderLeft={0.5}
-                      borderRight={0.5}
-                      justifyContent={"space-around"}
-                      // component={"button"}
-                      sx={{ cursor: "pointer" }}
-                      // onClick={() => {
-                      //   setMasterCallCrud({
-                      //     id: cal._id,
-                      //     numbers: cal.numbers,
-                      //   });
-                      //   setCallTotal(cal.totalAmount);
-                      //   setAutoCompleteCtrl(true);
-                      // }}
-                    >
-                      {cal.numbers.map((ca, key) => {
-                        return (
-                          <Stack
-                            direction={"row"}
-                            // width={{ sx: 180 }}
-                            marginY={0.3}
-                            justifyContent={{
-                              sx: "space-between",
-                              sm: "space-around",
-                              md: "space-around",
-                            }}
-                          >
-                            <BetListCom call={ca} key={key}></BetListCom>
-                          </Stack>
-                        );
-                      })}
-                    </Stack>
-                  );
-                })
-                .reverse()}
-        </Stack>
-        <Stack
-          alignItems={"center"}
-          // width={"30%"}
-          maxHeight={400}
-          minHeight={400}
-          overflow={"scroll"}
-          boxShadow={1}
-          // borderBottom={1}
-          // padding={1}
-          // justifyContent={"space-between"}
-        >
-          {demoLager &&
-            mastercallcrud.id === "" &&
-            demoLager.extraNumb.map((calc, key) => {
+            :
+            masterOutCalls
+              .filter(
+                (mso, key) => mso.customer._id.toString() === cusval._id.toString()
+              )
+              .map((cal, key) => {
+                return (
+                  <Stack
+                    bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
+                    borderLeft={0.5}
+                    borderRight={0.5}
+                    justifyContent={"space-around"}
+                    // component={"button"}
+                    sx={{ cursor: "pointer" }}
+                    // onClick={() => {
+                    //   setMasterCallCrud({
+                    //     id: cal._id,
+                    //     numbers: cal.numbers,
+                    //   });
+                    //   setCallTotal(cal.totalAmount);
+                    //   setAutoCompleteCtrl(true);
+                    // }}
+                  >
+                    {cal.numbers.map((ca, key) => {
+                      return (
+                        <Stack
+                          direction={"row"}
+                          // width={{ sx: 180 }}
+                          marginY={0.3}
+                          justifyContent={{
+                            sx: "space-between",
+                            sm: "space-around",
+                            md: "space-around",
+                          }}
+                        >
+                          <BetListCom call={ca} key={key}></BetListCom>
+                        </Stack>
+                      );
+                    })}
+                  </Stack>
+                );
+              })
+              .reverse()}
+          </Stack>
+          <Stack
+            alignItems={"center"}
+            // width={"30%"}
+            maxHeight={400}
+            minHeight={400}
+            overflow={"scroll"}
+            boxShadow={1}
+            // borderBottom={1}
+            // padding={1}
+            // justifyContent={"space-between"}
+          >
+            {demoLager &&
+              mastercallcrud.id === "" &&
+              demoLager.extraNumb.map((calc, key) => {
+                return (
+                  <Stack
+                    borderLeft={0.5}
+                    borderRight={0.5}
+                    // padding={1}
+                    // direction={"row"}
+                    justifyContent={"space-around"}
+                  >
+                    <BetListCom call={calc} key={key} />
+                  </Stack>
+                );
+              })}
+            {mastercallcrud.numbers.map((calcrud, key) => {
               return (
-                <Stack
-                  borderLeft={0.5}
-                  borderRight={0.5}
-                  // padding={1}
-                  // direction={"row"}
-                  justifyContent={"space-around"}
-                >
-                  <BetListCom call={calc} key={key} />
-                </Stack>
+                <BetListCom call={calcrud}>
+                  {/* <Stack direction={"row"}> */}
+                  <IconButton
+                    size="small"
+                    onClick={() => editHandle(calcrud, key)}
+                  >
+                    <Edit fontSize={"6px"} />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    onClick={() => mastercallDelete(key, calcrud)}
+                  >
+                    <Delete fontSize={"6px"} />
+                  </IconButton>
+                  {/* </Stack> */}
+                </BetListCom>
               );
             })}
-          {mastercallcrud.numbers.map((calcrud, key) => {
-            return (
-              <BetListCom call={calcrud}>
-                {/* <Stack direction={"row"}> */}
-                <IconButton
-                  size="small"
-                  onClick={() => editHandle(calcrud, key)}
-                >
-                  <Edit fontSize={"6px"} />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  onClick={() => mastercallDelete(key, calcrud)}
-                >
-                  <Delete fontSize={"6px"} />
-                </IconButton>
-                {/* </Stack> */}
-              </BetListCom>
-            );
-          })}
+          </Stack>
         </Stack>
-      </Stack>
+      )}
       <Stack
         padding={1}
         border={1}
