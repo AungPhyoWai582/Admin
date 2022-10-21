@@ -176,7 +176,7 @@ const LagerCut = () => {
       })
       .catch((err) => console.log(err));
   };
-  console.log(customers);
+  console.log(cutLag);
 
   return (
     <>
@@ -441,8 +441,9 @@ const LagerCut = () => {
             maxWidth={"70%"}
           >
             <Typography>Numbers :</Typography>
-            <Stack
+            <Box
               bgcolor="white"
+              // paddingTop={1}
               justifyContent={{
                 sx: "space-between",
                 sm: "space-around",
@@ -454,7 +455,7 @@ const LagerCut = () => {
               {cutLag.numbers.map((ca, key) => (
                 <BetListCom call={ca} key={key} />
               ))}
-            </Stack>
+            </Box>
           </Stack>
           <Stack
             spacing={1.5}

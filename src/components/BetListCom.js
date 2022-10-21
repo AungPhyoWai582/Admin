@@ -4,10 +4,10 @@ import { blue, green, grey } from "@mui/material/colors";
 import React from "react";
 
 const BetListCom = ({ call, key, onClick, children }) => {
-  // console.log(setEdtiNum);
+  console.log(call);
   console.log(children);
   return (
-    <Stack direction={"row"} width={"100%"}>
+    <Stack direction={"row"}>
       <Stack
         // marginX={0.5}
         direction={"row"}

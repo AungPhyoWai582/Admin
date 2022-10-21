@@ -102,7 +102,7 @@ const BetPage = () => {
   const [autocompleteCtrl, setAutoCompleteCtrl] = useState(false);
 
   const [selectChoice, setSelectChoice] = useState();
-  const [enternumtol, setEnternumtol] = useState({ number: "", total: "" });
+  // const [enternumtol, setEnternumtol] = useState({ number: "", total: "" });
 
   const [beterrorcontrol, setBeterrorcontrol] = useState(false);
   const [callandBetlistctleff, setCallandBetlistctleff] = useState(true);
@@ -120,7 +120,7 @@ const BetPage = () => {
 
   const [masters, setMasters] = useState([]);
 
-  const showCalls = [];
+  // const showCalls = [];
 
   const { lotteryId } = useParams();
   const location = useLocation();
