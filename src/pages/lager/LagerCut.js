@@ -141,11 +141,11 @@ const LagerCut = () => {
       .map((num) => Number(num.amount))
       .reduce((pre, next) => pre + next, 0);
     console.log(numbers);
-    console.log(data, total);
+    // console.log(data, total);
     // setViewLager({ ...viewLager, numbers: breakData, totalAmount: total });
     setCutLag({
       ...cutLag,
-      numbers: breakData,
+      numbers: breakData.filter(bd=>bd.amount !== '0'),
       breakPercent: breakPercent,
       cutAmount: total,
       mainAmount: lager.totalAmount,
@@ -249,12 +249,7 @@ const LagerCut = () => {
                     >
                       {Array.from(Array(4), (_, x) => x).map((row, key) => {
                         let num = row * 25 + col;
-                        console.log(
-                          (num.toString().length === 1
-                            ? "0" + num
-                            : num
-                          ).toString()
-                        );
+                      
                         return (
                           <>
                             <TableCell
