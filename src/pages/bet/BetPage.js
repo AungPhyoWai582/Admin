@@ -198,10 +198,11 @@ const BetPage = () => {
           if (masters) {
             const masters = res.data.data;
             setMasters([...masters]);
-            setCalllistctrl(false);
+            // setCalllistctrl(false);
             if (masters) {
               setAutoCompleteValue(masters[0]);
             }
+            console.log(autoCompleteValue);
           }
         })
         .catch((err) => console.log(err));
@@ -213,15 +214,14 @@ const BetPage = () => {
         },
       }).then((res) => {
         setCustomers(res.data);
-        setCusval(res.data[0])
+        setCusval(res.data[0]);
       });
 
-      
       setInOutCtl(false);
     }
     // setHotNumbers( calculateHotTee(JSON.parse(localStorage.getItem('user-info')),hot_tees,lager.in.numbers,lager.in.totalAmount))
   }, [inOutCtl]);
-
+  // console.log(masters);
   useEffect(() => {
     if (in_out === "In") {
       Axios.get(`/call/${lotteryId}`, {
@@ -280,7 +280,7 @@ const BetPage = () => {
   // out Customer select
   const OnSelect = (e) => {
     const { value } = e.target;
-    console.log(value)
+    console.log(value);
 
     setCusval(value);
     setMastercallAPI(true);
@@ -2043,11 +2043,15 @@ const BetPage = () => {
     }
 
     if (in_out === "In") {
-      Axios.post(`/call/${lotteryId}`, {master:autoCompleteValue._id,numbers:call.numbers}, {
-        headers: {
-          authorization: `Bearer ` + localStorage.getItem("access-token"),
-        },
-      })
+      Axios.post(
+        `/call/${lotteryId}`,
+        { master: autoCompleteValue._id, numbers: call.numbers },
+        {
+          headers: {
+            authorization: `Bearer ` + localStorage.getItem("access-token"),
+          },
+        }
+      )
         .then((res) => {
           console.log(res.data.data);
           setCall({
@@ -2170,7 +2174,7 @@ const BetPage = () => {
 
   // console.log(cusval);
 
-  const [value, setValue] = React.useState(masters[0]);
+  const [value, setValue] = React.useState(masters);
   const [inputValue, setInputValue] = React.useState("");
   return (
     <Stack height={"100%"} bgcolor={"white"}>
@@ -2277,17 +2281,10 @@ const BetPage = () => {
         <Stack direction={"row"} spacing={1}>
           {(in_out === "In" && (
             <Autocomplete
-              id="controllable-states-demo"
               size="small"
-              // options={selectChoice && selectChoice === "Out" ? agents : "0"}
               options={masters}
-              // inputValue={autoCompleteValue}
-              // defaultValue={autoCompleteValue}
-              isOptionEqualToValue={(option, value) =>
-                option.username === value.username
-              }
               sx={{ width: 150 }}
-              getOptionLabel={(cus) => cus.username}
+              getOptionLabel={(cus) => `${cus.username}`}
               onChange={(e, value) => {
                 console.log(value);
                 setAutoCompleteValue(value);
@@ -2300,10 +2297,12 @@ const BetPage = () => {
                 <TextField
                   {...params}
                   sx={{ fontSize: 8 }}
-                  label="Master"
+                  label={`${
+                    autoCompleteValue ? autoCompleteValue.username : "Agent"
+                  }`}
                   size="small"
                   color={"success"}
-                  // defaultValue={masters}
+                  // defaultValue={autoCompleteValue}
                 />
               )}
             />
@@ -2503,7 +2502,7 @@ const BetPage = () => {
           color={"success"}
           onClick={() => {
             setDelButtCtl(false);
-
+            setEditCtlBtn(false);
             setMasterCallCrud({ id: "", numbers: [] });
           }}
         >
@@ -2568,7 +2567,7 @@ const BetPage = () => {
         </ModalBox>
       </Stack>
 
-      {(autoCompleteValue||cusval) && (
+      {(autoCompleteValue || cusval) && (
         <Stack direction={"row"} spacing={{ xs: 0.5, sm: 1, md: 1 }}>
           <Stack
             // display={{ md: "none" }}
@@ -2708,56 +2707,119 @@ const BetPage = () => {
             // padding={1}
             // spacing={1}
           >
-            {in_out === "In" && (call.numbers.length // autocompleteCtrl === false
-              ? call.numbers
-                  .map((cal, key) => (
-                    // <Stack
-                    //   width={"100%"}
-                    //   alignItems={"center"}
-                    //   bgcolor={"ActiveBorder"}
-                    // >
-                    <>
-                      <Stack
-                        direction={"row"}
-                        // width={{ sx: 180 }}
-                        marginY={0.3}
-                        justifyContent={{
-                          sx: "space-between",
-                          sm: "space-around",
-                          md: "space-around",
-                        }}
-                      >
-                        <BetListCom call={cal} key={key}>
-                          <IconButton
-                            size="small"
-                            onClick={() => mscallcrud(cal, key)}
-                          >
-                            <Typography
-                              fontSize={8}
-                              textAlign={"center"}
-                              width={20}
-                              color={green[900]}
+            {in_out === "In" &&
+              (call.numbers.length // autocompleteCtrl === false
+                ? call.numbers
+                    .map((cal, key) => (
+                      // <Stack
+                      //   width={"100%"}
+                      //   alignItems={"center"}
+                      //   bgcolor={"ActiveBorder"}
+                      // >
+                      <>
+                        <Stack
+                          direction={"row"}
+                          // width={{ sx: 180 }}
+                          marginY={0.3}
+                          justifyContent={{
+                            sx: "space-between",
+                            sm: "space-around",
+                            md: "space-around",
+                          }}
+                        >
+                          <BetListCom call={cal} key={key}>
+                            <IconButton
+                              size="small"
+                              onClick={() => mscallcrud(cal, key)}
                             >
-                              {key + 1}
-                            </Typography>
-                            <Delete
-                              sx={{ textalign: "center" }}
-                              fontSize="small"
-                            />
-                          </IconButton>
-                        </BetListCom>
-                      </Stack>
-                    </>
-                  ))
-                  .reverse()
-              : // autocompleteCtrl &&
-                //   autoCompleteValue &&
+                              <Typography
+                                fontSize={8}
+                                textAlign={"center"}
+                                width={20}
+                                color={green[900]}
+                              >
+                                {key + 1}
+                              </Typography>
+                              <Delete
+                                sx={{ textalign: "center" }}
+                                fontSize="small"
+                              />
+                            </IconButton>
+                          </BetListCom>
+                        </Stack>
+                      </>
+                    ))
+                    .reverse()
+                : // autocompleteCtrl &&
+                  //   autoCompleteValue &&
 
-                mastercalls
+                  mastercalls
+                    .filter(
+                      (ms, key) =>
+                        ms.master._id.toString() ==
+                        autoCompleteValue._id.toString()
+                    )
+                    .map((cal, key) => {
+                      return (
+                        <Stack
+                          bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
+                          borderLeft={0.5}
+                          borderRight={0.5}
+                          justifyContent={"space-around"}
+                          // component={"button"}
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => {
+                            setMasterCallCrud({
+                              id: cal._id,
+                              numbers: cal.numbers,
+                            });
+                            setCallTotal(cal.totalAmount);
+                            setAutoCompleteCtrl(true);
+                            setDelButtCtl(true);
+                          }}
+                        >
+                          {cal.numbers.map((ca, key) => {
+                            return (
+                              <Stack
+                                direction={"row"}
+                                // width={{ sx: 180 }}
+                                marginY={0.3}
+                                justifyContent={{
+                                  sx: "space-between",
+                                  sm: "space-around",
+                                  md: "space-around",
+                                }}
+                              >
+                                <BetListCom call={ca} key={key}></BetListCom>
+                              </Stack>
+                            );
+                          })}
+                        </Stack>
+                      );
+                    })
+                    .reverse())}
+
+            {in_out === "Out" && singleCusCall.Lagnumbers.length
+              ? singleCusCall.Lagnumbers.map((cuscall, key) => {
+                  return (
+                    <Stack
+                      direction={"row"}
+                      // width={{ sx: 180 }}
+                      marginY={0.3}
+                      justifyContent={{
+                        sx: "space-between",
+                        sm: "space-around",
+                        md: "space-around",
+                      }}
+                    >
+                      <BetListCom call={cuscall} key={key}></BetListCom>
+                    </Stack>
+                  );
+                })
+              : masterOutCalls
                   .filter(
-                    (ms, key) =>
-                      ms.master._id.toString() ==
-                      autoCompleteValue._id.toString()
+                    (mso, key) =>
+                      mso.customer._id.toString() === cusval._id.toString()
                   )
                   .map((cal, key) => {
                     return (
@@ -2768,15 +2830,14 @@ const BetPage = () => {
                         justifyContent={"space-around"}
                         // component={"button"}
                         sx={{ cursor: "pointer" }}
-                        onClick={() => {
-                          setMasterCallCrud({
-                            id: cal._id,
-                            numbers: cal.numbers,
-                          });
-                          setCallTotal(cal.totalAmount);
-                          setAutoCompleteCtrl(true);
-                          setDelButtCtl(true);
-                        }}
+                        // onClick={() => {
+                        //   setMasterCallCrud({
+                        //     id: cal._id,
+                        //     numbers: cal.numbers,
+                        //   });
+                        //   setCallTotal(cal.totalAmount);
+                        //   setAutoCompleteCtrl(true);
+                        // }}
                       >
                         {cal.numbers.map((ca, key) => {
                           return (
@@ -2797,70 +2858,7 @@ const BetPage = () => {
                       </Stack>
                     );
                   })
-                  .reverse())
-            }
-
-
-            {in_out === "Out" &&
-            singleCusCall.Lagnumbers.length? singleCusCall.Lagnumbers.map((cuscall, key) => {
-                return (
-                  <Stack
-                    direction={"row"}
-                    // width={{ sx: 180 }}
-                    marginY={0.3}
-                    justifyContent={{
-                      sx: "space-between",
-                      sm: "space-around",
-                      md: "space-around",
-                    }}
-                  >
-                    <BetListCom call={cuscall} key={key}></BetListCom>
-                  </Stack>
-                );
-              })
-            :
-            masterOutCalls
-              .filter(
-                (mso, key) => mso.customer._id.toString() === cusval._id.toString()
-              )
-              .map((cal, key) => {
-                return (
-                  <Stack
-                    bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
-                    borderLeft={0.5}
-                    borderRight={0.5}
-                    justifyContent={"space-around"}
-                    // component={"button"}
-                    sx={{ cursor: "pointer" }}
-                    // onClick={() => {
-                    //   setMasterCallCrud({
-                    //     id: cal._id,
-                    //     numbers: cal.numbers,
-                    //   });
-                    //   setCallTotal(cal.totalAmount);
-                    //   setAutoCompleteCtrl(true);
-                    // }}
-                  >
-                    {cal.numbers.map((ca, key) => {
-                      return (
-                        <Stack
-                          direction={"row"}
-                          // width={{ sx: 180 }}
-                          marginY={0.3}
-                          justifyContent={{
-                            sx: "space-between",
-                            sm: "space-around",
-                            md: "space-around",
-                          }}
-                        >
-                          <BetListCom call={ca} key={key}></BetListCom>
-                        </Stack>
-                      );
-                    })}
-                  </Stack>
-                );
-              })
-              .reverse()}
+                  .reverse()}
           </Stack>
           <Stack
             alignItems={"center"}
