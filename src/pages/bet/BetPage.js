@@ -113,6 +113,8 @@ const BetPage = () => {
   const [lager, setLager] = useState({});
   const [call, setCall] = useState({
     master: "",
+    hotLimit: 0,
+    superHotLimit: 0,
     numbers: [],
   });
   // const [outCalls, setOutCalls] = useState([]);
@@ -346,6 +348,17 @@ const BetPage = () => {
                 }`
               );
               checkHot = true;
+            } else if (
+              masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                masterTotalData.Data[
+                  masterTotalData.Data.findIndex(
+                    (obj) => obj.number === a.number
+                  )
+                ].amount -call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+              a.amount
+            ) {
+              alert("Limit Over !!!");
+              checkHot = true;
             }
           }
         });
@@ -397,6 +410,17 @@ const BetPage = () => {
                 }`
               );
               checkHot = true;
+            } else if (
+              masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                masterTotalData.Data[
+                  masterTotalData.Data.findIndex(
+                    (obj) => obj.number === a.number
+                  )
+                ].amount -call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+              a.amount
+            ) {
+              alert("Limit Over !!!");
+              checkHot = true;
             }
           }
         });
@@ -447,6 +471,17 @@ const BetPage = () => {
                 }`
               );
               checkHot = true;
+            } else if (
+              masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                masterTotalData.Data[
+                  masterTotalData.Data.findIndex(
+                    (obj) => obj.number === a.number
+                  )
+                ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+              a.amount
+            ) {
+              alert("Limit Over !!!");
+              checkHot = true;
             }
           }
         });
@@ -496,6 +531,17 @@ const BetPage = () => {
                   ].amount
                 }`
               );
+              checkHot = true;
+            } else if (
+              masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                masterTotalData.Data[
+                  masterTotalData.Data.findIndex(
+                    (obj) => obj.number === a.number
+                  )
+                ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+              a.amount
+            ) {
+              alert("Limit Over !!!");
               checkHot = true;
             }
           }
@@ -552,6 +598,28 @@ const BetPage = () => {
                     ].amount
                   }`
                 );
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
                 checkHot = true;
               }
             }
@@ -615,6 +683,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0)<
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -674,6 +753,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -727,6 +817,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -779,6 +880,17 @@ const BetPage = () => {
                     ].amount
                   }`
                 );
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
                 checkHot = true;
               }
             }
@@ -839,6 +951,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -893,6 +1016,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -945,6 +1079,17 @@ const BetPage = () => {
                     ].amount
                   }`
                 );
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
                 checkHot = true;
               }
             }
@@ -1012,6 +1157,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1068,6 +1224,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1122,6 +1289,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1148,6 +1326,7 @@ const BetPage = () => {
           onchange.number.endsWith("8") ||
           onchange.number.endsWith("9")
         ) {
+          // talone-chin
           // FPate.map((a) => {
           // if(hot.includes(a.number)){
 
@@ -1172,6 +1351,10 @@ const BetPage = () => {
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
                 onchange.amount
               )
+              // ||
+              // call.numbers.filter((cal) => hot.includes(cal.number)).amount +
+              // onchange.amount >=
+              // masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
             ) {
               alert(
                 `remain hot amount : ${
@@ -1186,12 +1369,25 @@ const BetPage = () => {
               // checkHot = true;
               return;
             }
+            if (
+              masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                masterTotalData.Data[
+                  masterTotalData.Data.findIndex(
+                    (obj) => obj.number === onchange.number
+                  )
+                ].amount - call.numbers.filter(cal=>cal.number===onchange.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+              onchange.amount
+            ) {
+              alert("Limit Over !!!");
+              return;
+            }
           }
 
           setCall({
             ...call,
             numbers: [...call.numbers, onchange],
           });
+
           setOnchange({ number: "", amount: onchange.amount });
           setBeterrorcontrol(false);
           setEditCtlBtn(false);
@@ -1261,6 +1457,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1322,6 +1529,17 @@ const BetPage = () => {
                     ].amount
                   }`
                 );
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
                 checkHot = true;
               }
             }
@@ -1411,6 +1629,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1472,6 +1701,17 @@ const BetPage = () => {
                     ].amount
                   }`
                 );
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
                 checkHot = true;
               }
             }
@@ -1571,6 +1811,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1632,6 +1883,17 @@ const BetPage = () => {
                     ].amount
                   }`
                 );
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
                 checkHot = true;
               }
             }
@@ -1741,6 +2003,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0)<
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1802,6 +2075,17 @@ const BetPage = () => {
                     ].amount
                   }`
                 );
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
                 checkHot = true;
               }
             }
@@ -1921,6 +2205,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1982,6 +2277,17 @@ const BetPage = () => {
                     ].amount
                   }`
                 );
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
                 checkHot = true;
               }
             }
