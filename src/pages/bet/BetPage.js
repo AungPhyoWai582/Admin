@@ -113,6 +113,8 @@ const BetPage = () => {
   const [lager, setLager] = useState({});
   const [call, setCall] = useState({
     master: "",
+    hotLimit: 0,
+    superHotLimit: 0,
     numbers: [],
   });
   // const [outCalls, setOutCalls] = useState([]);
@@ -213,10 +215,9 @@ const BetPage = () => {
         },
       }).then((res) => {
         setCustomers(res.data);
-        setCusval(res.data[0])
+        setCusval(res.data[0]);
       });
 
-      
       setInOutCtl(false);
     }
     // setHotNumbers( calculateHotTee(JSON.parse(localStorage.getItem('user-info')),hot_tees,lager.in.numbers,lager.in.totalAmount))
@@ -280,7 +281,7 @@ const BetPage = () => {
   // out Customer select
   const OnSelect = (e) => {
     const { value } = e.target;
-    console.log(value)
+    console.log(value);
 
     setCusval(value);
     setMastercallAPI(true);
@@ -346,6 +347,17 @@ const BetPage = () => {
                 }`
               );
               checkHot = true;
+            } else if (
+              masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                masterTotalData.Data[
+                  masterTotalData.Data.findIndex(
+                    (obj) => obj.number === a.number
+                  )
+                ].amount -call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+              a.amount
+            ) {
+              alert("Limit Over !!!");
+              checkHot = true;
             }
           }
         });
@@ -397,6 +409,17 @@ const BetPage = () => {
                 }`
               );
               checkHot = true;
+            } else if (
+              masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                masterTotalData.Data[
+                  masterTotalData.Data.findIndex(
+                    (obj) => obj.number === a.number
+                  )
+                ].amount -call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+              a.amount
+            ) {
+              alert("Limit Over !!!");
+              checkHot = true;
             }
           }
         });
@@ -447,6 +470,17 @@ const BetPage = () => {
                 }`
               );
               checkHot = true;
+            } else if (
+              masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                masterTotalData.Data[
+                  masterTotalData.Data.findIndex(
+                    (obj) => obj.number === a.number
+                  )
+                ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+              a.amount
+            ) {
+              alert("Limit Over !!!");
+              checkHot = true;
             }
           }
         });
@@ -496,6 +530,17 @@ const BetPage = () => {
                   ].amount
                 }`
               );
+              checkHot = true;
+            } else if (
+              masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                masterTotalData.Data[
+                  masterTotalData.Data.findIndex(
+                    (obj) => obj.number === a.number
+                  )
+                ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+              a.amount
+            ) {
+              alert("Limit Over !!!");
               checkHot = true;
             }
           }
@@ -552,6 +597,28 @@ const BetPage = () => {
                     ].amount
                   }`
                 );
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
                 checkHot = true;
               }
             }
@@ -615,6 +682,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0)<
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -674,6 +752,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -727,6 +816,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -779,6 +879,17 @@ const BetPage = () => {
                     ].amount
                   }`
                 );
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
                 checkHot = true;
               }
             }
@@ -839,6 +950,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -893,6 +1015,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -945,6 +1078,17 @@ const BetPage = () => {
                     ].amount
                   }`
                 );
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
                 checkHot = true;
               }
             }
@@ -1012,6 +1156,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1068,6 +1223,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1122,6 +1288,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1148,6 +1325,7 @@ const BetPage = () => {
           onchange.number.endsWith("8") ||
           onchange.number.endsWith("9")
         ) {
+          // talone-chin
           // FPate.map((a) => {
           // if(hot.includes(a.number)){
 
@@ -1172,6 +1350,10 @@ const BetPage = () => {
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
                 onchange.amount
               )
+              // ||
+              // call.numbers.filter((cal) => hot.includes(cal.number)).amount +
+              // onchange.amount >=
+              // masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
             ) {
               alert(
                 `remain hot amount : ${
@@ -1186,12 +1368,25 @@ const BetPage = () => {
               // checkHot = true;
               return;
             }
+            if (
+              masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                masterTotalData.Data[
+                  masterTotalData.Data.findIndex(
+                    (obj) => obj.number === onchange.number
+                  )
+                ].amount - call.numbers.filter(cal=>cal.number===onchange.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+              onchange.amount
+            ) {
+              alert("Limit Over !!!");
+              return;
+            }
           }
 
           setCall({
             ...call,
             numbers: [...call.numbers, onchange],
           });
+
           setOnchange({ number: "", amount: onchange.amount });
           setBeterrorcontrol(false);
           setEditCtlBtn(false);
@@ -1261,6 +1456,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1322,6 +1528,17 @@ const BetPage = () => {
                     ].amount
                   }`
                 );
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
                 checkHot = true;
               }
             }
@@ -1411,6 +1628,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1472,6 +1700,17 @@ const BetPage = () => {
                     ].amount
                   }`
                 );
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
                 checkHot = true;
               }
             }
@@ -1571,6 +1810,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1632,6 +1882,17 @@ const BetPage = () => {
                     ].amount
                   }`
                 );
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
                 checkHot = true;
               }
             }
@@ -1741,6 +2002,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0)<
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1802,6 +2074,17 @@ const BetPage = () => {
                     ].amount
                   }`
                 );
+                checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
                 checkHot = true;
               }
             }
@@ -1921,6 +2204,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -1983,6 +2277,17 @@ const BetPage = () => {
                   }`
                 );
                 checkHot = true;
+              } else if (
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === a.number
+                    )
+                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                a.amount
+              ) {
+                alert("Limit Over !!!");
+                checkHot = true;
               }
             }
           });
@@ -2043,11 +2348,15 @@ const BetPage = () => {
     }
 
     if (in_out === "In") {
-      Axios.post(`/call/${lotteryId}`, {master:autoCompleteValue._id,numbers:call.numbers}, {
-        headers: {
-          authorization: `Bearer ` + localStorage.getItem("access-token"),
-        },
-      })
+      Axios.post(
+        `/call/${lotteryId}`,
+        { master: autoCompleteValue._id, numbers: call.numbers },
+        {
+          headers: {
+            authorization: `Bearer ` + localStorage.getItem("access-token"),
+          },
+        }
+      )
         .then((res) => {
           console.log(res.data.data);
           setCall({
@@ -2568,7 +2877,7 @@ const BetPage = () => {
         </ModalBox>
       </Stack>
 
-      {(autoCompleteValue||cusval) && (
+      {(autoCompleteValue || cusval) && (
         <Stack direction={"row"} spacing={{ xs: 0.5, sm: 1, md: 1 }}>
           <Stack
             // display={{ md: "none" }}
@@ -2708,56 +3017,119 @@ const BetPage = () => {
             // padding={1}
             // spacing={1}
           >
-            {in_out === "In" && (call.numbers.length // autocompleteCtrl === false
-              ? call.numbers
-                  .map((cal, key) => (
-                    // <Stack
-                    //   width={"100%"}
-                    //   alignItems={"center"}
-                    //   bgcolor={"ActiveBorder"}
-                    // >
-                    <>
-                      <Stack
-                        direction={"row"}
-                        // width={{ sx: 180 }}
-                        marginY={0.3}
-                        justifyContent={{
-                          sx: "space-between",
-                          sm: "space-around",
-                          md: "space-around",
-                        }}
-                      >
-                        <BetListCom call={cal} key={key}>
-                          <IconButton
-                            size="small"
-                            onClick={() => mscallcrud(cal, key)}
-                          >
-                            <Typography
-                              fontSize={8}
-                              textAlign={"center"}
-                              width={20}
-                              color={green[900]}
+            {in_out === "In" &&
+              (call.numbers.length // autocompleteCtrl === false
+                ? call.numbers
+                    .map((cal, key) => (
+                      // <Stack
+                      //   width={"100%"}
+                      //   alignItems={"center"}
+                      //   bgcolor={"ActiveBorder"}
+                      // >
+                      <>
+                        <Stack
+                          direction={"row"}
+                          // width={{ sx: 180 }}
+                          marginY={0.3}
+                          justifyContent={{
+                            sx: "space-between",
+                            sm: "space-around",
+                            md: "space-around",
+                          }}
+                        >
+                          <BetListCom call={cal} key={key}>
+                            <IconButton
+                              size="small"
+                              onClick={() => mscallcrud(cal, key)}
                             >
-                              {key + 1}
-                            </Typography>
-                            <Delete
-                              sx={{ textalign: "center" }}
-                              fontSize="small"
-                            />
-                          </IconButton>
-                        </BetListCom>
-                      </Stack>
-                    </>
-                  ))
-                  .reverse()
-              : // autocompleteCtrl &&
-                //   autoCompleteValue &&
+                              <Typography
+                                fontSize={8}
+                                textAlign={"center"}
+                                width={20}
+                                color={green[900]}
+                              >
+                                {key + 1}
+                              </Typography>
+                              <Delete
+                                sx={{ textalign: "center" }}
+                                fontSize="small"
+                              />
+                            </IconButton>
+                          </BetListCom>
+                        </Stack>
+                      </>
+                    ))
+                    .reverse()
+                : // autocompleteCtrl &&
+                  //   autoCompleteValue &&
 
-                mastercalls
+                  mastercalls
+                    .filter(
+                      (ms, key) =>
+                        ms.master._id.toString() ==
+                        autoCompleteValue._id.toString()
+                    )
+                    .map((cal, key) => {
+                      return (
+                        <Stack
+                          bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
+                          borderLeft={0.5}
+                          borderRight={0.5}
+                          justifyContent={"space-around"}
+                          // component={"button"}
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => {
+                            setMasterCallCrud({
+                              id: cal._id,
+                              numbers: cal.numbers,
+                            });
+                            setCallTotal(cal.totalAmount);
+                            setAutoCompleteCtrl(true);
+                            setDelButtCtl(true);
+                          }}
+                        >
+                          {cal.numbers.map((ca, key) => {
+                            return (
+                              <Stack
+                                direction={"row"}
+                                // width={{ sx: 180 }}
+                                marginY={0.3}
+                                justifyContent={{
+                                  sx: "space-between",
+                                  sm: "space-around",
+                                  md: "space-around",
+                                }}
+                              >
+                                <BetListCom call={ca} key={key}></BetListCom>
+                              </Stack>
+                            );
+                          })}
+                        </Stack>
+                      );
+                    })
+                    .reverse())}
+
+            {in_out === "Out" && singleCusCall.Lagnumbers.length
+              ? singleCusCall.Lagnumbers.map((cuscall, key) => {
+                  return (
+                    <Stack
+                      direction={"row"}
+                      // width={{ sx: 180 }}
+                      marginY={0.3}
+                      justifyContent={{
+                        sx: "space-between",
+                        sm: "space-around",
+                        md: "space-around",
+                      }}
+                    >
+                      <BetListCom call={cuscall} key={key}></BetListCom>
+                    </Stack>
+                  );
+                })
+              : masterOutCalls
                   .filter(
-                    (ms, key) =>
-                      ms.master._id.toString() ==
-                      autoCompleteValue._id.toString()
+                    (mso, key) =>
+                      mso.customer._id.toString() === cusval._id.toString()
                   )
                   .map((cal, key) => {
                     return (
@@ -2768,15 +3140,14 @@ const BetPage = () => {
                         justifyContent={"space-around"}
                         // component={"button"}
                         sx={{ cursor: "pointer" }}
-                        onClick={() => {
-                          setMasterCallCrud({
-                            id: cal._id,
-                            numbers: cal.numbers,
-                          });
-                          setCallTotal(cal.totalAmount);
-                          setAutoCompleteCtrl(true);
-                          setDelButtCtl(true);
-                        }}
+                        // onClick={() => {
+                        //   setMasterCallCrud({
+                        //     id: cal._id,
+                        //     numbers: cal.numbers,
+                        //   });
+                        //   setCallTotal(cal.totalAmount);
+                        //   setAutoCompleteCtrl(true);
+                        // }}
                       >
                         {cal.numbers.map((ca, key) => {
                           return (
@@ -2797,70 +3168,7 @@ const BetPage = () => {
                       </Stack>
                     );
                   })
-                  .reverse())
-            }
-
-
-            {in_out === "Out" &&
-            singleCusCall.Lagnumbers.length? singleCusCall.Lagnumbers.map((cuscall, key) => {
-                return (
-                  <Stack
-                    direction={"row"}
-                    // width={{ sx: 180 }}
-                    marginY={0.3}
-                    justifyContent={{
-                      sx: "space-between",
-                      sm: "space-around",
-                      md: "space-around",
-                    }}
-                  >
-                    <BetListCom call={cuscall} key={key}></BetListCom>
-                  </Stack>
-                );
-              })
-            :
-            masterOutCalls
-              .filter(
-                (mso, key) => mso.customer._id.toString() === cusval._id.toString()
-              )
-              .map((cal, key) => {
-                return (
-                  <Stack
-                    bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
-                    borderLeft={0.5}
-                    borderRight={0.5}
-                    justifyContent={"space-around"}
-                    // component={"button"}
-                    sx={{ cursor: "pointer" }}
-                    // onClick={() => {
-                    //   setMasterCallCrud({
-                    //     id: cal._id,
-                    //     numbers: cal.numbers,
-                    //   });
-                    //   setCallTotal(cal.totalAmount);
-                    //   setAutoCompleteCtrl(true);
-                    // }}
-                  >
-                    {cal.numbers.map((ca, key) => {
-                      return (
-                        <Stack
-                          direction={"row"}
-                          // width={{ sx: 180 }}
-                          marginY={0.3}
-                          justifyContent={{
-                            sx: "space-between",
-                            sm: "space-around",
-                            md: "space-around",
-                          }}
-                        >
-                          <BetListCom call={ca} key={key}></BetListCom>
-                        </Stack>
-                      );
-                    })}
-                  </Stack>
-                );
-              })
-              .reverse()}
+                  .reverse()}
           </Stack>
           <Stack
             alignItems={"center"}
