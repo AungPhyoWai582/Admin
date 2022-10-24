@@ -12,6 +12,7 @@ import {
   Alert,
   AlertTitle,
   Autocomplete,
+  Box,
   Button,
   Chip,
   CircularProgress,
@@ -20,6 +21,7 @@ import {
   FormControlLabel,
   FormLabel,
   IconButton,
+  makeStyles,
   MenuItem,
   Pagination,
   PaginationItem,
@@ -28,6 +30,9 @@ import {
   RadioGroup,
   Select,
   Stack,
+  TableCell,
+  TableContainer,
+  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
@@ -80,6 +85,7 @@ import {
   catchHotLimitFromFunc,
 } from "./BetPage.method";
 import ModalBox from "../../components/modal/ModalBox";
+import { ClassNames } from "@emotion/react";
 
 const BetPage = () => {
   // For input refs
@@ -2193,6 +2199,16 @@ const BetPage = () => {
 
   const [value, setValue] = React.useState(masters);
   const [inputValue, setInputValue] = React.useState("");
+
+  // table height custom
+  // const useStyles = makeStyles({
+  //   tableRow: {
+  //     height: 30,
+  //   },
+  //   tableCell: {
+  //     padding: "0px 16px",
+  //   },
+  // });
   return (
     <Stack height={"100%"} bgcolor={"white"}>
       {success && (
@@ -2724,6 +2740,16 @@ const BetPage = () => {
             // padding={1}
             // spacing={1}
           >
+            {/* <TableContainer>
+              <TableRow className={useStyles.tableRow}>
+                <TableCell className={useStyles.tableCell}>67</TableCell>
+                <TableCell>10000</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>67</TableCell>
+                <TableCell>1000000</TableCell>
+              </TableRow>
+            </TableContainer> */}
             {in_out === "In" &&
               (call.numbers.length // autocompleteCtrl === false
                 ? call.numbers
@@ -2734,7 +2760,7 @@ const BetPage = () => {
                       //   bgcolor={"ActiveBorder"}
                       // >
                       <>
-                        <Stack
+                        <Box
                           direction={"row"}
                           // width={{ sx: 180 }}
                           marginY={0.3}
@@ -2763,7 +2789,7 @@ const BetPage = () => {
                               />
                             </IconButton>
                           </BetListCom>
-                        </Stack>
+                        </Box>
                       </>
                     ))
                     .reverse()
