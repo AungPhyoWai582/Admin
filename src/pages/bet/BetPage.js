@@ -2143,7 +2143,7 @@ const BetPage = () => {
 
     numbers[index] = onchange;
 
-    setMasterCallCrud({ ...mastercallcrud, numbers: numbers });
+    // setMasterCallCrud({ ...mastercallcrud, numbers: numbers });
     Axios.put(
       `/call/${lotteryId}/${mastercallcrud.id}`,
       {
@@ -2158,6 +2158,31 @@ const BetPage = () => {
       setMasterCallCrud({ id: "", numbers: [] });
       setEditCtlBtn(false);
     });
+  };
+  // Delete Call
+  const DeleteCall = () => {
+    const numbers = [...mastercallcrud.numbers];
+    const result = numbers.filter(
+      (obj) => obj.number.toString() !== onchange.number.toString()
+    );
+
+    // setMasterCallCrud({ ...mastercallcrud, numbers: result });
+    Axios.put(
+      `/call/${lotteryId}/${mastercallcrud.id}`,
+      {
+        numbers: result,
+      },
+      {
+        headers: {
+          authorization: `Bearer ` + localStorage.getItem("access-token"),
+        },
+      }
+    )
+      .then((res) => {
+        setMasterCallCrud({ id: "", numbers: [] });
+        setEditCtlBtn(false);
+      })
+      .catch((err) => console.log(err));
   };
 
   const setBreak = () => {
@@ -2483,9 +2508,14 @@ const BetPage = () => {
         />
         <Stack alignItems={"center"} alignContent={"center"}>
           {editCtlBtn ? (
-            <IconButton onClick={updateCall} size={"small"}>
-              <Edit fontSize="8" />
-            </IconButton>
+            <Stack direction={"row"} spacing={1} alignItems={"center"}>
+              <IconButton onClick={updateCall} size={"small"}>
+                <Edit fontSize="8" />
+              </IconButton>
+              <IconButton size="small" onClick={DeleteCall}>
+                <Delete fontSize={"6px"} />
+              </IconButton>
+            </Stack>
           ) : (
             <IconButton
               onClick={(e) => {
@@ -2939,12 +2969,12 @@ const BetPage = () => {
                   >
                     <Edit fontSize={"6px"} />
                   </IconButton>
-                  <IconButton
+                  {/* <IconButton
                     size="small"
                     onClick={() => mastercallDelete(key, calcrud)}
                   >
                     <Delete fontSize={"6px"} />
-                  </IconButton>
+                  </IconButton> */}
                   {/* </Stack> */}
                 </BetListCom>
               );
