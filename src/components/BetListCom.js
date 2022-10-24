@@ -20,7 +20,7 @@ const BetListCom = ({ call, key, onClick, children }) => {
           {call.number}
         </Typography>
         <Stack direction={"row"} alignItems={"center"} spacing={0.5}>
-          <Typography marginX={0.3} width={"30%"} textAlign={"center"}>
+          <Typography marginX={0.3} width={"30%"} textAlign={"left"}>
             {call.amount}
           </Typography>
           {children}
