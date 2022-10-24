@@ -354,7 +354,11 @@ const BetPage = () => {
                   masterTotalData.Data.findIndex(
                     (obj) => obj.number === a.number
                   )
-                ].amount -call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                ].amount -
+                call.numbers
+                  .filter((cal) => cal.number === a.number)
+                  .map((cal) => Number(cal.amount))
+                  .reduce((pre, next) => pre + next, 0) <
               a.amount
             ) {
               alert("Limit Over !!!");
@@ -416,7 +420,11 @@ const BetPage = () => {
                   masterTotalData.Data.findIndex(
                     (obj) => obj.number === a.number
                   )
-                ].amount -call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                ].amount -
+                call.numbers
+                  .filter((cal) => cal.number === a.number)
+                  .map((cal) => Number(cal.amount))
+                  .reduce((pre, next) => pre + next, 0) <
               a.amount
             ) {
               alert("Limit Over !!!");
@@ -477,7 +485,11 @@ const BetPage = () => {
                   masterTotalData.Data.findIndex(
                     (obj) => obj.number === a.number
                   )
-                ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                ].amount -
+                call.numbers
+                  .filter((cal) => cal.number === a.number)
+                  .map((cal) => Number(cal.amount))
+                  .reduce((pre, next) => pre + next, 0) <
               a.amount
             ) {
               alert("Limit Over !!!");
@@ -538,7 +550,11 @@ const BetPage = () => {
                   masterTotalData.Data.findIndex(
                     (obj) => obj.number === a.number
                   )
-                ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                ].amount -
+                call.numbers
+                  .filter((cal) => cal.number === a.number)
+                  .map((cal) => Number(cal.amount))
+                  .reduce((pre, next) => pre + next, 0) <
               a.amount
             ) {
               alert("Limit Over !!!");
@@ -605,7 +621,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -689,7 +709,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0)<
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -759,7 +783,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -823,7 +851,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -887,7 +919,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -957,7 +993,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -1022,7 +1062,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -1086,7 +1130,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -1163,7 +1211,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -1230,7 +1282,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -1295,7 +1351,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -1375,7 +1435,11 @@ const BetPage = () => {
                   masterTotalData.Data.findIndex(
                     (obj) => obj.number === onchange.number
                   )
-                ].amount - call.numbers.filter(cal=>cal.number===onchange.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                ].amount -
+                call.numbers
+                  .filter((cal) => cal.number === onchange.number)
+                  .map((cal) => Number(cal.amount))
+                  .reduce((pre, next) => pre + next, 0) <
               onchange.amount
             ) {
               alert("Limit Over !!!");
@@ -1463,7 +1527,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -1536,7 +1604,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -1635,7 +1707,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -1708,7 +1784,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -1817,7 +1897,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -1890,7 +1974,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -2009,7 +2097,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0)<
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -2082,7 +2174,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -2211,7 +2307,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
@@ -2284,7 +2384,11 @@ const BetPage = () => {
                     masterTotalData.Data.findIndex(
                       (obj) => obj.number === a.number
                     )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
+                  ].amount -
+                  call.numbers
+                    .filter((cal) => cal.number === a.number)
+                    .map((cal) => Number(cal.amount))
+                    .reduce((pre, next) => pre + next, 0) <
                 a.amount
               ) {
                 alert("Limit Over !!!");
