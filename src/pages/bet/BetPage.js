@@ -74,7 +74,7 @@ import {
   forwardPate,
 } from "./Betsign";
 import LagerTable from "../../components/LagerTable";
-import { calculateHotTee } from "./BetPage.method";
+import { calculateHotTee, catchHotLimit, catchHotLimitFromFunc } from "./BetPage.method";
 import ModalBox from "../../components/modal/ModalBox";
 
 const BetPage = () => {
@@ -313,246 +313,169 @@ const BetPage = () => {
     if (onchange.number.length === 1 && onchange.amount.length > 2) {
       if (onchange.number[0] === "k" || onchange.number[0] === "K") {
         const R = k(onchange);
-        let checkHot;
-        R.map((a) => {
-          if (hot.includes(a.number)) {
-            if (
-              !masterTotalData.Data.includes(a.number) &&
-              !(
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                onchange.amount
-              )
-            ) {
-              alert(
-                `remain hot amount : ${
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                }`
+        let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
+          R.map((a) => {
+            if (hot.includes(a.number)) {
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-              checkHot = true;
-            } else if (
-              masterTotalData.Data.includes(a.number) &&
-              !(
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                onchange.amount
-              )
-            ) {
-              alert(
-                `remain hot amount : ${
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number == a.number
-                    )
-                  ].amount
-                }`
-              );
-              checkHot = true;
-            } else if (
-              masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                masterTotalData.Data[
-                  masterTotalData.Data.findIndex(
-                    (obj) => obj.number === a.number
-                  )
-                ].amount -call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-              a.amount
-            ) {
-              alert("Limit Over !!!");
-              checkHot = true;
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
+              }
             }
+          });
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
           }
-        });
-
-        setCall({
-          ...call,
-          numbers: [
-            ...call.numbers,
-            ...(checkHot ? R.filter((a) => !hot.includes(a.number)) : R),
-          ],
-        });
-        // setCall({ ...call, numbers: [...call.numbers, ...R] });
+          
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(remainHotNumbers.length
+                ? R.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : R),
+            ],
+          });
 
         setOnchange({ number: "", amount: onchange.amount });
         setAutoCompleteCtrl(false);
       } else if (onchange.number[0] === "p" || onchange.number[0] === "P") {
         const P = p(onchange);
-        let checkHot;
-        P.map((a) => {
-          if (hot.includes(a.number)) {
-            if (
-              !masterTotalData.Data.includes(a.number) &&
-              !(
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                onchange.amount
-              )
-            ) {
-              alert(
-                `remain hot  amount : ${
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                }`
+        let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
+          P.map((a) => {
+            if (hot.includes(a.number)) {
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-              checkHot = true;
-            } else if (
-              masterTotalData.Data.includes(a.number) &&
-              !(
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                onchange.amount
-              )
-            ) {
-              alert(
-                `remain hot amount : ${
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number == a.number
-                    )
-                  ].amount
-                }`
-              );
-              checkHot = true;
-            } else if (
-              masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                masterTotalData.Data[
-                  masterTotalData.Data.findIndex(
-                    (obj) => obj.number === a.number
-                  )
-                ].amount -call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-              a.amount
-            ) {
-              alert("Limit Over !!!");
-              checkHot = true;
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
+              }
             }
+          });
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
           }
-        });
-
-        setCall({
-          ...call,
-          numbers: [
-            ...call.numbers,
-            ...(checkHot ? P.filter((a) => !hot.includes(a.number)) : P),
-          ],
-        });
+          
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(remainHotNumbers.length
+                ? P.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : P),
+            ],
+          });
         // setCall({ ...call, numbers: [...call.numbers, ...P] });
         setOnchange({ number: "", amount: onchange.amount });
         setAutoCompleteCtrl(false);
       } else if (onchange.number[0] === "b" || onchange.number[0] === "B") {
         const B = b(onchange);
-        let checkHot;
-        B.map((a) => {
-          if (hot.includes(a.number)) {
-            if (
-              !masterTotalData.Data.includes(a.number) &&
-              !(
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                onchange.amount
-              )
-            ) {
-              alert(
-                `remain hot amount : ${
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                }`
+        let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
+          B.map((a) => {
+            if (hot.includes(a.number)) {
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-              checkHot = true;
-            } else if (
-              masterTotalData.Data.includes(a.number) &&
-              !(
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                onchange.amount
-              )
-            ) {
-              alert(
-                `remain hot amount : ${
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number == a.number
-                    )
-                  ].amount
-                }`
-              );
-              checkHot = true;
-            } else if (
-              masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                masterTotalData.Data[
-                  masterTotalData.Data.findIndex(
-                    (obj) => obj.number === a.number
-                  )
-                ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-              a.amount
-            ) {
-              alert("Limit Over !!!");
-              checkHot = true;
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
+              }
             }
+          });
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
           }
-        });
-
-        setCall({
-          ...call,
-          numbers: [
-            ...call.numbers,
-            ...(checkHot ? B.filter((a) => !hot.includes(a.number)) : B),
-          ],
-        });
+          
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(remainHotNumbers.length
+                ? B.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : B),
+            ],
+          });
         // setCall({ ...call, numbers: [...call.numbers, ...B] });
         setOnchange({ number: "", amount: onchange.amount });
         setAutoCompleteCtrl(false);
       } else if (onchange.number[0] === "b" || onchange.number[0] === "B") {
         const B = b(onchange);
-        let checkHot;
-        B.map((a) => {
-          if (hot.includes(a.number)) {
-            if (
-              !masterTotalData.Data.includes(a.number) &&
-              !(
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                onchange.amount
-              )
-            ) {
-              alert(
-                `remain hot amount : ${
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                }`
+        let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
+          B.map((a) => {
+            if (hot.includes(a.number)) {
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-              checkHot = true;
-            } else if (
-              masterTotalData.Data.includes(a.number) &&
-              !(
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                onchange.amount
-              )
-            ) {
-              alert(
-                `remain hot amount : ${
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number == a.number
-                    )
-                  ].amount
-                }`
-              );
-              checkHot = true;
-            } else if (
-              masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                masterTotalData.Data[
-                  masterTotalData.Data.findIndex(
-                    (obj) => obj.number === a.number
-                  )
-                ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-              a.amount
-            ) {
-              alert("Limit Over !!!");
-              checkHot = true;
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
+              }
             }
+          });
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
           }
-        });
-
-        setCall({
-          ...call,
-          numbers: [
-            ...call.numbers,
-            ...(checkHot ? B.filter((a) => !hot.includes(a.number)) : B),
-          ],
-        });
+          
+          setCall({
+            ...call,
+            numbers: [
+              ...call.numbers,
+              ...(remainHotNumbers.length
+                ? B.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : B),
+            ],
+          });
         // setCall({ ...call, numbers: [...call.numbers, ...B] });
         setOnchange({ number: "", amount: onchange.amount });
         setAutoCompleteCtrl(false);
@@ -563,72 +486,41 @@ const BetPage = () => {
       if (onchange.number.startsWith("*")) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const apu = startStar(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           apu.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? apu.filter((a) => !hot.includes(a.number)) : apu),
+              ...(remainHotNumbers.length
+                ? apu.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : apu),
             ],
           });
           setOnchange({ number: "", amount: onchange.amount });
@@ -647,61 +539,40 @@ const BetPage = () => {
           onchange.amount.length > 2
         ) {
           const FPate = forwardPate(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           FPate.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0)<
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot
-                ? FPate.filter((a) => !hot.includes(a.number))
+              ...(remainHotNumbers.length
+                ? FPate.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
                 : FPate),
             ],
           });
@@ -717,60 +588,41 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const SPU = spu(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           SPU.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? SPU.filter((a) => !hot.includes(a.number)) : SPU),
+              ...(remainHotNumbers.length
+                ? SPU.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : SPU),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...SPU] });
@@ -781,60 +633,41 @@ const BetPage = () => {
           onchange.amount.length > 2
         ) {
           const SS = ss(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           SS.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? SS.filter((a) => !hot.includes(a.number)) : SS),
+              ...(remainHotNumbers.length
+                ? SS.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : SS),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...SS] });
@@ -845,61 +678,41 @@ const BetPage = () => {
           onchange.amount.length > 2
         ) {
           const SM = sonema(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           SM.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? SM.filter((a) => !hot.includes(a.number)) : SM),
+              ...(remainHotNumbers.length
+                ? SM.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : SM),
             ],
           });
           // console.log(MS);
@@ -915,61 +728,41 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const MPU = mpu(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           MPU.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? MPU.filter((a) => !hot.includes(a.number)) : MPU),
+              ...(remainHotNumbers.length
+                ? MPU.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : MPU),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...MPU] });
@@ -980,60 +773,41 @@ const BetPage = () => {
           onchange.amount.length > 2
         ) {
           const MS = masone(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           MS.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? MS.filter((a) => !hot.includes(a.number)) : MS),
+              ...(remainHotNumbers.length
+                ? MS.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : MS),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...MS] });
@@ -1044,60 +818,41 @@ const BetPage = () => {
           onchange.amount.length > 2
         ) {
           const SM = sonema(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           SM.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? SM.filter((a) => !hot.includes(a.number)) : SM),
+              ...(remainHotNumbers.length
+                ? SM.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : SM),
             ],
           });
           // console.log(MS);
@@ -1121,62 +876,40 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const BPate = backpate(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           BPate.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot
-                ? BPate.filter((a) => !hot.includes(a.number))
+              ...(remainHotNumbers.length
+                ? BPate.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
                 : BPate),
             ],
           });
@@ -1188,61 +921,41 @@ const BetPage = () => {
           onchange.amount.length > 2
         ) {
           const AP = aper(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           AP.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? AP.filter((a) => !hot.includes(a.number)) : AP),
+              ...(remainHotNumbers.length
+                ? AP.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : AP),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...AP] });
@@ -1253,61 +966,41 @@ const BetPage = () => {
           onchange.amount.length > 2
         ) {
           const BR = Breaks(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           BR.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? BR.filter((a) => !hot.includes(a.number)) : BR),
+              ...(remainHotNumbers.length
+                ? BR.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : BR),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...BR] });
@@ -1330,54 +1023,18 @@ const BetPage = () => {
           // if(hot.includes(a.number)){
 
           if (hot.includes(onchange.number)) {
-            if (
-              !masterTotalData.Data.includes(onchange.number) &&
-              !(
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                onchange.amount
-              )
-            ) {
+            console.log(call.numbers);
+            const hotLimitCalculate = catchHotLimit(
+              onchange,
+              hot,
+              masterTotalData,
+              call.numbers,
+              masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+            );
+            if (hotLimitCalculate.remainBet < onchange.amount) {
               alert(
-                `remain hot amount : ${
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                }`
+                ` LIMIT OVER! \n hot limit : ${hotLimitCalculate.hotLimit}\n hot total : ${hotLimitCalculate.hotTotal} \n remain bet : ${hotLimitCalculate.remainBet}`
               );
-              // checkHot = true;
-              return;
-            } else if (
-              masterTotalData.Data.includes(onchange.number) &&
-              !(
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                onchange.amount
-              )
-              // ||
-              // call.numbers.filter((cal) => hot.includes(cal.number)).amount +
-              // onchange.amount >=
-              // masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-            ) {
-              alert(
-                `remain hot amount : ${
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number == onchange.number
-                    )
-                  ].amount
-                }`
-              );
-              // checkHot = true;
-              return;
-            }
-            if (
-              masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                masterTotalData.Data[
-                  masterTotalData.Data.findIndex(
-                    (obj) => obj.number === onchange.number
-                  )
-                ].amount - call.numbers.filter(cal=>cal.number===onchange.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-              onchange.amount
-            ) {
-              alert("Limit Over !!!");
               return;
             }
           }
@@ -1421,61 +1078,41 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("+")) {
           const R = r(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           R.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? R.filter((a) => !hot.includes(a.number)) : R),
+              ...(remainHotNumbers.length
+                ? R.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : R),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...R] });
@@ -1494,61 +1131,41 @@ const BetPage = () => {
           onchange.number.endsWith("0")
         ) {
           const PDT = padatha(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           PDT.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+              ...(remainHotNumbers.length
+                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : PDT),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
@@ -1593,61 +1210,41 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const PDT = padatha(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           PDT.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+              ...(remainHotNumbers.length
+                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : PDT),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
@@ -1666,61 +1263,41 @@ const BetPage = () => {
           onchange.number.endsWith("0")
         ) {
           const PDT = padatha(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           PDT.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+              ...(remainHotNumbers.length
+                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : PDT),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
@@ -1775,61 +1352,41 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const PDT = padatha(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           PDT.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+              ...(remainHotNumbers.length
+                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : PDT),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
@@ -1848,61 +1405,41 @@ const BetPage = () => {
           onchange.number.endsWith("0")
         ) {
           const PDT = padatha(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           PDT.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+              ...(remainHotNumbers.length
+                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : PDT),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
@@ -1967,61 +1504,41 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const PDT = padatha(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           PDT.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0)<
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+              ...(remainHotNumbers.length
+                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : PDT),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
@@ -2040,61 +1557,41 @@ const BetPage = () => {
           onchange.number.endsWith("0")
         ) {
           const PDT = padatha(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           PDT.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+              ...(remainHotNumbers.length
+                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : PDT),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
@@ -2169,61 +1666,41 @@ const BetPage = () => {
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
           const PDT = padatha(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           PDT.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+              ...(remainHotNumbers.length
+                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : PDT),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
@@ -2242,61 +1719,41 @@ const BetPage = () => {
           onchange.number.endsWith("0")
         ) {
           const PDT = padatha(onchange);
-          let checkHot;
+          let hotLimit;
+          let hotTotal;
+          let remainHotNumbers = [];
           PDT.map((a) => {
             if (hot.includes(a.number)) {
-              if (
-                !masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Data.includes(a.number) &&
-                !(
-                  masterTotalData.Total * (autoCompleteValue.hot_limit / 100) >=
-                  onchange.amount
-                )
-              ) {
-                alert(
-                  `remain hot amount : ${
-                    masterTotalData.Total *
-                      (autoCompleteValue.hot_limit / 100) -
-                    masterTotalData[
-                      masterTotalData.Data.findIndex(
-                        (obj) => obj.number == a.number
-                      )
-                    ].amount
-                  }`
-                );
-                checkHot = true;
-              } else if (
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100) -
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === a.number
-                    )
-                  ].amount - call.numbers.filter(cal=>cal.number===a.number).map(cal=>Number(cal.amount)).reduce((pre,next)=>pre+next,0) <
-                a.amount
-              ) {
-                alert("Limit Over !!!");
-                checkHot = true;
+              console.log(call.numbers);
+              const hotLimitCalculate = catchHotLimit(
+                a,
+                hot,
+                masterTotalData,
+                call.numbers,
+                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+              );
+            
+              if (hotLimitCalculate.remainBet < onchange.amount) {
+                hotLimit=hotLimitCalculate.hotLimit;
+                hotTotal=hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                // return;
               }
             }
           });
-
+          if(remainHotNumbers.length!==0){
+            alert(
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+            );
+          }
+          
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
-              ...(checkHot ? PDT.filter((a) => !hot.includes(a.number)) : PDT),
+              ...(remainHotNumbers.length
+                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                : PDT),
             ],
           });
           // setCall({ ...call, numbers: [...call.numbers, ...PDT] });
