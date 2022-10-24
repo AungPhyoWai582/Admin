@@ -200,10 +200,11 @@ const BetPage = () => {
           if (masters) {
             const masters = res.data.data;
             setMasters([...masters]);
-            setCalllistctrl(false);
+            // setCalllistctrl(false);
             if (masters) {
               setAutoCompleteValue(masters[0]);
             }
+            console.log(autoCompleteValue);
           }
         })
         .catch((err) => console.log(err));
@@ -222,7 +223,7 @@ const BetPage = () => {
     }
     // setHotNumbers( calculateHotTee(JSON.parse(localStorage.getItem('user-info')),hot_tees,lager.in.numbers,lager.in.totalAmount))
   }, [inOutCtl]);
-
+  // console.log(masters);
   useEffect(() => {
     if (in_out === "In") {
       Axios.get(`/call/${lotteryId}`, {
@@ -1936,7 +1937,7 @@ const BetPage = () => {
 
   // console.log(cusval);
 
-  const [value, setValue] = React.useState(masters[0]);
+  const [value, setValue] = React.useState(masters);
   const [inputValue, setInputValue] = React.useState("");
   return (
     <Stack height={"100%"} bgcolor={"white"}>
@@ -2043,17 +2044,10 @@ const BetPage = () => {
         <Stack direction={"row"} spacing={1}>
           {(in_out === "In" && (
             <Autocomplete
-              id="controllable-states-demo"
               size="small"
-              // options={selectChoice && selectChoice === "Out" ? agents : "0"}
               options={masters}
-              // inputValue={autoCompleteValue}
-              // defaultValue={autoCompleteValue}
-              isOptionEqualToValue={(option, value) =>
-                option.username === value.username
-              }
               sx={{ width: 150 }}
-              getOptionLabel={(cus) => cus.username}
+              getOptionLabel={(cus) => `${cus.username}`}
               onChange={(e, value) => {
                 console.log(value);
                 setAutoCompleteValue(value);
@@ -2066,10 +2060,12 @@ const BetPage = () => {
                 <TextField
                   {...params}
                   sx={{ fontSize: 8 }}
-                  label="Master"
+                  label={`${
+                    autoCompleteValue ? autoCompleteValue.username : "Agent"
+                  }`}
                   size="small"
                   color={"success"}
-                  // defaultValue={masters}
+                  // defaultValue={autoCompleteValue}
                 />
               )}
             />
@@ -2269,7 +2265,7 @@ const BetPage = () => {
           color={"success"}
           onClick={() => {
             setDelButtCtl(false);
-
+            setEditCtlBtn(false);
             setMasterCallCrud({ id: "", numbers: [] });
           }}
         >
