@@ -41,6 +41,7 @@ const ShortCup = () => {
 
   const [reportIn, setReportIn] = useState({ me: {}, memberReport: [] });
   const [reportOut, setReportOut] = useState({ totalOut: {}, calls: [] });
+  const [reportMain,setReportMain] = useState({totalMain:{},main:[]})
 
   //pdf
   const [open, setOpen] = useState(false);
@@ -138,6 +139,21 @@ const ShortCup = () => {
           setLoading(false);
         })
         .catch((err) => console.log(err));
+    }
+    if(InOutControl === 'Main'){
+      Axios.get(
+        `/reports/main-collections?start_date=${startDate}&end_date=${endDate}&time=${timeselect}`,
+        {
+          headers: {
+            authorization: `Bearer ` + localStorage.getItem("access-token"),
+          },
+        }
+      ).then(res=>{
+        console.log(res.data.report);
+          const { main, totalMain } = res.data.report;
+          setReportMain({ main: main, totalMain: totalMain });
+          setLoading(false);
+      }).catch(err=>console.log(err))
     }
   };
 
@@ -251,7 +267,7 @@ const ShortCup = () => {
 
         <FormControl
           size="small"
-          disabled={InOutControl === "Out" ? true : false}
+          disabled={InOutControl === "Out"||InOutControl==="Main" ? true : false}
         >
           <FormControlLabel
             // label={"Customers: "}
@@ -319,7 +335,7 @@ const ShortCup = () => {
                 sx={{ fontWeight: "bold", fontSize: 12 }}
                 align="center"
               >
-                Commission
+                {InOutControl === "Main"?'OriginalBreak':'Commission'}
               </TableCell>
               <TableCell
                 sx={{ fontWeight: "bold", fontSize: 12 }}
@@ -478,61 +494,71 @@ const ShortCup = () => {
                   </TableCell>
                 </TableRow>
               )}
-              {/* {reportOut.totalOut && reportOut.totalOut.length!=0 && (
-                <TableRow
-                  style={{
-                    backgroundColor: grey[300],
-                  }}
-                >
-                  <TableCell
-                    sx={{ fontSize: 16, fontWeight: 600 }}
-                    align={"left"}
-                  >
-                    Total
+            </TableBody>
+          )}
+
+{InOutControl === "Main" && (
+            <TableBody>
+              {reportMain.main && reportMain.main.length ? (
+                [...reportMain.main].map((cal) => {
+                  const start = new Date(startDate);
+                  const end = new Date(endDate);
+                  return (
+                    <>
+                      <TableRow>
+                        <TableCell align="left">{`${start.getDate()}/${start.getMonth()}/${start.getFullYear()} - ${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`}</TableCell>
+                        <TableCell sx={{ overflow: "scroll/" }} align="left">
+                          {cal.user.username.toString()}
+                        </TableCell>
+                        <TableCell align="center">
+                          {cal.totalAmount.toString()}
+                        </TableCell>
+                        <TableCell align="center">
+                          {cal.pout_tee_amount
+                            ? cal.pout_tee_amount.toString()
+                            : "0"}
+                        </TableCell>
+                        <TableCell align="center" sx={{ color: "blue" }}>
+                          {cal.originalBreak===null?0:cal.originalBreak.toString()}
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          sx={{
+                            color:
+                              cal.win.toString()[0] === "-" ? "red" : "blue",
+                          }}
+                        >
+                          {cal.win.toString()}
+                        </TableCell>
+                        <TableCell
+                          sx={{ fontSize: 16, fontWeight: 500 }}
+                          align="right"
+                        >
+                          {/* {reportIn.me.totalWin} */}
+                          <IconButton size="small" color="success">
+                            <RemoveRedEye fontSize="12" />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  );
+                })
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7}>
+                    <Typography
+                      padding={1}
+                      fontSize={18}
+                      fontWeight={500}
+                      color={"red"}
+                      textAlign="center"
+                      gridColumn={3}
+                    >
+                      Reports Not Found !!!
+                    </Typography>
                   </TableCell>
-                  <TableCell
-                    sx={{ fontSize: 16, fontWeight: 600 }}
-                    align={"left"}
-                  ></TableCell>
-                  <TableCell
-                    sx={{ fontSize: 16, fontWeight: 500 }}
-                    align="center"
-                  >
-                    {reportOut.totalOut.totalAmount.toString()}
-                  </TableCell>
-                  <TableCell
-                    sx={{ fontSize: 16, fontWeight: 500 }}
-                    align="center"
-                  >
-                    {reportOut.totalOut.pout_tee_amount !== null
-                      ? reportOut.totalOut.pout_tee_amount.toString()
-                      : "0"}
-                  </TableCell>
-                  <TableCell
-                    sx={{ fontSize: 16, fontWeight: 500 }}
-                    align="center"
-                  >
-                    {reportOut.totalOut.totalCommission.toString()}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      fontSize: 16,
-                      fontWeight: 500,
-                      color:
-                        reportOut.totalOut.totalWin.toString()[0] === "-"
-                          ? "red"
-                          : "blue",
-                    }}
-                    align="center"
-                  >
-                    {reportOut.totalOut.totalWin.toString()}
-                  </TableCell>
-                  <TableCell
-                    sx={{ fontSize: 16, fontWeight: 500 }}
-                    align="right"
-                  ></TableCell>
                 </TableRow>
-              )} */}
+              )}
             </TableBody>
           )}
         </Table>

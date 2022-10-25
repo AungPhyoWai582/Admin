@@ -12,6 +12,7 @@ import {
   Alert,
   AlertTitle,
   Autocomplete,
+  Box,
   Button,
   Chip,
   CircularProgress,
@@ -20,6 +21,7 @@ import {
   FormControlLabel,
   FormLabel,
   IconButton,
+  makeStyles,
   MenuItem,
   Pagination,
   PaginationItem,
@@ -28,6 +30,9 @@ import {
   RadioGroup,
   Select,
   Stack,
+  TableCell,
+  TableContainer,
+  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
@@ -74,8 +79,13 @@ import {
   forwardPate,
 } from "./Betsign";
 import LagerTable from "../../components/LagerTable";
-import { calculateHotTee, catchHotLimit, catchHotLimitFromFunc } from "./BetPage.method";
+import {
+  calculateHotTee,
+  catchHotLimit,
+  catchHotLimitFromFunc,
+} from "./BetPage.method";
 import ModalBox from "../../components/modal/ModalBox";
+import { ClassNames } from "@emotion/react";
 
 const BetPage = () => {
   // For input refs
@@ -315,168 +325,208 @@ const BetPage = () => {
       if (onchange.number[0] === "k" || onchange.number[0] === "K") {
         const R = k(onchange);
         let hotLimit;
-          let hotTotal;
-          let remainHotNumbers = [];
-          R.map((a) => {
-            if (hot.includes(a.number)) {
-              console.log(call.numbers);
-              const hotLimitCalculate = catchHotLimit(
-                a,
-                hot,
-                masterTotalData,
-                call.numbers,
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-              );
-            
-              if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
-                // return;
-              }
-            }
-          });
-          if(remainHotNumbers.length!==0){
-            alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+        let hotTotal;
+        let remainHotNumbers = [];
+        R.map((a) => {
+          if (hot.includes(a.number)) {
+            console.log(call.numbers);
+            const hotLimitCalculate = catchHotLimit(
+              a,
+              hot,
+              masterTotalData,
+              call.numbers,
+              masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
             );
+
+            if (hotLimitCalculate.remainBet < onchange.amount) {
+              hotLimit = hotLimitCalculate.hotLimit;
+              hotTotal = hotLimitCalculate.hotTotal;
+              remainHotNumbers.push({
+                number: a.number,
+                remain: hotLimitCalculate.remainBet,
+              });
+              // return;
+            }
           }
-          
-          setCall({
-            ...call,
-            numbers: [
-              ...call.numbers,
-              ...(remainHotNumbers.length
-                ? R.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
-                : R),
-            ],
-          });
+        });
+        if (remainHotNumbers.length !== 0) {
+          alert(
+            ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+              (h) => `${h.number}:${h.remain}`
+            )}`
+          );
+        }
+
+        setCall({
+          ...call,
+          numbers: [
+            ...call.numbers,
+            ...(remainHotNumbers.length
+              ? R.filter(
+                  (a) =>
+                    !remainHotNumbers
+                      .map((rhn) => rhn.number.toString())
+                      .includes(a.number.toString())
+                )
+              : R),
+          ],
+        });
 
         setOnchange({ number: "", amount: onchange.amount });
         setAutoCompleteCtrl(false);
       } else if (onchange.number[0] === "p" || onchange.number[0] === "P") {
         const P = p(onchange);
         let hotLimit;
-          let hotTotal;
-          let remainHotNumbers = [];
-          P.map((a) => {
-            if (hot.includes(a.number)) {
-              console.log(call.numbers);
-              const hotLimitCalculate = catchHotLimit(
-                a,
-                hot,
-                masterTotalData,
-                call.numbers,
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-              );
-            
-              if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
-                // return;
-              }
-            }
-          });
-          if(remainHotNumbers.length!==0){
-            alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+        let hotTotal;
+        let remainHotNumbers = [];
+        P.map((a) => {
+          if (hot.includes(a.number)) {
+            console.log(call.numbers);
+            const hotLimitCalculate = catchHotLimit(
+              a,
+              hot,
+              masterTotalData,
+              call.numbers,
+              masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
             );
+
+            if (hotLimitCalculate.remainBet < onchange.amount) {
+              hotLimit = hotLimitCalculate.hotLimit;
+              hotTotal = hotLimitCalculate.hotTotal;
+              remainHotNumbers.push({
+                number: a.number,
+                remain: hotLimitCalculate.remainBet,
+              });
+              // return;
+            }
           }
-          
-          setCall({
-            ...call,
-            numbers: [
-              ...call.numbers,
-              ...(remainHotNumbers.length
-                ? P.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
-                : P),
-            ],
-          });
+        });
+        if (remainHotNumbers.length !== 0) {
+          alert(
+            ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+              (h) => `${h.number}:${h.remain}`
+            )}`
+          );
+        }
+
+        setCall({
+          ...call,
+          numbers: [
+            ...call.numbers,
+            ...(remainHotNumbers.length
+              ? P.filter(
+                  (a) =>
+                    !remainHotNumbers
+                      .map((rhn) => rhn.number.toString())
+                      .includes(a.number.toString())
+                )
+              : P),
+          ],
+        });
         // setCall({ ...call, numbers: [...call.numbers, ...P] });
         setOnchange({ number: "", amount: onchange.amount });
         setAutoCompleteCtrl(false);
       } else if (onchange.number[0] === "b" || onchange.number[0] === "B") {
         const B = b(onchange);
         let hotLimit;
-          let hotTotal;
-          let remainHotNumbers = [];
-          B.map((a) => {
-            if (hot.includes(a.number)) {
-              console.log(call.numbers);
-              const hotLimitCalculate = catchHotLimit(
-                a,
-                hot,
-                masterTotalData,
-                call.numbers,
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-              );
-            
-              if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
-                // return;
-              }
-            }
-          });
-          if(remainHotNumbers.length!==0){
-            alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+        let hotTotal;
+        let remainHotNumbers = [];
+        B.map((a) => {
+          if (hot.includes(a.number)) {
+            console.log(call.numbers);
+            const hotLimitCalculate = catchHotLimit(
+              a,
+              hot,
+              masterTotalData,
+              call.numbers,
+              masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
             );
+
+            if (hotLimitCalculate.remainBet < onchange.amount) {
+              hotLimit = hotLimitCalculate.hotLimit;
+              hotTotal = hotLimitCalculate.hotTotal;
+              remainHotNumbers.push({
+                number: a.number,
+                remain: hotLimitCalculate.remainBet,
+              });
+              // return;
+            }
           }
-          
-          setCall({
-            ...call,
-            numbers: [
-              ...call.numbers,
-              ...(remainHotNumbers.length
-                ? B.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
-                : B),
-            ],
-          });
+        });
+        if (remainHotNumbers.length !== 0) {
+          alert(
+            ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+              (h) => `${h.number}:${h.remain}`
+            )}`
+          );
+        }
+
+        setCall({
+          ...call,
+          numbers: [
+            ...call.numbers,
+            ...(remainHotNumbers.length
+              ? B.filter(
+                  (a) =>
+                    !remainHotNumbers
+                      .map((rhn) => rhn.number.toString())
+                      .includes(a.number.toString())
+                )
+              : B),
+          ],
+        });
         // setCall({ ...call, numbers: [...call.numbers, ...B] });
         setOnchange({ number: "", amount: onchange.amount });
         setAutoCompleteCtrl(false);
       } else if (onchange.number[0] === "b" || onchange.number[0] === "B") {
         const B = b(onchange);
         let hotLimit;
-          let hotTotal;
-          let remainHotNumbers = [];
-          B.map((a) => {
-            if (hot.includes(a.number)) {
-              console.log(call.numbers);
-              const hotLimitCalculate = catchHotLimit(
-                a,
-                hot,
-                masterTotalData,
-                call.numbers,
-                masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
-              );
-            
-              if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
-                // return;
-              }
-            }
-          });
-          if(remainHotNumbers.length!==0){
-            alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+        let hotTotal;
+        let remainHotNumbers = [];
+        B.map((a) => {
+          if (hot.includes(a.number)) {
+            console.log(call.numbers);
+            const hotLimitCalculate = catchHotLimit(
+              a,
+              hot,
+              masterTotalData,
+              call.numbers,
+              masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
             );
+
+            if (hotLimitCalculate.remainBet < onchange.amount) {
+              hotLimit = hotLimitCalculate.hotLimit;
+              hotTotal = hotLimitCalculate.hotTotal;
+              remainHotNumbers.push({
+                number: a.number,
+                remain: hotLimitCalculate.remainBet,
+              });
+              // return;
+            }
           }
-          
-          setCall({
-            ...call,
-            numbers: [
-              ...call.numbers,
-              ...(remainHotNumbers.length
-                ? B.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
-                : B),
-            ],
-          });
+        });
+        if (remainHotNumbers.length !== 0) {
+          alert(
+            ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+              (h) => `${h.number}:${h.remain}`
+            )}`
+          );
+        }
+
+        setCall({
+          ...call,
+          numbers: [
+            ...call.numbers,
+            ...(remainHotNumbers.length
+              ? B.filter(
+                  (a) =>
+                    !remainHotNumbers
+                      .map((rhn) => rhn.number.toString())
+                      .includes(a.number.toString())
+                )
+              : B),
+          ],
+        });
         // setCall({ ...call, numbers: [...call.numbers, ...B] });
         setOnchange({ number: "", amount: onchange.amount });
         setAutoCompleteCtrl(false);
@@ -500,27 +550,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? apu.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? apu.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : apu),
             ],
           });
@@ -553,27 +613,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? FPate.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? FPate.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : FPate),
             ],
           });
@@ -602,27 +672,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? SPU.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? SPU.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : SPU),
             ],
           });
@@ -647,27 +727,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? SS.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? SS.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : SS),
             ],
           });
@@ -692,27 +782,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? SM.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? SM.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : SM),
             ],
           });
@@ -742,27 +842,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? MPU.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? MPU.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : MPU),
             ],
           });
@@ -787,27 +897,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? MS.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? MS.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : MS),
             ],
           });
@@ -832,27 +952,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? SM.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? SM.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : SM),
             ],
           });
@@ -890,27 +1020,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? BPate.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? BPate.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : BPate),
             ],
           });
@@ -935,27 +1075,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? AP.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? AP.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : AP),
             ],
           });
@@ -980,27 +1130,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? BR.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? BR.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : BR),
             ],
           });
@@ -1092,27 +1252,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? R.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? R.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : R),
             ],
           });
@@ -1145,27 +1315,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? PDT.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : PDT),
             ],
           });
@@ -1224,27 +1404,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? PDT.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : PDT),
             ],
           });
@@ -1277,27 +1467,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? PDT.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : PDT),
             ],
           });
@@ -1366,27 +1566,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? PDT.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : PDT),
             ],
           });
@@ -1419,27 +1629,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? PDT.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : PDT),
             ],
           });
@@ -1518,27 +1738,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? PDT.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : PDT),
             ],
           });
@@ -1571,27 +1801,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? PDT.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : PDT),
             ],
           });
@@ -1680,27 +1920,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? PDT.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : PDT),
             ],
           });
@@ -1733,27 +1983,37 @@ const BetPage = () => {
                 call.numbers,
                 masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
               );
-            
+
               if (hotLimitCalculate.remainBet < onchange.amount) {
-                hotLimit=hotLimitCalculate.hotLimit;
-                hotTotal=hotLimitCalculate.hotTotal;
-                remainHotNumbers.push({number:a.number,remain:hotLimitCalculate.remainBet})
+                hotLimit = hotLimitCalculate.hotLimit;
+                hotTotal = hotLimitCalculate.hotTotal;
+                remainHotNumbers.push({
+                  number: a.number,
+                  remain: hotLimitCalculate.remainBet,
+                });
                 // return;
               }
             }
           });
-          if(remainHotNumbers.length!==0){
+          if (remainHotNumbers.length !== 0) {
             alert(
-              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(h=>`${h.number}:${h.remain}`)}`
+              ` LIMIT OVER! \n hot limit : ${hotLimit}\n hot total : ${hotTotal} \n remain bet : ${remainHotNumbers.map(
+                (h) => `${h.number}:${h.remain}`
+              )}`
             );
           }
-          
+
           setCall({
             ...call,
             numbers: [
               ...call.numbers,
               ...(remainHotNumbers.length
-                ? PDT.filter((a) => !remainHotNumbers.map(rhn=>rhn.number.toString()).includes(a.number.toString()))
+                ? PDT.filter(
+                    (a) =>
+                      !remainHotNumbers
+                        .map((rhn) => rhn.number.toString())
+                        .includes(a.number.toString())
+                  )
                 : PDT),
             ],
           });
@@ -1939,6 +2199,16 @@ const BetPage = () => {
 
   const [value, setValue] = React.useState(masters);
   const [inputValue, setInputValue] = React.useState("");
+
+  // table height custom
+  // const useStyles = makeStyles({
+  //   tableRow: {
+  //     height: 30,
+  //   },
+  //   tableCell: {
+  //     padding: "0px 16px",
+  //   },
+  // });
   return (
     <Stack height={"100%"} bgcolor={"white"}>
       {success && (
@@ -2470,6 +2740,16 @@ const BetPage = () => {
             // padding={1}
             // spacing={1}
           >
+            {/* <TableContainer>
+              <TableRow className={useStyles.tableRow}>
+                <TableCell className={useStyles.tableCell}>67</TableCell>
+                <TableCell>10000</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>67</TableCell>
+                <TableCell>1000000</TableCell>
+              </TableRow>
+            </TableContainer> */}
             {in_out === "In" &&
               (call.numbers.length // autocompleteCtrl === false
                 ? call.numbers
@@ -2480,7 +2760,7 @@ const BetPage = () => {
                       //   bgcolor={"ActiveBorder"}
                       // >
                       <>
-                        <Stack
+                        <Box
                           direction={"row"}
                           // width={{ sx: 180 }}
                           marginY={0.3}
@@ -2509,7 +2789,7 @@ const BetPage = () => {
                               />
                             </IconButton>
                           </BetListCom>
-                        </Stack>
+                        </Box>
                       </>
                     ))
                     .reverse()

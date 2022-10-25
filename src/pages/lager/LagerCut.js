@@ -16,6 +16,7 @@ import {
   Select,
   MenuItem,
   CircularProgress,
+  FormGroup,
 } from "@mui/material";
 import React from "react";
 
@@ -25,7 +26,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import Axios from "../../shared/Axios";
-import { SaveAlt } from "@mui/icons-material";
+import { CheckBox, SaveAlt } from "@mui/icons-material";
 import ModalBox from "../../components/modal/ModalBox";
 import BetListCom from "../../components/BetListCom";
 import { LoadingButton } from "@mui/lab";
@@ -145,7 +146,7 @@ const LagerCut = () => {
     // setViewLager({ ...viewLager, numbers: breakData, totalAmount: total });
     setCutLag({
       ...cutLag,
-      numbers: breakData.filter(bd=>bd.amount !== '0'),
+      numbers: breakData.filter((bd) => bd.amount !== "0"),
       breakPercent: breakPercent,
       cutAmount: total,
       mainAmount: lager.totalAmount,
@@ -206,7 +207,6 @@ const LagerCut = () => {
             value={breakPercent}
             onChange={(e) => setBreakPercent(e.target.value)}
           />
-
           <Button
             size="small"
             color="secondary"
@@ -215,6 +215,29 @@ const LagerCut = () => {
           >
             Set
           </Button>
+          {/* <Stack
+            direction={"row"}
+            // margin={"auto"}
+            spacing={1}
+            border={0.5}
+            justifyItems={"center"}
+          >
+            <CheckBox />
+            <FormGroup
+              sx={{ padding: 1, display: "flex", flexDirection: "row" }}
+            >
+              <FormControlLabel
+                defaultChecked={false}
+                control={<CheckBox color="success" />}
+                label="$"
+              />
+              <FormControlLabel
+                control={<CheckBox color="success" />}
+                label="%"
+              />
+            </FormGroup>
+          </Stack> */}
+          <CheckBox />
         </Stack>
         <Stack>
           <Stack
@@ -249,7 +272,7 @@ const LagerCut = () => {
                     >
                       {Array.from(Array(4), (_, x) => x).map((row, key) => {
                         let num = row * 25 + col;
-                      
+
                         return (
                           <>
                             <TableCell
