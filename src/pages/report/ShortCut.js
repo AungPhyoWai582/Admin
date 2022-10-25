@@ -41,7 +41,7 @@ const ShortCup = () => {
 
   const [reportIn, setReportIn] = useState({ me: {}, memberReport: [] });
   const [reportOut, setReportOut] = useState({ totalOut: {}, calls: [] });
-  const [reportMain,setReportMain] = useState({totalMain:{},main:[]})
+  const [reportMain, setReportMain] = useState({ totalMain: {}, main: [] });
 
   //pdf
   const [open, setOpen] = useState(false);
@@ -140,7 +140,7 @@ const ShortCup = () => {
         })
         .catch((err) => console.log(err));
     }
-    if(InOutControl === 'Main'){
+    if (InOutControl === "Main") {
       Axios.get(
         `/reports/main-collections?start_date=${startDate}&end_date=${endDate}&time=${timeselect}`,
         {
@@ -148,12 +148,14 @@ const ShortCup = () => {
             authorization: `Bearer ` + localStorage.getItem("access-token"),
           },
         }
-      ).then(res=>{
-        console.log(res.data.report);
+      )
+        .then((res) => {
+          console.log(res.data.report);
           const { main, totalMain } = res.data.report;
           setReportMain({ main: main, totalMain: totalMain });
           setLoading(false);
-      }).catch(err=>console.log(err))
+        })
+        .catch((err) => console.log(err));
     }
   };
 
@@ -267,7 +269,9 @@ const ShortCup = () => {
 
         <FormControl
           size="small"
-          disabled={InOutControl === "Out"||InOutControl==="Main" ? true : false}
+          disabled={
+            InOutControl === "Out" || InOutControl === "Main" ? true : false
+          }
         >
           <FormControlLabel
             // label={"Customers: "}
@@ -335,7 +339,7 @@ const ShortCup = () => {
                 sx={{ fontWeight: "bold", fontSize: 12 }}
                 align="center"
               >
-                {InOutControl === "Main"?'OriginalBreak':'Commission'}
+                {InOutControl === "Main" ? "OriginalBreak" : "Commission"}
               </TableCell>
               <TableCell
                 sx={{ fontWeight: "bold", fontSize: 12 }}
@@ -497,7 +501,7 @@ const ShortCup = () => {
             </TableBody>
           )}
 
-{InOutControl === "Main" && (
+          {InOutControl === "Main" && (
             <TableBody>
               {reportMain.main && reportMain.main.length ? (
                 [...reportMain.main].map((cal) => {
@@ -519,7 +523,9 @@ const ShortCup = () => {
                             : "0"}
                         </TableCell>
                         <TableCell align="center" sx={{ color: "blue" }}>
-                          {cal.originalBreak===null?0:cal.originalBreak.toString()}
+                          {cal.originalBreak === null
+                            ? 0
+                            : cal.originalBreak.toString()}
                         </TableCell>
                         <TableCell
                           align="center"
