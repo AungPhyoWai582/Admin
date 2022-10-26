@@ -21,8 +21,8 @@ const AppTopbar = ({ name, authUser, setAuthUser }) => {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" color="success">
+      <Box sx={{ flexGrow: 1,marginBottom:10 }}>
+        <AppBar position="fixed" color="success">
           <Toolbar>
             <IconButton
               size="large"

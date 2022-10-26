@@ -174,39 +174,29 @@ const ShortCup = () => {
         paddingLeft={3}
         bgcolor={grey[300]}
         borderRadius={1}
-        // alignItems="center"
+        alignItems="center"
       >
-        <FormControl>
-          {/* <FormLabel id="demo-controlled-radio-buttons-group">Gender</FormLabel> */}
-          <RadioGroup
-            aria-labelledby="demo-controlled-radio-buttons-group"
-            name="controlled-radio-buttons-group"
-            value={InOutControl}
-            onChange={(e) => setInOutControl(e.target.value)}
-          >
-            <Stack direction={"row"}>
-              <FormControlLabel
-                value="In"
-                control={<Radio color="success" />}
-                label="In"
-                labelPlacement="start"
-              />
-              <FormControlLabel
-                value="Out"
-                control={<Radio color="success" />}
-                label="Out"
-                labelPlacement="start"
-              />
-              <FormControlLabel
-                value="Main"
-                control={<Radio color="success" />}
-                label="Main"
-                labelPlacement="start"
-              />
-            </Stack>
-          </RadioGroup>
+        <FormControl size="small">
+          <FormControlLabel
+            // label={"Time"}
+            // labelPlacement="top"
+            control={
+              <Select
+                sx={{ width: 150, height: 30, backgroundColor: "white" }}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={timeselect}
+                // label="Age"
+                onChange={(e) => setTimeSelect(e.target.value)}
+              >
+                {time.map((t) => (
+                  <MenuItem value={t}>{t}</MenuItem>
+                ))}
+              </Select>
+            }
+          />
         </FormControl>
-
+        
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <Stack direction={"row"}>
             <DatePicker
@@ -246,26 +236,37 @@ const ShortCup = () => {
         borderRadius={1}
         alignItems={"center"}
       >
-        <FormControl size="small">
-          <FormControlLabel
-            // label={"Time"}
-            // labelPlacement="top"
-            control={
-              <Select
-                sx={{ width: 150, height: 30, backgroundColor: "white" }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={timeselect}
-                // label="Age"
-                onChange={(e) => setTimeSelect(e.target.value)}
-              >
-                {time.map((t) => (
-                  <MenuItem value={t}>{t}</MenuItem>
-                ))}
-              </Select>
-            }
-          />
+       <FormControl>
+          {/* <FormLabel id="demo-controlled-radio-buttons-group">Gender</FormLabel> */}
+          <RadioGroup
+            aria-labelledby="demo-controlled-radio-buttons-group"
+            name="controlled-radio-buttons-group"
+            value={InOutControl}
+            onChange={(e) => setInOutControl(e.target.value)}
+          >
+            <Stack direction={"row"}>
+              <FormControlLabel
+                value="In"
+                control={<Radio color="success" />}
+                label="In"
+                labelPlacement="start"
+              />
+              <FormControlLabel
+                value="Out"
+                control={<Radio color="success" />}
+                label="Out"
+                labelPlacement="start"
+              />
+              <FormControlLabel
+                value="Main"
+                control={<Radio color="success" />}
+                label="Main"
+                labelPlacement="start"
+              />
+            </Stack>
+          </RadioGroup>
         </FormControl>
+
 
         <FormControl
           size="small"
