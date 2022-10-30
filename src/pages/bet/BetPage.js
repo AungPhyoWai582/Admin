@@ -97,7 +97,7 @@ const BetPage = () => {
   //masterapi ctl
   const [mastercallAPIctl, setMastercallAPI] = useState(false);
   // const [singleBetCleanctlr, setSingleBetCleanctlr] = useState(false);
-  const [callTotal, setCallTotal] = useState(0);
+  const [callTotal, setCallTotal] = useState("0");
   const [calltotalCtrl, setCalltotalCtrl] = useState(false);
 
   // delButton control
@@ -127,7 +127,12 @@ const BetPage = () => {
     superHotLimit: 0,
     numbers: [],
   });
-  // const [outCalls, setOutCalls] = useState([]);
+  const [outCalls, setOutCalls] = useState({
+    customer: "",
+    hotLimit: 0,
+    superHotLimit: 0,
+    numbers: [],
+  });
   // const [callList, setCallList] = useState([]);
 
   const [masters, setMasters] = useState([]);
@@ -320,6 +325,11 @@ const BetPage = () => {
   const choice = (e) => {
     e.preventDefault();
     // const hotRemain = calculateHotTee(onchange,hot,autoCompleteValue,masterTotalData);
+
+    if(in_out==='Out' && !lager.numbers.map(lg=>lg.number.toString()).includes(onchange.number.toString())){
+      alert(`${onchange.number} has not in your lager`);
+      return;
+    }
 
     if (onchange.number.length === 1 && onchange.amount.length > 2) {
       if (onchange.number[0] === "k" || onchange.number[0] === "K") {
@@ -2099,6 +2109,43 @@ const BetPage = () => {
         // })
         .catch((err) => console.log(err));
     }
+
+    if (in_out === "Out") {
+    
+      Axios.post(
+        `/outcall/${lotteryId}`,
+        { customer: cusval._id, numbers: call.numbers },
+        {
+          headers: {
+            authorization: `Bearer ` + localStorage.getItem("access-token"),
+          },
+        }
+      )
+        .then((res) => {
+          console.log(res.data.data);
+          setCall({
+            master: "",
+            numbers: [],
+          });
+          // setCusval();
+          setOnchange({
+            number: "",
+            amount: "",
+          });
+          setSuccess(true);
+          // setInOutCtl(true);
+          setLoading(false);
+          // setCalllistctrl(true);
+          // setCalltotalCtrl(true);
+          // setAutoCompleteCtrl(true);
+          setMastercallAPI(true);
+        })
+        // .then((res) => {
+        //   setSuccess(false);
+        //   setLoading(false);
+        // })
+        .catch((err) => console.log(err));
+    }
   };
 
   //crud delete
@@ -2849,7 +2896,8 @@ const BetPage = () => {
                               id: cal._id,
                               numbers: cal.numbers,
                             });
-                            setCallTotal(cal.totalAmount);
+                            // setCallTotal(cal.totalAmount);
+                            console.log(cal.totalAmount)
                             setAutoCompleteCtrl(true);
                             setDelButtCtl(true);
                           }}
@@ -2875,8 +2923,8 @@ const BetPage = () => {
                     })
                     .reverse())}
 
-            {in_out === "Out" && singleCusCall.Lagnumbers.length
-              ? singleCusCall.Lagnumbers.map((cuscall, key) => {
+            {in_out === "Out" && call.numbers.length
+              ? call.numbers.map((cuscall, key) => {
                   return (
                     <Stack
                       direction={"row"}
@@ -2998,13 +3046,14 @@ const BetPage = () => {
       >
         <Typography fontWeight={900} fontSize={14}>
           <span style={{ color: "red" }}>Call Total</span> :{" "}
-          {callTotal && calltotalCtrl
+          {/* {callTotal && calltotalCtrl
             ? callTotal.toString()
             : call.numbers && calltotalCtrl === false
             ? call.numbers
                 .reduce((p, n) => Number(p) + Number(n.amount), 0)
                 .toString()
-            : "0"}
+            : "0"} */}
+            {callTotal}
         </Typography>
         <Typography fontWeight={900} fontSize={14}>
           <span style={{ color: "red" }}>Count</span> :{" "}
