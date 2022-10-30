@@ -15,13 +15,14 @@ import {
   Paper,
   Select,
   Stack,
+  Tab,
   TextField,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import { green, grey, teal } from "@mui/material/colors";
 import { Box } from "@mui/system";
-import { LoadingButton } from "@mui/lab";
+import { LoadingButton, TabContext, TabList, TabPanel } from "@mui/lab";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
@@ -688,7 +689,27 @@ const MemberDetail = () => {
       </Stack>
     </>
   );
-  const transcation = <Typography variant="h1">Hello Transcation</Typography>
+  const transcation = (
+    <Stack direction={"row"} height={"100vh"} boxShadow='1' borderColor={grey[300]}>
+      <Box sx={{ width: "30%", typography: "body1", bgcolor: grey[300] }}>
+        <TabContext>
+          <Box>
+            <TabList orientation="vertical" aria-label="lab API tabs example">
+              <Tab label="In" value="1" />
+              <Tab label="Out" value="2" />
+              <Tab label="DownLine" value={"3"} />
+            </TabList>
+          </Box>
+          <TabPanel value="1">In</TabPanel>
+          <TabPanel value="2">Out</TabPanel>
+          <TabPanel value="2">DownLine</TabPanel>
+        </TabContext>
+      </Box>
+      <Box>
+        <Typography>Name : yya nds;lfkjasd;lf</Typography>
+      </Box>
+    </Stack>
+  );
   return (
     <>
       <Stack
@@ -699,7 +720,7 @@ const MemberDetail = () => {
         // bgcolor={teal[100]}
         // height='500px'
       >
-        <Tabbar memberDetail={memberDetail} transcation={transcation}  />
+        <Tabbar memberDetail={memberDetail} transcation={transcation} />
       </Stack>
     </>
   );
