@@ -2155,19 +2155,20 @@ const BetPage = () => {
         },
       }
     ).then((res) => {
+      setMastercallAPI(true);
       setMasterCallCrud({ id: "", numbers: [] });
       setEditCtlBtn(false);
     });
   };
   // Delete Call
   const DeleteCall = () => {
-    // setMastercallAPI(true);
+    // console.log();
     const numbers = [...mastercallcrud.numbers];
     const result = numbers.filter(
       (obj) => obj.number.toString() !== onchange.number.toString()
     );
 
-    setMasterCallCrud({ ...mastercallcrud, numbers: result });
+    // setMasterCallCrud({ ...mastercallcrud, numbers: result });
     Axios.put(
       `/call/${lotteryId}/${mastercallcrud.id}`,
       {
@@ -2179,15 +2180,12 @@ const BetPage = () => {
         },
       }
     )
-      .then((res) => {
-        setEditCtlBtn(false);
-        setMastercallAPI(true);
-      })
+      .then((res) => setMastercallAPI(true))
       .catch((err) => console.log(err));
 
-    setMastercallAPI(false);
-    // setMasterCallCrud({ ...mastercallcrud, numbers: [result] });
+    setMasterCallCrud({ ...mastercallcrud, numbers: result });
     setOnchange({ number: "", amount: "" });
+    setMastercallAPI(false);
   };
 
   const setBreak = () => {
@@ -2517,13 +2515,7 @@ const BetPage = () => {
               <IconButton onClick={updateCall} size={"small"}>
                 <Edit fontSize="8" />
               </IconButton>
-              <IconButton
-                size="small"
-                onClick={() => {
-                  DeleteCall();
-                  // setMastercallAPI(true);
-                }}
-              >
+              <IconButton size="small" onClick={() => DeleteCall()}>
                 <Delete fontSize={"6px"} />
               </IconButton>
             </Stack>
