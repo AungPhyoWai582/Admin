@@ -2581,13 +2581,7 @@ const BetPage = () => {
               <IconButton onClick={updateCall} size={"small"}>
                 <Edit fontSize="8" />
               </IconButton>
-              <IconButton
-                size="small"
-                onClick={() => {
-                  DeleteCall();
-                  // setMastercallAPI(true);
-                }}
-              >
+              <IconButton size="small" onClick={() => DeleteCall()}>
                 <Delete fontSize={"6px"} />
               </IconButton>
             </Stack>
