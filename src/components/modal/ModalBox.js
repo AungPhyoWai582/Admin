@@ -2,7 +2,7 @@ import { Modal } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 
-const ModalBox = ({ children, open, setOpen }) => {
+const ModalBox = ({ children, open, setOpen,setOnchange }) => {
   const style = {
     position: "absolute",
     top: "50%",
@@ -18,7 +18,7 @@ const ModalBox = ({ children, open, setOpen }) => {
   return (
     <Modal
       open={open}
-      onClose={() => setOpen(false)}
+      onClose={() => {setOpen(false);setOnchange({number:'',amount:''})}}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
