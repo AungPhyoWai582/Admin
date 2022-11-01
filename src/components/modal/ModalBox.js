@@ -5,11 +5,11 @@ import React from "react";
 const ModalBox = ({ children, open, setOpen }) => {
   const style = {
     position: "absolute",
-    top: "50%",
+    top: "45%",
     left: "50%",
     // bottom: "30%",
     transform: "translate(-50%, -50%)",
-    width: { xs: "90%", sm: "90%", md: "50%", xl: "50%" },
+    width: { xs: "70%", sm: "60%", md: "50%", xl: "50%" },
     bgcolor: "white",
     // border: '2px solid #000',
     // boxShadow: 24,

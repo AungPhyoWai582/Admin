@@ -198,12 +198,12 @@ const LagerCut = () => {
           direction={"row"}
         >
           <TextField
-            label="Break"
+            label="Cash"
             color={"success"}
             variant="outlined"
             size="small"
             name="break"
-            sx={{ bgcolor: teal[50] }}
+            sx={{ bgcolor: teal[50], width: 150 }}
             value={breakPercent}
             onChange={(e) => setBreakPercent(e.target.value)}
           />
@@ -215,6 +215,18 @@ const LagerCut = () => {
           >
             Set
           </Button>
+
+          <TextField
+            disabled
+            label="%"
+            color={"success"}
+            variant="outlined"
+            size="small"
+            name="break"
+            sx={{ bgcolor: teal[50], width: 150 }}
+            value={breakPercent}
+            onChange={(e) => setBreakPercent(e.target.value)}
+          />
           {/* <Stack
             direction={"row"}
             // margin={"auto"}
@@ -237,7 +249,6 @@ const LagerCut = () => {
               />
             </FormGroup>
           </Stack> */}
-          <CheckBox />
         </Stack>
         <Stack>
           <Stack
