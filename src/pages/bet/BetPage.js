@@ -3,6 +3,7 @@ import {
   AddSharp,
   ArrowBack,
   ArrowForward,
+  Cancel,
   Close,
   Delete,
   Edit,
@@ -39,6 +40,7 @@ import {
 import {
   blue,
   cyan,
+  deepOrange,
   green,
   grey,
   lightBlue,
@@ -97,12 +99,13 @@ const BetPage = () => {
   //masterapi ctl
   const [mastercallAPIctl, setMastercallAPI] = useState(false);
   // const [singleBetCleanctlr, setSingleBetCleanctlr] = useState(false);
-  const [callTotal, setCallTotal] = useState("0");
+  const [callTotal, setCallTotal] = useState(0);
   const [calltotalCtrl, setCalltotalCtrl] = useState(false);
 
   // delButton control
   const [delButtCtl, setDelButtCtl] = useState(false);
   const [confirmCtl, setComfirmCtl] = useState(false);
+  const [crudOpen, setCrudOpen] = useState(false);
 
   //loading
   const [loading, setLoading] = useState(false);
@@ -326,7 +329,12 @@ const BetPage = () => {
     e.preventDefault();
     // const hotRemain = calculateHotTee(onchange,hot,autoCompleteValue,masterTotalData);
 
-    if(in_out==='Out' && !lager.numbers.map(lg=>lg.number.toString()).includes(onchange.number.toString())){
+    if (
+      in_out === "Out" &&
+      !lager.numbers
+        .map((lg) => lg.number.toString())
+        .includes(onchange.number.toString())
+    ) {
       alert(`${onchange.number} has not in your lager`);
       return;
     }
@@ -2111,7 +2119,6 @@ const BetPage = () => {
     }
 
     if (in_out === "Out") {
-    
       Axios.post(
         `/outcall/${lotteryId}`,
         { customer: cusval._id, numbers: call.numbers },
@@ -2155,6 +2162,8 @@ const BetPage = () => {
     // setAutoCompleteCtrl(false);
   };
   const mastercallDelete = (callid) => {
+    setLoading(true);
+
     Axios.delete(`/call/${lotteryId}/${callid}`, {
       headers: {
         authorization: `Bearer ` + localStorage.getItem("access-token"),
@@ -2163,8 +2172,10 @@ const BetPage = () => {
       .then((res) => {
         console.log(res);
         // setMastercallAPI(true);
+        setLoading(false);
         setMasterCallCrud({ id: "", numbers: [] });
         setComfirmCtl(false);
+        setCrudOpen(false);
         // setInOutCtl(true);
         setMastercallAPI(true);
       })
@@ -2174,7 +2185,7 @@ const BetPage = () => {
   };
   const editHandle = (cal, key) => {
     // console.log(key);
-    setEditCtlBtn(true);
+    // setEditCtlBtn(true);
     setOnchange({
       number: cal.number,
       amount: cal.amount,
@@ -2183,17 +2194,20 @@ const BetPage = () => {
 
   //editReading
   const updateCall = () => {
+    setLoading(true);
     // console.log(onchange);
     // console.log(mastercallcrud);
     const numbers = [...mastercallcrud.numbers];
     const index = numbers.findIndex((obj) => obj.number == onchange.number);
-
     numbers[index] = onchange;
+
+    console.log(numbers);
 
     // setMasterCallCrud({ ...mastercallcrud, numbers: numbers });
     Axios.put(
       `/call/${lotteryId}/${mastercallcrud.id}`,
       {
+        // master:autoCompleteValue._id,
         numbers: numbers,
       },
       {
@@ -2202,38 +2216,43 @@ const BetPage = () => {
         },
       }
     ).then((res) => {
-      setMastercallAPI(true);
+      setLoading(false);
       setMasterCallCrud({ id: "", numbers: [] });
-      setEditCtlBtn(false);
+      // setEditCtlBtn(false);
+      setCrudOpen(false);
+      setMastercallAPI(true);
     });
   };
   // Delete Call
-  const DeleteCall = () => {
-    // console.log();
-    const numbers = [...mastercallcrud.numbers];
-    const result = numbers.filter(
-      (obj) => obj.number.toString() !== onchange.number.toString()
-    );
+  // const DeleteCall = () => {
+  //   // setMastercallAPI(true);
+  //   const numbers = [...mastercallcrud.numbers];
+  //   const result = numbers.filter(
+  //     (obj) => obj.number.toString() !== onchange.number.toString()
+  //   );
 
-    // setMasterCallCrud({ ...mastercallcrud, numbers: result });
-    Axios.put(
-      `/call/${lotteryId}/${mastercallcrud.id}`,
-      {
-        numbers: result,
-      },
-      {
-        headers: {
-          authorization: `Bearer ` + localStorage.getItem("access-token"),
-        },
-      }
-    )
-      .then((res) => setMastercallAPI(true))
-      .catch((err) => console.log(err));
+  //   setMasterCallCrud({ ...mastercallcrud, numbers: result });
+  //   Axios.put(
+  //     `/call/${lotteryId}/${mastercallcrud.id}`,
+  //     {
+  //       numbers: result,
+  //     },
+  //     {
+  //       headers: {
+  //         authorization: `Bearer ` + localStorage.getItem("access-token"),
+  //       },
+  //     }
+  //   )
+  //     .then((res) => {
+  //       setEditCtlBtn(false);
+  //       setMastercallAPI(true);
+  //     })
+  //     .catch((err) => console.log(err));
 
-    setMasterCallCrud({ ...mastercallcrud, numbers: result });
-    setOnchange({ number: "", amount: "" });
-    setMastercallAPI(false);
-  };
+  //   setMastercallAPI(false);
+  //   // setMasterCallCrud({ ...mastercallcrud, numbers: [result] });
+  //   setOnchange({ number: "", amount: "" });
+  // };
 
   const setBreak = () => {
     const avg = (Number(demoLager.totalAmount) / Number(lagerBreak)).toString();
@@ -2557,7 +2576,7 @@ const BetPage = () => {
           label={"ထိုးငွေ"}
         />
         <Stack alignItems={"center"} alignContent={"center"}>
-          {editCtlBtn ? (
+          {/* {editCtlBtn ? (
             <Stack direction={"row"} spacing={1} alignItems={"center"}>
               <IconButton onClick={updateCall} size={"small"}>
                 <Edit fontSize="8" />
@@ -2566,17 +2585,16 @@ const BetPage = () => {
                 <Delete fontSize={"6px"} />
               </IconButton>
             </Stack>
-          ) : (
-            <IconButton
-              onClick={(e) => {
-                bet(e, in_out);
-              }}
-              size={"small"}
-              sx={{ bgcolor: green[700] }}
-            >
-              <Add fontSize="8" />
-            </IconButton>
-          )}
+          ) : ( */}
+          <IconButton
+            onClick={(e) => {
+              bet(e, in_out);
+            }}
+            size={"small"}
+            sx={{ bgcolor: green[700] }}
+          >
+            <Add fontSize="8" />
+          </IconButton>
         </Stack>
       </Stack>
 
@@ -2632,52 +2650,6 @@ const BetPage = () => {
         >
           <span style={{ fontSize: 16, paddingInline: 1 }}>Call Delete</span>
         </Button>
-        <ModalBox open={confirmCtl} setOpen={setComfirmCtl}>
-          <Typography
-            padding={1}
-            textAlign={"center"}
-            fontWeight={700}
-            letterSpacing={0.8}
-          >
-            Do you want to <span style={{ color: "red" }}>DELETE</span> your
-            call ?
-          </Typography>
-          <Stack
-            direction={"row"}
-            spacing={2}
-            justifyContent={"center"}
-            margin={1}
-          >
-            <Button
-              sx={{
-                textTransform: "inherit",
-                letterSpacing: 0.8,
-                fontWeight: 700,
-              }}
-              variant={"contained"}
-              size={"small"}
-              onClick={() => setComfirmCtl(false)}
-              color={"success"}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant={"contained"}
-              size={"small"}
-              color={"error"}
-              sx={{
-                textTransform: "inherit",
-                letterSpacing: 0.8,
-                fontWeight: 700,
-              }}
-              onClick={() => {
-                mastercallDelete(mastercallcrud.id);
-              }}
-            >
-              Ok
-            </Button>
-          </Stack>
-        </ModalBox>
       </Stack>
 
       {(autoCompleteValue || cusval) && (
@@ -2896,10 +2868,11 @@ const BetPage = () => {
                               id: cal._id,
                               numbers: cal.numbers,
                             });
-                            // setCallTotal(cal.totalAmount);
-                            console.log(cal.totalAmount)
+                            setCallTotal(cal.totalAmount);
+                            // console.log(cal.totalAmount)
                             setAutoCompleteCtrl(true);
-                            setDelButtCtl(true);
+                            // setDelButtCtl(true);
+                            setCrudOpen(true);
                           }}
                         >
                           {cal.numbers.map((ca, key) => {
@@ -3010,26 +2983,6 @@ const BetPage = () => {
                   </Stack>
                 );
               })}
-            {mastercallcrud.numbers.map((calcrud, key) => {
-              return (
-                <BetListCom call={calcrud}>
-                  {/* <Stack direction={"row"}> */}
-                  <IconButton
-                    size="small"
-                    onClick={() => editHandle(calcrud, key)}
-                  >
-                    <Edit fontSize={"6px"} />
-                  </IconButton>
-                  {/* <IconButton
-                    size="small"
-                    onClick={() => mastercallDelete(key, calcrud)}
-                  >
-                    <Delete fontSize={"6px"} />
-                  </IconButton> */}
-                  {/* </Stack> */}
-                </BetListCom>
-              );
-            })}
           </Stack>
         </Stack>
       )}
@@ -3053,7 +3006,7 @@ const BetPage = () => {
                 .reduce((p, n) => Number(p) + Number(n.amount), 0)
                 .toString()
             : "0"} */}
-            {callTotal}
+          {callTotal}
         </Typography>
         <Typography fontWeight={900} fontSize={14}>
           <span style={{ color: "red" }}>Count</span> :{" "}
@@ -3064,6 +3017,220 @@ const BetPage = () => {
           {masterTotalData !== null ? masterTotalData.Total.toString() : "0"}
         </Typography>
       </Stack>
+
+      <ModalBox open={confirmCtl} setOpen={setComfirmCtl}>
+        <Typography
+          padding={1}
+          textAlign={"center"}
+          fontWeight={700}
+          letterSpacing={0.8}
+        >
+          Do you want to <span style={{ color: "red" }}>DELETE</span> your call
+          ?
+        </Typography>
+        <Stack
+          direction={"row"}
+          spacing={2}
+          justifyContent={"center"}
+          margin={1}
+        >
+          <Button
+            sx={{
+              textTransform: "inherit",
+              letterSpacing: 0.8,
+              fontWeight: 700,
+            }}
+            variant={"contained"}
+            size={"small"}
+            onClick={() => setComfirmCtl(false)}
+            color={"success"}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant={"contained"}
+            size={"small"}
+            color={"error"}
+            sx={{
+              textTransform: "inherit",
+              letterSpacing: 0.8,
+              fontWeight: 700,
+            }}
+            onClick={() => {
+              mastercallDelete(mastercallcrud.id);
+            }}
+          >
+            Ok
+          </Button>
+        </Stack>
+      </ModalBox>
+      <ModalBox open={crudOpen} setOpen={setCrudOpen} setOnchange={setOnchange}>
+        <Stack
+          direction={"row"}
+          bgcolor={grey[300]}
+          padding={2}
+          justifyContent={"center"}
+        >
+          <Stack
+            direction={"row"}
+            padding={2}
+            spacing={1}
+            width="80%"
+            bgcolor={"white"}
+            borderRadius={5}
+          >
+            <BetCom
+              width={50}
+              text={"number"}
+              name="number"
+              autoFocus={true}
+              value={onchange.number}
+              textColor={hot.includes(onchange.number) ? "red" : "blue"}
+              onChange={onChangeHandler}
+              inputRef={textFieldForNumber}
+              style={{ position: "relative" }}
+              // numTotalCheck={
+              //   <Chip sx={{ position: "absolute", right: 0 }} label="a" />
+              // }
+              onKeyDown={(event) => {
+                if (event.key.toLowerCase() === "enter") {
+                  console.log(event.target);
+                  textFieldForAmount.current.focus();
+                  // event.target.value.select();
+                  //  const form = event.target.form;
+                  //  const index = [...form].indexOf(event.target);
+                  //  form.elements[index + 1].focus();
+                  event.preventDefault();
+                }
+              }}
+              label={"နံပါတ်"}
+            >
+              {masterTotalData.Data.map((num) => num.number).includes(
+                onchange.number
+              ) && (
+                <Chip
+                  label={
+                    masterTotalData.Data[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number === onchange.number
+                      )
+                    ].amount
+                  }
+                  sx={{
+                    position: "absolute",
+                    right: 4,
+                    top: 4,
+                    backgroundColor: green[300],
+                  }}
+                />
+              )}
+            </BetCom>
+
+            {/* <TwoDSign /> */}
+            <BetCom
+              text={"number"}
+              name="amount"
+              value={onchange.amount}
+              onChange={onChangeHandler}
+              inputRef={textFieldForAmount}
+              onFocus={(event) => event.target.select()}
+              onKeyDown={(event) => {
+                console.log(event.key);
+
+                if (
+                  event.key.toLowerCase() === "enter" ||
+                  event.key.toLowerCase() === "numpadenter"
+                ) {
+                  choice(event);
+                  textFieldForNumber.current.focus();
+                  event.target.value.select();
+                  event.preventDefault();
+                }
+              }}
+              // onFocus={false}
+              label={"ထိုးငွေ"}
+            />
+            {/* <IconButton onClick={updateCall} size={"small"}>
+              <Edit fontSize="8" />
+            </IconButton> */}
+            {/* <Stack
+            direction={"row"}
+            // width="20%"
+            bgcolor='red'
+            justifyContent={"center"}
+            padding={2}
+          > */}
+            <IconButton
+              variant="contained"
+              color="warning"
+              onClick={updateCall}
+              sx={{ borderRadius: "10px" }}
+            >
+              {onchange.amount.toString() === "0" ? (
+                <Delete fontSize="40px" />
+              ) : (
+                <Edit fontSize="40px" />
+              )}
+            </IconButton>
+          </Stack>
+        </Stack>
+
+        <Stack direction={"row"} justifyContent="center" bgcolor={grey[300]}>
+          <Stack
+            border={0.1}
+            width="80%"
+            bgcolor={"white"}
+            borderColor={grey[300]}
+            borderRadius={1}
+            overflow="scroll"
+            maxHeight={"60vh"}
+          >
+            {mastercallcrud.numbers.map((calcrud, key) => {
+              return (
+                <BetListCom call={calcrud}>
+                  {/* <Stack direction={"row"}> */}
+                  <IconButton
+                    // color={'#ffcc80'}
+                    size="small"
+                    onClick={() => editHandle(calcrud, key)}
+                  >
+                    <Edit fontSize={"6px"} />
+                  </IconButton>
+                </BetListCom>
+              );
+            })}
+          </Stack>
+        </Stack>
+        <Stack
+          bgcolor={grey[300]}
+          direction={"row"}
+          justifyContent="space-around"
+          spacing={2}
+          padding={2}
+        >
+          <Button
+            variant="contained"
+            onClick={() => {
+              setCrudOpen(false);
+              setOnchange({ number: "", amount: "" });
+            }}
+            color={"info"}
+            sx={{ borderRadius: "10px", textTransform: "none" }}
+            endIcon={<Cancel />}
+          >
+            cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => setComfirmCtl(true)}
+            color="error"
+            sx={{ borderRadius: "10px", textTransform: "none" }}
+            endIcon={<Delete />}
+          >
+            Delete call
+          </Button>
+        </Stack>
+      </ModalBox>
 
       <Dialog fullScreen open={lagerOpen}>
         <Stack alignItems={"end"}>

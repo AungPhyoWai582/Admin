@@ -19,10 +19,10 @@ const BetListCom = ({ call, key, onClick, children }) => {
       marginX={0.5}
       direction={"row"}
       width={{ xs: 150, sm: 230, md: 300 }}
-      spacing={{ xs: 3, sm: 3, md: 1 }}
+      // spacing={{ xs: 3, sm: 3, md: 1 }}
       // boxShadow={1}
       alignItems={"center"}
-      justifyContent={"space-between"}
+      justifyContent={"space-around"}
     >
       <Typography
         marginX={0.3}
