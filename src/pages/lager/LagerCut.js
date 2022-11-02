@@ -198,15 +198,15 @@ const LagerCut = () => {
       const Tamount = lager.totalAmount;
       console.log(numbers, Tamount);
       const data = numbers
-        .filter((n) => n.amount > lager.originalBreak)
+        // .filter((n) => n.amount > lager.originalBreak)
         .map((num) => {
           return {
             number: num.number,
-            amount: (
-              ((Number(num.amount) - Number(lager.originalBreak)) *
+            amount: Math.round(
+              (Number(num.amount)  *
                 breakPercent) /
-              100
-            ).toString(),
+                100
+            ),
           };
         });
       const total = data
@@ -375,7 +375,34 @@ const LagerCut = () => {
                                 borderCollapse: "collapse",
                               }}
                             >
-                              <Typography width={{ xs: 40, sm: 60, md: 80 }}>
+                              <Typography
+                                width={{ xs: 40, sm: 60, md: 80 }}
+                                sx={{
+                                  color:
+                                    Number(
+                                      viewLager.numbers
+                                        .map((lag) => lag.number)
+                                        .includes(
+                                          num.toString().length === 1
+                                            ? "0" + num
+                                            : num.toString()
+                                        )
+                                        ? viewLager.numbers[
+                                            viewLager.numbers.findIndex(
+                                              (obj) =>
+                                                obj.number.toString() ===
+                                                (num.toString().length == 1
+                                                  ? "0" + num
+                                                  : num.toString()
+                                                ).toString()
+                                            )
+                                          ].amount
+                                        : "0"
+                                    ) > lager.originalBreak
+                                      ? "red"
+                                      : "blue",
+                                }}
+                              >
                                 {viewLager.numbers
                                   .map((lag) => lag.number)
                                   .includes(

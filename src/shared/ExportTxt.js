@@ -13,7 +13,7 @@ export const exportTextFile = (cutLag) => {
     }
   );
   element.href = URL.createObjectURL(file);
-  element.download = "2D";
+  element.download = "2D.txt";
   document.body.appendChild(element);
   element.click();
 };
