@@ -17,6 +17,7 @@ import {
   MenuItem,
   CircularProgress,
   FormGroup,
+  Checkbox,
 } from "@mui/material";
 import React from "react";
 
@@ -26,12 +27,15 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import Axios from "../../shared/Axios";
-import { CheckBox, SaveAlt } from "@mui/icons-material";
+// import { CheckBox, SaveAlt } from "@mui/icons-material";
 import ModalBox from "../../components/modal/ModalBox";
 import BetListCom from "../../components/BetListCom";
 import { LoadingButton } from "@mui/lab";
+import { exportTextFile } from "../../shared/ExportTxt";
 
 const LagerCut = () => {
+  // % and cash control
+  const [perandcashCtl, setPerandcashCtl] = useState(false);
   //lager Cut Mod CTL
   const [lagModCtl, setLagModCtl] = useState(false);
 
@@ -52,6 +56,7 @@ const LagerCut = () => {
   });
   const [outList, setOutList] = useState([]);
   const [breakPercent, setBreakPercent] = useState(0);
+  const [lagerID, setLagerID] = useState();
   const [useEffCtrl, setUseEffCtrl] = useState(false);
   const [customers, setCustomers] = useState([]);
   const [customer, setCustomer] = useState("");
@@ -85,11 +90,17 @@ const LagerCut = () => {
         console.log(lag);
         if (lag) {
           setLager(lag);
+          setLagerID(lag._id);
+
           setViewLager({
             ...viewLager,
             numbers: lag.numbers,
+
             totalAmount: lag.totalAmount,
           });
+          if (perandcashCtl) {
+            setBreakPercent(lag.originalBreak);
+          }
           setUseEffCtrl(false);
         }
       })
@@ -109,48 +120,106 @@ const LagerCut = () => {
     });
   }, [useEffCtrl]);
   console.log(outList);
+  console.log(lagerID);
 
   console.log(customer);
   const setBreak = () => {
-    setLagModCtl(true);
-    console.log(breakPercent);
-    const numbers = [...lager.numbers];
-    const Tamount = lager.totalAmount;
-    console.log(numbers, Tamount);
-    const data = numbers.map((num) => {
-      return {
-        number: num.number,
-        amount: (num.amount - breakPercent).toString(),
-      };
-    });
-    const breakData = numbers.map((na, key) => {
-      if (Number(na.amount) >= Number(breakPercent)) {
-        return {
-          number: na.number,
-          amount: breakPercent,
-        };
-      }
-      if (Number(na.amount) < Number(breakPercent)) {
-        return {
-          number: na.number,
-          amount: na.amount,
-        };
-      }
-    });
-    console.log(breakData);
-    const total = breakData
-      .map((num) => Number(num.amount))
-      .reduce((pre, next) => pre + next, 0);
-    console.log(numbers);
-    // console.log(data, total);
-    // setViewLager({ ...viewLager, numbers: breakData, totalAmount: total });
-    setCutLag({
-      ...cutLag,
-      numbers: breakData.filter((bd) => bd.amount !== "0"),
-      breakPercent: breakPercent,
-      cutAmount: total,
-      mainAmount: lager.totalAmount,
-    });
+    if (perandcashCtl) {
+      console.log("Origin");
+      console.log(
+        breakPercent,
+        lager._id,
+        localStorage.getItem("access-token")
+      );
+      Axios.put(
+        `/lagers/${lager._id}`,
+        { originalBreak: breakPercent },
+        {
+          headers: {
+            authorization: "Bearer " + localStorage.getItem("access-token"),
+          },
+        }
+      )
+        .then((res) => {
+          console.log(res.data);
+          setUseEffCtrl(true);
+        })
+        .catch((err) => console.log(err.message));
+      // Axios.put(
+      //   `/lagers/${lagerID}`,
+      //   {
+      //     headers: {
+      //       authorization: "Bearer " + localStorage.getItem("access-token"),
+      //     },
+      //   },
+      //   { originalBreak: breakPercent }
+      // )
+      //   .then((res) => console.log(res.data))
+      //   .catch((err) => console.log(err));
+      // const data = numbers.map((num) => {
+      //   return {
+      //     number: num.number,
+      //     amount: (num.amount - breakPercent).toString(),
+      //   };
+      // });
+      // const breakData = numbers.map((na, key) => {
+      //   if (Number(na.amount) >= Number(breakPercent)) {
+      //     return {
+      //       number: na.number,
+      //       amount: breakPercent,
+      //     };
+      //   }
+      //   if (Number(na.amount) < Number(breakPercent)) {
+      //     return {
+      //       number: na.number,
+      //       amount: na.amount,
+      //     };
+      //   }
+      // });
+      // console.log(breakData);
+      // const total = breakData
+      //   .map((num) => Number(num.amount))
+      //   .reduce((pre, next) => pre + next, 0);
+      // console.log(numbers);
+      // // console.log(data, total);
+      // // setViewLager({ ...viewLager, numbers: breakData, totalAmount: total });
+      // setCutLag({
+      //   ...cutLag,
+      //   numbers: breakData.filter((bd) => bd.amount !== "0"),
+      //   breakPercent: breakPercent,
+      //   cutAmount: total,
+      //   mainAmount: lager.totalAmount,
+      // });
+    } else if (!perandcashCtl) {
+      console.log("%");
+      setLagModCtl(true);
+      console.log(breakPercent);
+      const numbers = [...lager.numbers];
+      const Tamount = lager.totalAmount;
+      console.log(numbers, Tamount);
+      const data = numbers
+        .filter((n) => n.amount > lager.originalBreak)
+        .map((num) => {
+          return {
+            number: num.number,
+            amount: (
+              ((Number(num.amount) - Number(lager.originalBreak)) *
+                breakPercent) /
+              100
+            ).toString(),
+          };
+        });
+      const total = data
+        .map((num) => Number(num.amount))
+        .reduce((pre, next) => pre + next, 0);
+      setCutLag({
+        ...cutLag,
+        numbers: data.filter((bd) => bd.amount !== "0"),
+        breakPercent: breakPercent,
+        cutAmount: total,
+        mainAmount: lager.totalAmount,
+      });
+    }
   };
 
   const saveCut = () => {
@@ -170,7 +239,7 @@ const LagerCut = () => {
       .then((res) => {
         console.log(res.data);
         setCustomer("");
-        setBreakPercent(0);
+        // setBreakPercent(0);
         setUseEffCtrl(true);
         setLoading(false);
         setLagModCtl(false);
@@ -198,12 +267,12 @@ const LagerCut = () => {
           direction={"row"}
         >
           <TextField
-            label="Cash"
+            label={`${perandcashCtl ? "Origin" : "%"}`}
             color={"success"}
             variant="outlined"
             size="small"
             name="break"
-            sx={{ bgcolor: teal[50], width: 150 }}
+            sx={{ bgcolor: teal[50], width: 100 }}
             value={breakPercent}
             onChange={(e) => setBreakPercent(e.target.value)}
           />
@@ -215,40 +284,23 @@ const LagerCut = () => {
           >
             Set
           </Button>
-
-          <TextField
-            disabled
-            label="%"
-            color={"success"}
-            variant="outlined"
-            size="small"
-            name="break"
-            sx={{ bgcolor: teal[50], width: 150 }}
-            value={breakPercent}
-            onChange={(e) => setBreakPercent(e.target.value)}
-          />
-          {/* <Stack
-            direction={"row"}
-            // margin={"auto"}
-            spacing={1}
-            border={0.5}
-            justifyItems={"center"}
-          >
-            <CheckBox />
-            <FormGroup
-              sx={{ padding: 1, display: "flex", flexDirection: "row" }}
-            >
-              <FormControlLabel
-                defaultChecked={false}
-                control={<CheckBox color="success" />}
-                label="$"
-              />
-              <FormControlLabel
-                control={<CheckBox color="success" />}
-                label="%"
-              />
-            </FormGroup>
-          </Stack> */}
+          <Stack direction={"row"} alignItems={"center"}>
+            <Checkbox
+              color="success"
+              onChange={() => {
+                setPerandcashCtl(!perandcashCtl);
+                perandcashCtl
+                  ? setBreakPercent("0")
+                  : setBreakPercent(lager.originalBreak);
+              }}
+            />
+            <Typography fontSize={14} color={"royalblue"} textAlign={"center"}>
+              Original :{" "}
+              {lager.originalBreak == null
+                ? "0"
+                : lager.originalBreak.toString()}
+            </Typography>
+          </Stack>
         </Stack>
         <Stack>
           <Stack
@@ -419,10 +471,10 @@ const LagerCut = () => {
               name={customer.name}
               value={customer.name}
               defaultValue={"All"}
-              onChange={
-                (e) => setCustomer(e.target.value)
-                // setCutLag(...cutLag, { bra })
-              }
+              onChange={(e) => {
+                // setCustomer(e.target.value);
+                setCutLag({ ...cutLag, customer: e.target.value });
+              }}
             >
               {customers.map((c) => (
                 <MenuItem value={c._id}>{c.name}</MenuItem>
@@ -438,7 +490,7 @@ const LagerCut = () => {
             alignItems={"center"}
           >
             <Typography>Break :</Typography>
-            <Typography>{cutLag ? cutLag.breakPercent : "0"}</Typography>
+            <Typography>{cutLag ? cutLag.breakPercent + "%" : "0"}</Typography>
           </Stack>
           <Stack
             spacing={1.5}
@@ -449,17 +501,6 @@ const LagerCut = () => {
             <Typography>Total :</Typography>
             <Typography>{cutLag ? cutLag.cutAmount : "0"}</Typography>
           </Stack>
-          <Stack
-            spacing={1.5}
-            padding={1}
-            direction="row"
-            alignItems={"center"}
-          >
-            <Typography>Count :</Typography>
-            <Typography>
-              {cutLag ? cutLag.numbers.length.toString() : "0"}
-            </Typography>
-          </Stack>
 
           <Stack
             spacing={1.5}
@@ -469,7 +510,9 @@ const LagerCut = () => {
             minWidth="50%"
             maxWidth={"70%"}
           >
-            <Typography>Numbers :</Typography>
+            <Typography>
+              Numbers : {cutLag ? cutLag.numbers.length.toString() : "0"}
+            </Typography>
             <Box
               bgcolor="white"
               // paddingTop={1}
@@ -501,11 +544,20 @@ const LagerCut = () => {
             >
               cancel
             </Button>
+            <Button
+              variant={"contained"}
+              size="small"
+              // sx={{ bgcolor: "white" }}
+              color={"primary"}
+              onClick={() => exportTextFile(cutLag)}
+            >
+              PDF
+            </Button>
             <LoadingButton
               variant="contained"
               size="small"
               loading={loading}
-              color="primary"
+              color="success"
               onClick={saveCut}
             >
               save

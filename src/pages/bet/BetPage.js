@@ -2049,28 +2049,35 @@ const BetPage = () => {
   // console.log(mastercallcrud);
   const handleFiles = (e) => {
     const reader = new FileReader();
+
+    reader.readAsText(e.target.files[0]);
+
     reader.onload = (e) => {
       const ReadData = [];
 
       const text = e.target.result;
+
       console.log(text);
       const cells = text.split("\n").map((el) => el.split(/\s+/));
-      // console.log(cells);
+      // // console.log(cells);
       const headings = cells.shift();
       console.log(cells);
       // console.log(headings);
 
-      cells.map((el) => ReadData.push({ number: el[0], amount: el[1] }));
+      setCall({
+        ...call,
+        numbers: cells.map((el) => {
+          return { number: el[0], amount: el[1] };
+        }),
+      });
 
-      console.log(ReadData);
-      if (ReadData.length) {
-        setCall({ ...call, numbers: ReadData });
-      }
+      // console.log(ReadData);
+      // if (ReadData.length) {
+      //   setCall({ ...call, numbers: ReadData });
+      // }
     };
 
     // setCall({ ...call, numbers: ReadData });
-
-    reader.readAsText(e.target.files[0]);
   };
 
   const bet = (e, in_out) => {
@@ -2463,7 +2470,6 @@ const BetPage = () => {
             ))}
           {in_out === "In" && (
             <Button
-              onClick={handleFiles}
               variant="contained"
               component="label"
               color="success"
@@ -2471,7 +2477,14 @@ const BetPage = () => {
               sx={{ fontSize: 14 }}
             >
               <span style={{ fontSize: 8 }}>Read</span>
-              <input hidden accept={"All/*"} multiple type="file" />
+
+              <input
+                onChange={handleFiles}
+                hidden
+                accept={"All/*"}
+                multiple
+                type="file"
+              />
             </Button>
           )}
           <Button
