@@ -5,7 +5,7 @@ import React from "react";
 const ModalBox = ({ children, open, setOpen,setOnchange }) => {
   const style = {
     position: "absolute",
-    top: "45%",
+    top: "50%",
     left: "50%",
     // bottom: "30%",
     transform: "translate(-50%, -50%)",
