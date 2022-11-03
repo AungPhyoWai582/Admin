@@ -64,7 +64,7 @@ const Dashboard = () => {
 
       <Route path="/lottery/bet/:lotteryId" element={<BetPage />} />
       {/* <Route path="/lottery/calls/:lotteryId" element={<CallsList />} /> */}
-      <Route path="/lottery/lager/:lotteryId" element={<LagerCut />} />
+      <Route path="/lottery/bet/:lotteryId/lager" element={<LagerCut />} />
 
       <Route path="/reports/total" element={<ShortCup />} />
       <Route path="/reports/daily" element={<Daily />} />

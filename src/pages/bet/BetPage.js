@@ -7,6 +7,7 @@ import {
   Close,
   Delete,
   Edit,
+  Star,
 } from "@mui/icons-material";
 import BorderColorTwoToneIcon from "@mui/icons-material/BorderColorTwoTone";
 import {
@@ -53,7 +54,7 @@ import { arrayIncludes } from "@mui/x-date-pickers/internals/utils/utils";
 import axios from "axios";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import ReactFileReader from "react-file-reader";
-import { useLocation, useParams } from "react-router-dom";
+import { NavLink, useLocation, useParams } from "react-router-dom";
 import BetButtonCom from "../../components/BetButtonCom";
 import BetCom from "../../components/BetCom";
 import BetListCom from "../../components/BetListCom";
@@ -146,9 +147,8 @@ const BetPage = () => {
   // const showCalls = [];
 
   const { lotteryId } = useParams();
-  const location = useLocation();
-  const { hot_tees } = location.state;
-  const hot = hot_tees.split("/");
+  // const location = useLocation();
+  // const { hot_tees } = location.state;
   const [hotNumbers, setHotNumbers] = useState();
   // console.log(hot);
   const [success, setSuccess] = useState(false);
@@ -191,6 +191,8 @@ const BetPage = () => {
     Data: [],
     Total: 0,
   });
+  // let hot = [];
+  const [hot, setHot] = useState([]);
   // in outt
   const [in_out, set_in_out] = useState("In");
   const [customers, setCustomers] = useState([]);
@@ -201,6 +203,13 @@ const BetPage = () => {
   });
 
   useEffect(() => {
+    Axios.get(`/lotterys/${lotteryId}`)
+      .then((res) => {
+        console.log(res.data.lottery);
+        const { lottery } = res.data;
+        setHot(lottery.hot_tees.split("/"));
+      })
+      .catch((err) => console.log(err));
     Axios.get(`/lagers/${lotteryId}`, {
       headers: {
         authorization: "Bearer " + localStorage.getItem("access-token"),
@@ -253,7 +262,7 @@ const BetPage = () => {
       setInOutCtl(false);
     }
     // setHotNumbers( calculateHotTee(JSON.parse(localStorage.getItem('user-info')),hot_tees,lager.in.numbers,lager.in.totalAmount))
-  }, [inOutCtl]);
+  }, [inOutCtl === true]);
   // console.log(masters);
   useEffect(() => {
     if (in_out === "In") {
@@ -2461,7 +2470,7 @@ const BetPage = () => {
             />
           </RadioGroup>
         </Stack>
-        <Stack direction={"row"} spacing={1}>
+        <Stack direction={"row"} spacing={1} alignItems={"center"}>
           {(in_out === "In" && (
             <Autocomplete
               size="small"
@@ -2522,8 +2531,8 @@ const BetPage = () => {
               variant="contained"
               component="label"
               color="success"
-              size={"small"}
-              sx={{ fontSize: 14 }}
+              // size={"small"}
+              // sx={{ fontSize: 14 }}
             >
               <span style={{ fontSize: 8 }}>Read</span>
 
@@ -2536,7 +2545,7 @@ const BetPage = () => {
               />
             </Button>
           )}
-          <Button
+          {/* <Button
             variant={"contained"}
             size={"small"}
             color={"success"}
@@ -2560,7 +2569,12 @@ const BetPage = () => {
             >
               Lager
             </Typography>
-          </Button>
+          </Button> */}
+          <NavLink to={`/lottery/bet/${lotteryId}/lager`}>
+            <IconButton size="small" sx={{ color: "black" }}>
+              <Star />
+            </IconButton>
+          </NavLink>
         </Stack>
       </Stack>
       <Stack
@@ -2892,7 +2906,7 @@ const BetPage = () => {
                           <BetListCom call={cal} key={key}>
                             <IconButton
                               size="small"
-                              // onClick={() => mscallcrud(cal, key)}
+                              onClick={() => mscallcrud(cal, key)}
                             >
                               <Typography
                                 fontSize={8}
@@ -3043,7 +3057,6 @@ const BetPage = () => {
             // justifyContent={"space-between"}
           >
             {demoLager &&
-              mastercallcrud.id === "" &&
               demoLager.extraNumb.map((calc, key) => {
                 return (
                   <Stack
@@ -3071,6 +3084,17 @@ const BetPage = () => {
         }}
         spacing={{ xs: 1, sm: 2, md: 3 }}
       >
+        <Typography fontWeight={900} fontSize={14}>
+          <span style={{ color: "red" }}>Call Total</span> :{" "}
+          {call.numbers
+            .map((am) => Number(am.amount))
+            .reduce((p, n) => p + n, 0)
+            .toString()}
+        </Typography>
+        <Typography fontWeight={900} fontSize={14}>
+          <span style={{ color: "red" }}>Count</span> :{" "}
+          {call.numbers.length.toString()}
+        </Typography>
         <Typography fontWeight={900} fontSize={14}>
           <span style={{ color: "red" }}>Net Total</span> :{" "}
           {masterTotalData !== null ? masterTotalData.Total.toString() : "0"}
@@ -3127,7 +3151,7 @@ const BetPage = () => {
               }}
               label={"နံပါတ်"}
             >
-              {masterTotalData.Data.map((num) => num.number).includes(
+              {/* {masterTotalData.Data.map((num) => num.number).includes(
                 onchange.number
               ) && (
                 <Chip
@@ -3145,7 +3169,7 @@ const BetPage = () => {
                     backgroundColor: green[300],
                   }}
                 />
-              )}
+              )} */}
             </BetCom>
 
             {/* <TwoDSign /> */}
@@ -3488,18 +3512,6 @@ const BetPage = () => {
           </Button>
         </Stack>
       </ModalBox>
-
-      <Dialog fullScreen open={lagerOpen}>
-        <Stack alignItems={"end"}>
-          <Typography>{demoLager.totalAmount}</Typography>
-          <IconButton onClick={() => setLagerOpen(false)}>
-            <Close />
-          </IconButton>
-        </Stack>
-        <Stack maxWidth={"100%"} padding={1}>
-          <LagerCut />
-        </Stack>
-      </Dialog>
     </Stack>
   );
 };

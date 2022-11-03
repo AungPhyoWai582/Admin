@@ -18,13 +18,15 @@ import {
   CircularProgress,
   FormGroup,
   Checkbox,
+  IconButton,
 } from "@mui/material";
 import React from "react";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 import { blue, green, grey, red, teal } from "@mui/material/colors";
 
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, NavLink, useParams } from "react-router-dom";
 
 import Axios from "../../shared/Axios";
 // import { CheckBox, SaveAlt } from "@mui/icons-material";
@@ -32,6 +34,7 @@ import ModalBox from "../../components/modal/ModalBox";
 import BetListCom from "../../components/BetListCom";
 import { LoadingButton } from "@mui/lab";
 import { exportTextFile } from "../../shared/ExportTxt";
+import { Star } from "@mui/icons-material";
 
 const LagerCut = () => {
   // % and cash control
@@ -143,8 +146,10 @@ const LagerCut = () => {
         .then((res) => {
           console.log(res.data);
           setUseEffCtrl(true);
+          // setInOutCtl(true);
         })
         .catch((err) => console.log(err.message));
+      // setInOutCtl(true);
       // Axios.put(
       //   `/lagers/${lagerID}`,
       //   {
@@ -252,54 +257,88 @@ const LagerCut = () => {
     <>
       <Stack
         padding={1}
+        // margin={1}
         direction={"column"}
         // sx={{ xs: { direction: "column", sm: { direction: "column" } } }}
         // bgcolor={grey[300]}
       >
         {/* {useMediaQuery("(max-width:500px)") && <Typography>Heeo</Typography>} */}
+
         <Stack
           // width={"30%"}
           // padding={1}
           // alignItems="center"
           // border={1}
           // margin="auto"
+          // margin={1}
           spacing={1}
+          alignItems={"center"}
           direction={"row"}
+          justifyContent={"space-between"}
         >
-          <TextField
-            label={`${perandcashCtl ? "Origin" : "%"}`}
-            color={"success"}
-            variant="outlined"
-            size="small"
-            name="break"
-            sx={{ bgcolor: teal[50], width: 100 }}
-            value={breakPercent}
-            onChange={(e) => setBreakPercent(e.target.value)}
-          />
-          <Button
-            size="small"
-            color="secondary"
-            variant="contained"
-            onClick={setBreak}
-          >
-            Set
-          </Button>
-          <Stack direction={"row"} alignItems={"center"}>
-            <Checkbox
-              color="success"
-              onChange={() => {
-                setPerandcashCtl(!perandcashCtl);
-                perandcashCtl
-                  ? setBreakPercent("0")
-                  : setBreakPercent(lager.originalBreak);
-              }}
+          <Stack direction={"row"}>
+            <TextField
+              label={`${perandcashCtl ? "Origin" : "%"}`}
+              color={"success"}
+              variant="outlined"
+              size="small"
+              name="break"
+              sx={{ bgcolor: teal[50], width: 100 }}
+              value={breakPercent}
+              onChange={(e) => setBreakPercent(e.target.value)}
             />
-            <Typography fontSize={14} color={"royalblue"} textAlign={"center"}>
-              Original :{" "}
-              {lager.originalBreak == null
-                ? "0"
-                : lager.originalBreak.toString()}
-            </Typography>
+            <Button
+              size="small"
+              color="secondary"
+              variant="contained"
+              onClick={setBreak}
+            >
+              Set
+            </Button>
+            <Stack direction={"row"} alignItems={"center"}>
+              <Checkbox
+                color="success"
+                onChange={() => {
+                  setPerandcashCtl(!perandcashCtl);
+                  perandcashCtl
+                    ? setBreakPercent("0")
+                    : setBreakPercent(lager.originalBreak);
+                }}
+              />
+              <Typography
+                fontSize={14}
+                color={"royalblue"}
+                textAlign={"center"}
+              >
+                Original :{" "}
+                {lager.originalBreak == null
+                  ? "0"
+                  : lager.originalBreak.toString()}
+              </Typography>
+            </Stack>
+          </Stack>
+
+          <Stack
+            right={"100%"}
+            alignItems={"end"}
+            paddingRight={1}
+            justifyContent={"flex-end"}
+          >
+            <NavLink
+              to={`/lottery/bet/${lotteryId}`}
+              state={{
+                lotteryId: lotteryId,
+                // hot_tees: h.toString(),
+              }}
+            >
+              <IconButton
+                size="small"
+                sx={{ color: "black" }}
+                // disabled={l.play === true ? true : false}
+              >
+                <ArrowForwardIcon />
+              </IconButton>
+            </NavLink>
           </Stack>
         </Stack>
         <Stack>

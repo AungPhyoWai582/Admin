@@ -50,7 +50,7 @@ const Lottery = () => {
     setPlay(true);
     Axios.get("/lotterys")
       .then((res) => {
-        console.log(res.data.lotteries)
+        console.log(res.data.lotteries);
         setLottery(res.data.lotteries);
         setEffCtrl(false);
       })
@@ -223,14 +223,14 @@ const Lottery = () => {
                     <MenuBook fontSize="small" />
                   </IconButton>
                 </NavLink> */}
-                    <NavLink
+                    {/* <NavLink
                       to={`/lottery/lager/${l._id}`}
                       state={{ _date: date }}
                     >
                       <IconButton size="small" sx={{ color: "black" }}>
                         <Star fontSize="small" />
                       </IconButton>
-                    </NavLink>
+                    </NavLink> */}
                     {/* <NavLink to={`/lottery/calls/${l._id}`}>
                     <IconButton size="small" sx={{ color: "black" }}>
                       <List fontSize="small" />
