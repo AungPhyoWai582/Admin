@@ -101,12 +101,14 @@ const BetPage = () => {
   const [mastercallAPIctl, setMastercallAPI] = useState(false);
   const [extraCtl, setExtraCtl] = useState(false);
   const [callTotal, setCallTotal] = useState(0);
+  const [callCount, setCallCount] = useState(0);
   const [calltotalCtrl, setCalltotalCtrl] = useState(false);
 
   // delButton control
   const [delButtCtl, setDelButtCtl] = useState(false);
   const [confirmCtl, setComfirmCtl] = useState(false);
   const [crudOpen, setCrudOpen] = useState(false);
+  const [crudOutOpen, setCrudOutOpen] = useState(false);
 
   //loading
   const [loading, setLoading] = useState(false);
@@ -155,6 +157,11 @@ const BetPage = () => {
   //callList crud
   const [editCtlBtn, setEditCtlBtn] = useState(false);
   const [mastercallcrud, setMasterCallCrud] = useState({ id: "", numbers: [] });
+  const [masteroutcallcrud, setMasterOutCallCrud] = useState({
+    id: "",
+    numbers: [],
+  });
+
   const [keydemo, setKeyDemo] = useState();
   //For twoD sign state
   const [autoCompleteValue, setAutoCompleteValue] = useState();
@@ -2202,6 +2209,30 @@ const BetPage = () => {
         console.log(err);
       });
   };
+
+  const masteroutcallDelete = (callid) => {
+    setLoading(true);
+
+    Axios.delete(`/outcall/${lotteryId}/${callid}`, {
+      headers: {
+        authorization: `Bearer ` + localStorage.getItem("access-token"),
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        // setMastercallAPI(true);
+        setLoading(false);
+        setMasterOutCallCrud({ id: "", numbers: [] });
+        setComfirmCtl(false);
+        setCrudOpen(false);
+        // setInOutCtl(true);
+        setMastercallAPI(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const editHandle = (cal, key) => {
     // console.log(key);
     // setEditCtlBtn(true);
@@ -2243,36 +2274,37 @@ const BetPage = () => {
       setInOutCtl(true);
     });
   };
-  // Delete Call
-  // const DeleteCall = () => {
-  //   // setMastercallAPI(true);
-  //   const numbers = [...mastercallcrud.numbers];
-  //   const result = numbers.filter(
-  //     (obj) => obj.number.toString() !== onchange.number.toString()
-  //   );
 
-  //   setMasterCallCrud({ ...mastercallcrud, numbers: result });
-  //   Axios.put(
-  //     `/call/${lotteryId}/${mastercallcrud.id}`,
-  //     {
-  //       numbers: result,
-  //     },
-  //     {
-  //       headers: {
-  //         authorization: `Bearer ` + localStorage.getItem("access-token"),
-  //       },
-  //     }
-  //   )
-  //     .then((res) => {
-  //       setEditCtlBtn(false);
-  //       setMastercallAPI(true);
-  //     })
-  //     .catch((err) => console.log(err));
+  const updateOutCall = () => {
+    setLoading(true);
+    // console.log(onchange);
+    // console.log(mastercallcrud);
+    const numbers = [...masteroutcallcrud.numbers];
+    const index = numbers.findIndex((obj) => obj.number == onchange.number);
+    numbers[index] = onchange;
 
-  //   setMastercallAPI(false);
-  //   // setMasterCallCrud({ ...mastercallcrud, numbers: [result] });
-  //   setOnchange({ number: "", amount: "" });
-  // };
+    console.log(numbers);
+
+    // setMasterCallCrud({ ...mastercallcrud, numbers: numbers });
+    Axios.put(
+      `/outcall/${lotteryId}/${masteroutcallcrud.id}`,
+      {
+        // master:autoCompleteValue._id,
+        numbers: numbers,
+      },
+      {
+        headers: {
+          authorization: `Bearer ` + localStorage.getItem("access-token"),
+        },
+      }
+    ).then((res) => {
+      setLoading(false);
+      setMasterOutCallCrud({ id: "", numbers: [] });
+      // setEditCtlBtn(false);
+      setCrudOpen(false);
+      setMastercallAPI(true);
+    });
+  };
 
   const setBreak = (lager) => {
     console.log(lager);
@@ -2860,7 +2892,7 @@ const BetPage = () => {
                           <BetListCom call={cal} key={key}>
                             <IconButton
                               size="small"
-                              onClick={() => mscallcrud(cal, key)}
+                              // onClick={() => mscallcrud(cal, key)}
                             >
                               <Typography
                                 fontSize={8}
@@ -2898,12 +2930,17 @@ const BetPage = () => {
                           justifyContent={"space-around"}
                           // component={"button"}
                           sx={{ cursor: "pointer" }}
+                          // onDoubleClick={()=>alert('double click')}
+                          // onMouseOver={()=>{
+
+                          // }}
                           onClick={() => {
                             setMasterCallCrud({
                               id: cal._id,
                               numbers: cal.numbers,
                             });
                             setCallTotal(cal.totalAmount);
+                            setCallCount(cal.numbers.length);
                             // console.log(cal.totalAmount)
                             setAutoCompleteCtrl(true);
                             // setDelButtCtl(true);
@@ -2962,14 +2999,15 @@ const BetPage = () => {
                         justifyContent={"space-around"}
                         // component={"button"}
                         sx={{ cursor: "pointer" }}
-                        // onClick={() => {
-                        //   setMasterCallCrud({
-                        //     id: cal._id,
-                        //     numbers: cal.numbers,
-                        //   });
-                        //   setCallTotal(cal.totalAmount);
-                        //   setAutoCompleteCtrl(true);
-                        // }}
+                        onClick={() => {
+                          setMasterOutCallCrud({
+                            id: cal._id,
+                            numbers: cal.numbers,
+                          });
+                          setCallTotal(cal.totalAmount);
+                          setAutoCompleteCtrl(true);
+                          setCrudOutOpen(true);
+                        }}
                       >
                         {cal.numbers.map((ca, key) => {
                           return (
@@ -3033,76 +3071,24 @@ const BetPage = () => {
         spacing={{ xs: 1, sm: 2, md: 3 }}
       >
         <Typography fontWeight={900} fontSize={14}>
-          <span style={{ color: "red" }}>Call Total</span> :{" "}
-          {/* {callTotal && calltotalCtrl
-            ? callTotal.toString()
-            : call.numbers && calltotalCtrl === false
-            ? call.numbers
-                .reduce((p, n) => Number(p) + Number(n.amount), 0)
-                .toString()
-            : "0"} */}
-          {callTotal}
-        </Typography>
-        <Typography fontWeight={900} fontSize={14}>
-          <span style={{ color: "red" }}>Count</span> :{" "}
-          {call ? call.numbers.length : "0"}
-        </Typography>
-        <Typography fontWeight={900} fontSize={14}>
           <span style={{ color: "red" }}>Net Total</span> :{" "}
           {masterTotalData !== null ? masterTotalData.Total.toString() : "0"}
         </Typography>
       </Stack>
 
-      <ModalBox open={confirmCtl} setOpen={setComfirmCtl}>
-        <Typography
-          padding={1}
-          textAlign={"center"}
-          fontWeight={700}
-          letterSpacing={0.8}
-        >
-          Do you want to <span style={{ color: "red" }}>DELETE</span> your call
-          ?
-        </Typography>
-        <Stack
-          direction={"row"}
-          spacing={2}
-          justifyContent={"center"}
-          margin={1}
-        >
-          <Button
-            sx={{
-              textTransform: "inherit",
-              letterSpacing: 0.8,
-              fontWeight: 700,
-            }}
-            variant={"contained"}
-            size={"small"}
-            onClick={() => setComfirmCtl(false)}
-            color={"success"}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant={"contained"}
-            size={"small"}
-            color={"error"}
-            sx={{
-              textTransform: "inherit",
-              letterSpacing: 0.8,
-              fontWeight: 700,
-            }}
-            onClick={() => {
-              mastercallDelete(mastercallcrud.id);
-            }}
-          >
-            Ok
-          </Button>
-        </Stack>
-      </ModalBox>
       <ModalBox open={crudOpen} setOpen={setCrudOpen} setOnchange={setOnchange}>
+        <Stack direction={"row"} justifyContent="space-around">
+          <Typography fontWeight={"bold"} color={"blue"}>
+            Total : {callTotal}{" "}
+          </Typography>
+          <Typography fontWeight={"bold"} color={"blue"}>
+            Count : {callCount}
+          </Typography>
+        </Stack>
         <Stack
           direction={"row"}
-          bgcolor={grey[300]}
+          // bgcolor={grey[300]}
+          bgcolor={green[100]}
           padding={2}
           justifyContent={"center"}
         >
@@ -3210,7 +3196,7 @@ const BetPage = () => {
           </Stack>
         </Stack>
 
-        <Stack direction={"row"} justifyContent="center" bgcolor={grey[300]}>
+        <Stack direction={"row"} justifyContent="center" bgcolor={green[100]}>
           <Stack
             border={0.1}
             width="80%"
@@ -3237,7 +3223,8 @@ const BetPage = () => {
           </Stack>
         </Stack>
         <Stack
-          bgcolor={grey[300]}
+          // bgcolor={grey[300]}
+          bgcolor={green[100]}
           direction={"row"}
           justifyContent="space-around"
           spacing={2}
@@ -3263,6 +3250,240 @@ const BetPage = () => {
             endIcon={<Delete />}
           >
             Delete call
+          </Button>
+        </Stack>
+      </ModalBox>
+
+      <ModalBox
+        open={crudOutOpen}
+        setOpen={setCrudOutOpen}
+        setOnchange={setOnchange}
+      >
+        <Stack direction={"row"} justifyContent="space-around">
+          <Typography fontWeight={"bold"} color={"blue"}>
+            Total : {callTotal}{" "}
+          </Typography>
+          <Typography fontWeight={"bold"} color={"blue"}>
+            Count : {callCount}
+          </Typography>
+        </Stack>
+        <Stack
+          direction={"row"}
+          // bgcolor={grey[300]}
+          bgcolor={green[100]}
+          padding={2}
+          justifyContent={"center"}
+        >
+          <Stack
+            direction={"row"}
+            padding={2}
+            spacing={1}
+            width="80%"
+            bgcolor={"white"}
+            borderRadius={5}
+          >
+            <BetCom
+              width={50}
+              text={"number"}
+              name="number"
+              autoFocus={true}
+              value={onchange.number}
+              textColor={hot.includes(onchange.number) ? "red" : "blue"}
+              onChange={onChangeHandler}
+              inputRef={textFieldForNumber}
+              style={{ position: "relative" }}
+              // numTotalCheck={
+              //   <Chip sx={{ position: "absolute", right: 0 }} label="a" />
+              // }
+              onKeyDown={(event) => {
+                if (event.key.toLowerCase() === "enter") {
+                  console.log(event.target);
+                  textFieldForAmount.current.focus();
+                  // event.target.value.select();
+                  //  const form = event.target.form;
+                  //  const index = [...form].indexOf(event.target);
+                  //  form.elements[index + 1].focus();
+                  event.preventDefault();
+                }
+              }}
+              label={"နံပါတ်"}
+            >
+              {/* {masterTotalData.Data.map((num) => num.number).includes(
+                onchange.number
+              ) && (
+                <Chip
+                  label={
+                    masterTotalData.Data[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number === onchange.number
+                      )
+                    ].amount
+                  }
+                  sx={{
+                    position: "absolute",
+                    right: 4,
+                    top: 4,
+                    backgroundColor: green[300],
+                  }}
+                />
+              )} */}
+            </BetCom>
+
+            {/* <TwoDSign /> */}
+            <BetCom
+              text={"number"}
+              name="amount"
+              value={onchange.amount}
+              onChange={onChangeHandler}
+              inputRef={textFieldForAmount}
+              onFocus={(event) => event.target.select()}
+              onKeyDown={(event) => {
+                console.log(event.key);
+
+                if (
+                  event.key.toLowerCase() === "enter" ||
+                  event.key.toLowerCase() === "numpadenter"
+                ) {
+                  choice(event);
+                  textFieldForNumber.current.focus();
+                  event.target.value.select();
+                  event.preventDefault();
+                }
+              }}
+              // onFocus={false}
+              label={"ထိုးငွေ"}
+            />
+            {/* <IconButton onClick={updateCall} size={"small"}>
+              <Edit fontSize="8" />
+            </IconButton> */}
+            {/* <Stack
+            direction={"row"}
+            // width="20%"
+            bgcolor='red'
+            justifyContent={"center"}
+            padding={2}
+          > */}
+            <IconButton
+              variant="contained"
+              color="warning"
+              onClick={updateOutCall}
+              sx={{ borderRadius: "10px" }}
+            >
+              {onchange.amount.toString() === "0" ? (
+                <Delete fontSize="40px" />
+              ) : (
+                <Edit fontSize="40px" />
+              )}
+            </IconButton>
+          </Stack>
+        </Stack>
+
+        <Stack direction={"row"} justifyContent="center" bgcolor={green[100]}>
+          <Stack
+            border={0.1}
+            width="80%"
+            bgcolor={"white"}
+            borderColor={grey[300]}
+            borderRadius={1}
+            overflow="scroll"
+            maxHeight={"60vh"}
+          >
+            {masteroutcallcrud.numbers.map((calcrud, key) => {
+              return (
+                <BetListCom call={calcrud}>
+                  {/* <Stack direction={"row"}> */}
+                  <IconButton
+                    // color={'#ffcc80'}
+                    size="small"
+                    onClick={() => editHandle(calcrud, key)}
+                  >
+                    <Edit fontSize={"6px"} />
+                  </IconButton>
+                </BetListCom>
+              );
+            })}
+          </Stack>
+        </Stack>
+        <Stack
+          // bgcolor={grey[300]}
+          bgcolor={green[100]}
+          direction={"row"}
+          justifyContent="space-around"
+          spacing={2}
+          padding={2}
+        >
+          <Button
+            variant="contained"
+            onClick={() => {
+              setCrudOutOpen(false);
+              setOnchange({ number: "", amount: "" });
+            }}
+            color={"info"}
+            sx={{ borderRadius: "10px", textTransform: "none" }}
+            endIcon={<Cancel />}
+          >
+            cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => setComfirmCtl(true)}
+            color="error"
+            sx={{ borderRadius: "10px", textTransform: "none" }}
+            endIcon={<Delete />}
+          >
+            Delete call
+          </Button>
+        </Stack>
+      </ModalBox>
+
+      <ModalBox open={confirmCtl} setOpen={setComfirmCtl}>
+        <Typography
+          padding={1}
+          textAlign={"center"}
+          fontWeight={700}
+          letterSpacing={0.8}
+        >
+          Do you want to <span style={{ color: "red" }}>DELETE</span> your call
+          ?
+        </Typography>
+        <Stack
+          direction={"row"}
+          spacing={2}
+          justifyContent={"center"}
+          margin={1}
+        >
+          <Button
+            sx={{
+              textTransform: "inherit",
+              letterSpacing: 0.8,
+              fontWeight: 700,
+            }}
+            variant={"contained"}
+            size={"small"}
+            onClick={() => setComfirmCtl(false)}
+            color={"success"}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant={"contained"}
+            size={"small"}
+            color={"error"}
+            sx={{
+              textTransform: "inherit",
+              letterSpacing: 0.8,
+              fontWeight: 700,
+            }}
+            onClick={() => {
+              if (mastercallcrud.id) {
+                mastercallDelete(mastercallcrud.id);
+              }
+              if (masteroutcallcrud.id) {
+                masteroutcallDelete(masteroutcallcrud.id);
+              }
+            }}
+          >
+            Ok
           </Button>
         </Stack>
       </ModalBox>
