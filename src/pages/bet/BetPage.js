@@ -2846,7 +2846,7 @@ const BetPage = () => {
           </Stack>
 
           <Stack
-            // display={"block"}
+            display={"block"}
             // position={"initial"}
             // direction={"column"}
             alignItems={"center"}
@@ -2924,6 +2924,7 @@ const BetPage = () => {
                     .map((cal, key) => {
                       return (
                         <Stack
+                          position={"relative"}
                           bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
                           borderLeft={0.5}
                           borderRight={0.5}
