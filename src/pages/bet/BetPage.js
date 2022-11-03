@@ -262,6 +262,7 @@ const BetPage = () => {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
+        console.log(res.data.data)
         setMastercalls(res.data.data);
         // setBreak();
       });
@@ -309,7 +310,7 @@ const BetPage = () => {
     setAutoCompleteCtrl(false);
     setMastercallAPI(false);
     setCalllistctrl(false);
-  }, [autocompleteCtrl, mastercallAPIctl]);
+  }, [inOutCtl,autocompleteCtrl, mastercallAPIctl]);
 
   console.log(mastercalls);
 

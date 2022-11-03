@@ -226,9 +226,7 @@ const ShortCup = () => {
       </Stack>
       <Stack
         direction={"row"}
-        justifyContent="center"
-        // flexDirection={"row"}
-        // flexWrap="wrap"
+        flexWrap="wrap"
         spacing={2}
         padding={1}
         paddingLeft={3}
