@@ -271,7 +271,7 @@ const BetPage = () => {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
-        console.log(res.data.data)
+        console.log(res.data.data);
         setMastercalls(res.data.data);
         // setBreak();
       });
@@ -319,7 +319,7 @@ const BetPage = () => {
     setAutoCompleteCtrl(false);
     setMastercallAPI(false);
     setCalllistctrl(false);
-  }, [inOutCtl,autocompleteCtrl, mastercallAPIctl]);
+  }, [inOutCtl, autocompleteCtrl, mastercallAPIctl]);
 
   console.log(mastercalls);
 
@@ -2235,7 +2235,7 @@ const BetPage = () => {
         setMasterOutCallCrud({ id: "", numbers: [] });
         setComfirmCtl(false);
         setCrudOpen(false);
-        // setInOutCtl(true);
+        setInOutCtl(true);
         setMastercallAPI(true);
       })
       .catch((err) => {
@@ -2312,6 +2312,7 @@ const BetPage = () => {
       setMasterOutCallCrud({ id: "", numbers: [] });
       // setEditCtlBtn(false);
       setCrudOpen(false);
+      setInOutCtl(true);
       setMastercallAPI(true);
     });
   };
