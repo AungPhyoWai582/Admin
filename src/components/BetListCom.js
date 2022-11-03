@@ -11,7 +11,7 @@ import {
 import { blue, green, grey } from "@mui/material/colors";
 import React from "react";
 
-const BetListCom = ({ call, key, onClick, children }) => {
+const BetListCom = ({ call, key, onClick, children, color }) => {
   console.log(call);
   console.log(children);
   return (
@@ -29,6 +29,7 @@ const BetListCom = ({ call, key, onClick, children }) => {
         width={"20%"}
         textAlign={"right"}
         position={"inherit"}
+        color={color ? `${color}` : "black"}
       >
         {call.number}
       </Typography>

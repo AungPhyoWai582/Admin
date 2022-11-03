@@ -202,11 +202,11 @@ const LagerCut = () => {
         .map((num) => {
           return {
             number: num.number,
-            amount: Math.round(
-              (Number(num.amount)  *
-                breakPercent) /
-                100
-            ),
+            amount:
+              Math.round(
+                (Number(num.amount) * Number(breakPercent / 100)) / 100
+              ) * 100,
+            // amount: Math.round(7549 / 100) * 100,
           };
         });
       const total = data

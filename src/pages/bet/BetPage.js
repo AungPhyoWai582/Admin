@@ -88,6 +88,7 @@ import {
 } from "./BetPage.method";
 import ModalBox from "../../components/modal/ModalBox";
 import { ClassNames } from "@emotion/react";
+import LagerCut from "../lager/LagerCut";
 
 const BetPage = () => {
   // For input refs
@@ -98,7 +99,7 @@ const BetPage = () => {
 
   //masterapi ctl
   const [mastercallAPIctl, setMastercallAPI] = useState(false);
-  // const [singleBetCleanctlr, setSingleBetCleanctlr] = useState(false);
+  const [extraCtl, setExtraCtl] = useState(false);
   const [callTotal, setCallTotal] = useState(0);
   const [calltotalCtrl, setCalltotalCtrl] = useState(false);
 
@@ -169,7 +170,7 @@ const BetPage = () => {
   //Lager Break
   const [lagerBreak, setLagerBreak] = useState("0");
   const [demoLager, setDemolager] = useState({
-    originalBreak: 0,
+    originalBreak: lager && lager.originalBreak ? lager.originalBreak : 0,
     average: 0,
     totalAmount: 0,
     extraNumb: [],
@@ -202,11 +203,16 @@ const BetPage = () => {
         const lager = res.data.data;
         if (lager) {
           setLager(lager);
+          const ext = setBreak(lager);
+          console.log(ext);
+          setDemolager({ ...demoLager, extraNumb: ext });
         }
         // setCallList(res.data.data.in.read);
         // setSuccess(false);
       })
       .catch((err) => console.log(err));
+    // setBreak();
+
     if (in_out === "In") {
       Axios.get(`/masters`, {
         headers: {
@@ -250,6 +256,7 @@ const BetPage = () => {
         },
       }).then((res) => {
         setMastercalls(res.data.data);
+        // setBreak();
       });
 
       if (autoCompleteValue) {
@@ -262,7 +269,7 @@ const BetPage = () => {
           }
         ).then((res) => {
           // console.log(res.data);
-
+          // setBreak();
           setMasterTotalData({
             Data: res.data.numsData,
             Total: res.data.numsTotal,
@@ -278,7 +285,7 @@ const BetPage = () => {
       }).then((res) => {
         console.log(res.data.data);
         setMasterOutCall(res.data.data);
-
+        // setBreak();
         // setInOutCtl(false);
         // setCalllistctrl(false);
         // setMastercalls(res.data.data);
@@ -288,6 +295,10 @@ const BetPage = () => {
       //   console.log(cusval)
       // }
     }
+    // if (lager && lager.numbers.length !== 0) {
+    //   const lagerExt = setBreak();
+    //   console.log(lagerExt);
+    // }
     setAutoCompleteCtrl(false);
     setMastercallAPI(false);
     setCalllistctrl(false);
@@ -2117,6 +2128,7 @@ const BetPage = () => {
           // setCalltotalCtrl(true);
           // setAutoCompleteCtrl(true);
           setMastercallAPI(true);
+          setInOutCtl(true);
         })
         // .then((res) => {
         //   setSuccess(false);
@@ -2183,7 +2195,7 @@ const BetPage = () => {
         setMasterCallCrud({ id: "", numbers: [] });
         setComfirmCtl(false);
         setCrudOpen(false);
-        // setInOutCtl(true);
+        setInOutCtl(true);
         setMastercallAPI(true);
       })
       .catch((err) => {
@@ -2228,6 +2240,7 @@ const BetPage = () => {
       // setEditCtlBtn(false);
       setCrudOpen(false);
       setMastercallAPI(true);
+      setInOutCtl(true);
     });
   };
   // Delete Call
@@ -2261,29 +2274,33 @@ const BetPage = () => {
   //   setOnchange({ number: "", amount: "" });
   // };
 
-  const setBreak = () => {
-    const avg = (Number(demoLager.totalAmount) / Number(lagerBreak)).toString();
+  const setBreak = (lager) => {
+    console.log(lager);
+    // const avg =
+    //   lager.numbers.length !== 0
+    //     ? Number(
+    //         lager.numbers
+    //           .map((num) => Number(num.amount))
+    //           .reduce((pre, next) => pre + next, 0)
+    //       ) / Number(lager.originalBreak)
+    //     : "0";
     const extraArray = [];
-    demoLager.numbers.map((demol, key) => {
-      if (Number(demol.amount) > Number(lagerBreak)) {
+    lager.numbers.map((demol, key) => {
+      if (Number(demol.amount) > Number(lager.originalBreak)) {
         // console.log(Number(demol.amount) - Number(lagerBreak));
         let obj = {
           number: demol.number,
-          amount: Number(demol.amount) - Number(lagerBreak),
+          amount: Number(demol.amount) - Number(lager.originalBreak),
         };
         extraArray.push(obj);
       }
-      // console.log(extraArray);
+      console.log(extraArray);
     });
-    setDemolager({
-      ...demoLager,
-      originalBreak: lagerBreak,
-      average: avg,
-      extraNumb: extraArray,
-    });
+    return extraArray;
     // setCallDemo({...demoLager, extraNumb: extraArray});
     // setDemolager(callDemo);
-    setLagerOpen(false);
+    // console.log(demoLager);
+    // setLagerOpen(false);
   };
 
   //CallOutLager
@@ -2495,8 +2512,12 @@ const BetPage = () => {
               setLagerOpen(true);
               setDemolager({
                 ...demoLager,
-                totalAmount: lager.in.totalAmount,
-                numbers: lager.in.numbers,
+                totalAmount:
+                  lager &&
+                  lager.map
+                    .map((num) => Number(num.amount))
+                    .reduce((pre, next) => pre + next, 0),
+                numbers: lager.numbers,
               });
             }}
           >
@@ -2602,6 +2623,7 @@ const BetPage = () => {
           <IconButton
             onClick={(e) => {
               bet(e, in_out);
+              setBreak();
             }}
             size={"small"}
             sx={{ bgcolor: green[700] }}
@@ -2992,7 +3014,7 @@ const BetPage = () => {
                     // direction={"row"}
                     justifyContent={"space-around"}
                   >
-                    <BetListCom call={calc} key={key} />
+                    <BetListCom call={calc} key={key} color={"red"} />
                   </Stack>
                 );
               })}
@@ -3247,28 +3269,13 @@ const BetPage = () => {
 
       <Dialog fullScreen open={lagerOpen}>
         <Stack alignItems={"end"}>
+          <Typography>{demoLager.totalAmount}</Typography>
           <IconButton onClick={() => setLagerOpen(false)}>
             <Close />
           </IconButton>
         </Stack>
         <Stack maxWidth={"100%"} padding={1}>
-          <Stack direction={"row"} padding={1}>
-            <TextField
-              value={lagerBreak}
-              label={"Break Amount"}
-              size={"small"}
-              onChange={(e) => setLagerBreak(e.target.value)}
-            />
-            <Button
-              size="small"
-              variant={"contained"}
-              color={"success"}
-              onClick={setBreak}
-            >
-              Set
-            </Button>
-          </Stack>
-          <LagerTable hot={hot} demo={demoLager} />
+          <LagerCut />
         </Stack>
       </Dialog>
     </Stack>
