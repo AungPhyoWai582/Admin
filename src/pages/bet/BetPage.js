@@ -2451,28 +2451,31 @@ const BetPage = () => {
         boxShadow={1}
       >
         <Stack direction={"row"}>
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="row-radio-buttons-group"
-            value={in_out}
-            onChange={(e) => {
-              set_in_out(e.target.value);
-              setInOutCtl(true);
-              setCalllistctrl(true);
-            }}
-          >
-            <FormControlLabel
-              value="In"
-              control={<Radio size="small" color="success" />}
-              label="In"
-            />
-            <FormControlLabel
-              value="Out"
-              control={<Radio size="small" color="success" />}
-              label="Out"
-            />
-          </RadioGroup>
+          <Stack>
+            {" "}
+            <RadioGroup
+              row
+              aria-labelledby="demo-row-radio-buttons-group-label"
+              name="row-radio-buttons-group"
+              value={in_out}
+              onChange={(e) => {
+                set_in_out(e.target.value);
+                setInOutCtl(true);
+                setCalllistctrl(true);
+              }}
+            >
+              <FormControlLabel
+                value="In"
+                control={<Radio size="small" color="success" />}
+                label="In"
+              />
+              <FormControlLabel
+                value="Out"
+                control={<Radio size="small" color="success" />}
+                label="Out"
+              />
+            </RadioGroup>
+          </Stack>
         </Stack>
         <Stack direction={"row"} spacing={1} alignItems={"center"}>
           {(in_out === "In" && (
@@ -2686,7 +2689,7 @@ const BetPage = () => {
       <Stack
         position={"relative"}
         display={`${!delButtCtl && "none"}`}
-        justifyContent={"right"}
+        // justifyContent={"right"}
         width={"100%"}
         direction={"row"}
         padding={1}
@@ -2736,7 +2739,13 @@ const BetPage = () => {
           <span style={{ fontSize: 16, paddingInline: 1 }}>Call Delete</span>
         </Button>
       </Stack>
-
+      <Stack
+        alignItems={"end"}
+        display={{ xs: "block", md: "none", sm: "none" }}
+        paddingX={{ xs: 1, sm: 1, md: 2 }}
+      >
+        <Clock />
+      </Stack>
       {(autoCompleteValue || cusval) && (
         <Stack direction={"row"} spacing={{ xs: 0.5, sm: 1, md: 1 }}>
           <Stack
@@ -2860,9 +2869,6 @@ const BetPage = () => {
                     </>
                   );
                 })}
-            </Stack>
-            <Stack>
-              <Clock />
             </Stack>
           </Stack>
 

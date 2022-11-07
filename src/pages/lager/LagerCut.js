@@ -203,6 +203,7 @@ const LagerCut = () => {
       const Tamount = lager.totalAmount;
       console.log(numbers, Tamount);
       const data = numbers
+        // .sort((a, b) => (b.amount > a.amount ? 1 : -1))
         // .filter((n) => n.amount > lager.originalBreak)
         .map((num) => {
           return {
@@ -278,7 +279,7 @@ const LagerCut = () => {
         >
           <Stack direction={"row"}>
             <TextField
-              label={`${perandcashCtl ? "Origin" : "%"}`}
+              label={`${perandcashCtl ? "Origin" : "Break"}`}
               color={"success"}
               variant="outlined"
               size="small"
@@ -310,10 +311,8 @@ const LagerCut = () => {
                 color={"royalblue"}
                 textAlign={"center"}
               >
-                Original :{" "}
-                {lager.originalBreak == null
-                  ? "0"
-                  : lager.originalBreak.toString()}
+                Break % :{" "}
+                {lager.originalBreak == lager.originalBreak ? "100 %" : "0"}
               </Typography>
             </Stack>
           </Stack>
@@ -590,9 +589,11 @@ const LagerCut = () => {
               height={"50vh"}
               overflow="scroll"
             >
-              {cutLag.numbers.map((ca, key) => (
-                <BetListCom call={ca} key={key} />
-              ))}
+              {cutLag.numbers
+                .sort((a, b) => (b.amount > a.amount ? 1 : -1))
+                .map((ca, key) => (
+                  <BetListCom call={ca} key={key} />
+                ))}
             </Box>
           </Stack>
           <Stack
