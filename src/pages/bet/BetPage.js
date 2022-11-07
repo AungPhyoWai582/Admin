@@ -2444,15 +2444,21 @@ const BetPage = () => {
       )}
       <Stack
         padding={1}
-        spacing={1}
+        // spacing={1}
         flexDirection={"row"}
         flexWrap="wrap"
         justifyContent={"center"}
         boxShadow={1}
       >
+        <Stack
+          alignItems={"center"}
+          display={{ xs: "none", md: "block", sm: "block" }}
+          paddingX={{ xs: 1, sm: 1, md: 2 }}
+        >
+          <Clock />
+        </Stack>
         <Stack direction={"row"}>
           <Stack>
-            {" "}
             <RadioGroup
               row
               aria-labelledby="demo-row-radio-buttons-group-label"
