@@ -86,10 +86,12 @@ import {
   calculateHotTee,
   catchHotLimit,
   catchHotLimitFromFunc,
+  SortingAmount,
 } from "./BetPage.method";
 import ModalBox from "../../components/modal/ModalBox";
 import { ClassNames } from "@emotion/react";
 import LagerCut from "../lager/LagerCut";
+import Clock from "../../components/Clocks";
 
 const BetPage = () => {
   // For input refs
@@ -2586,78 +2588,78 @@ const BetPage = () => {
         justifyContent={"center"}
         boxShadow={1}
       >
-        <BetCom
-          width={50}
-          text={"number"}
-          name="number"
-          autoFocus={true}
-          value={onchange.number}
-          textColor={hot.includes(onchange.number) ? "red" : "blue"}
-          onChange={onChangeHandler}
-          inputRef={textFieldForNumber}
-          style={{ position: "relative" }}
-          // numTotalCheck={
-          //   <Chip sx={{ position: "absolute", right: 0 }} label="a" />
-          // }
-          onKeyDown={(event) => {
-            if (event.key.toLowerCase() === "enter") {
-              console.log(event.target);
-              textFieldForAmount.current.focus();
-              // event.target.value.select();
-              //  const form = event.target.form;
-              //  const index = [...form].indexOf(event.target);
-              //  form.elements[index + 1].focus();
-              event.preventDefault();
-            }
-          }}
-          label={"နံပါတ်"}
-        >
-          {masterTotalData.Data.map((num) => num.number).includes(
-            onchange.number
-          ) && (
-            <Chip
-              label={
-                masterTotalData.Data[
-                  masterTotalData.Data.findIndex(
-                    (obj) => obj.number === onchange.number
-                  )
-                ].amount
+        <Stack alignItems={"center"} direction={"row"} spacing={0.5}>
+          <BetCom
+            width={50}
+            text={"number"}
+            name="number"
+            autoFocus={true}
+            value={onchange.number}
+            textColor={hot.includes(onchange.number) ? "red" : "blue"}
+            onChange={onChangeHandler}
+            inputRef={textFieldForNumber}
+            style={{ position: "relative" }}
+            // numTotalCheck={
+            //   <Chip sx={{ position: "absolute", right: 0 }} label="a" />
+            // }
+            onKeyDown={(event) => {
+              if (event.key.toLowerCase() === "enter") {
+                console.log(event.target);
+                textFieldForAmount.current.focus();
+                // event.target.value.select();
+                //  const form = event.target.form;
+                //  const index = [...form].indexOf(event.target);
+                //  form.elements[index + 1].focus();
+                event.preventDefault();
               }
-              sx={{
-                position: "absolute",
-                right: 4,
-                top: 4,
-                backgroundColor: green[300],
-              }}
-            />
-          )}
-        </BetCom>
+            }}
+            label={"နံပါတ်"}
+          >
+            {masterTotalData.Data.map((num) => num.number).includes(
+              onchange.number
+            ) && (
+              <Chip
+                label={
+                  masterTotalData.Data[
+                    masterTotalData.Data.findIndex(
+                      (obj) => obj.number === onchange.number
+                    )
+                  ].amount
+                }
+                sx={{
+                  position: "absolute",
+                  right: 4,
+                  top: 4,
+                  backgroundColor: green[300],
+                }}
+              />
+            )}
+          </BetCom>
 
-        {/* <TwoDSign /> */}
-        <BetCom
-          text={"number"}
-          name="amount"
-          value={onchange.amount}
-          onChange={onChangeHandler}
-          inputRef={textFieldForAmount}
-          onFocus={(event) => event.target.select()}
-          onKeyDown={(event) => {
-            console.log(event.key);
+          {/* <TwoDSign /> */}
+          <BetCom
+            text={"number"}
+            name="amount"
+            value={onchange.amount}
+            onChange={onChangeHandler}
+            inputRef={textFieldForAmount}
+            onFocus={(event) => event.target.select()}
+            onKeyDown={(event) => {
+              console.log(event.key);
 
-            if (
-              event.key.toLowerCase() === "enter" ||
-              event.key.toLowerCase() === "numpadenter"
-            ) {
-              choice(event);
-              textFieldForNumber.current.focus();
-              event.target.value.select();
-              event.preventDefault();
-            }
-          }}
-          // onFocus={false}
-          label={"ထိုးငွေ"}
-        />
-        <Stack alignItems={"center"} alignContent={"center"}>
+              if (
+                event.key.toLowerCase() === "enter" ||
+                event.key.toLowerCase() === "numpadenter"
+              ) {
+                choice(event);
+                textFieldForNumber.current.focus();
+                event.target.value.select();
+                event.preventDefault();
+              }
+            }}
+            // onFocus={false}
+            label={"ထိုးငွေ"}
+          />
           {/* {editCtlBtn ? (
             <Stack direction={"row"} spacing={1} alignItems={"center"}>
               <IconButton onClick={updateCall} size={"small"}>
@@ -2859,6 +2861,9 @@ const BetPage = () => {
                   );
                 })}
             </Stack>
+            <Stack>
+              <Clock />
+            </Stack>
           </Stack>
 
           <Stack
@@ -2888,6 +2893,7 @@ const BetPage = () => {
             {in_out === "In" &&
               (call.numbers.length // autocompleteCtrl === false
                 ? call.numbers
+
                     .map((cal, key) => (
                       // <Stack
                       //   width={"100%"}
@@ -2964,44 +2970,48 @@ const BetPage = () => {
                             setCrudOpen(true);
                           }}
                         >
-                          {cal.numbers.map((ca, key) => {
-                            return (
-                              <Stack
-                                direction={"row"}
-                                // width={{ sx: 180 }}
-                                marginY={0.3}
-                                justifyContent={{
-                                  sx: "space-between",
-                                  sm: "space-around",
-                                  md: "space-around",
-                                }}
-                              >
-                                <BetListCom call={ca} key={key}></BetListCom>
-                              </Stack>
-                            );
-                          })}
+                          {cal.numbers
+                            .sort((a, b) => (b.amount > a.amount ? 1 : -1))
+                            .map((ca, key) => {
+                              return (
+                                <Stack
+                                  direction={"row"}
+                                  // width={{ sx: 180 }}
+                                  marginY={0.3}
+                                  justifyContent={{
+                                    sx: "space-between",
+                                    sm: "space-around",
+                                    md: "space-around",
+                                  }}
+                                >
+                                  <BetListCom call={ca} key={key}></BetListCom>
+                                </Stack>
+                              );
+                            })}
                         </Stack>
                       );
                     })
                     .reverse())}
 
             {in_out === "Out" && call.numbers.length
-              ? call.numbers.map((cuscall, key) => {
-                  return (
-                    <Stack
-                      direction={"row"}
-                      // width={{ sx: 180 }}
-                      marginY={0.3}
-                      justifyContent={{
-                        sx: "space-between",
-                        sm: "space-around",
-                        md: "space-around",
-                      }}
-                    >
-                      <BetListCom call={cuscall} key={key}></BetListCom>
-                    </Stack>
-                  );
-                })
+              ? call.numbers
+                  .sort((a, b) => (b.amount > a.amount ? 1 : -1))
+                  .map((cuscall, key) => {
+                    return (
+                      <Stack
+                        direction={"row"}
+                        // width={{ sx: 180 }}
+                        marginY={0.3}
+                        justifyContent={{
+                          sx: "space-between",
+                          sm: "space-around",
+                          md: "space-around",
+                        }}
+                      >
+                        <BetListCom call={cuscall} key={key}></BetListCom>
+                      </Stack>
+                    );
+                  })
               : masterOutCalls
                   .filter(
                     (mso, key) =>
@@ -3026,26 +3036,28 @@ const BetPage = () => {
                           setCrudOutOpen(true);
                         }}
                       >
-                        {cal.numbers.map((ca, key) => {
-                          return (
-                            <Stack
-                              direction={"row"}
-                              // width={{ sx: 180 }}
-                              marginY={0.3}
-                              justifyContent={{
-                                sx: "space-between",
-                                sm: "space-around",
-                                md: "space-around",
-                              }}
-                            >
-                              <BetListCom call={ca} key={key}></BetListCom>
-                            </Stack>
-                          );
-                        })}
+                        {cal.numbers
+                          .sort((a, b) => (b.amount > a.amount ? 1 : -1))
+                          .map((ca, key) => {
+                            return (
+                              <Stack
+                                direction={"row"}
+                                // width={{ sx: 180 }}
+                                marginY={0.3}
+                                justifyContent={{
+                                  sx: "space-between",
+                                  sm: "space-around",
+                                  md: "space-around",
+                                }}
+                              >
+                                <BetListCom call={ca} key={key}></BetListCom>
+                              </Stack>
+                            );
+                          })
+                          .sort()}
                       </Stack>
                     );
-                  })
-                  .reverse()}
+                  })}
           </Stack>
           <Stack
             alignItems={"center"}
@@ -3059,19 +3071,21 @@ const BetPage = () => {
             // justifyContent={"space-between"}
           >
             {demoLager &&
-              demoLager.extraNumb.map((calc, key) => {
-                return (
-                  <Stack
-                    borderLeft={0.5}
-                    borderRight={0.5}
-                    // padding={1}
-                    // direction={"row"}
-                    justifyContent={"space-around"}
-                  >
-                    <BetListCom call={calc} key={key} color={"red"} />
-                  </Stack>
-                );
-              })}
+              demoLager.extraNumb
+                .sort((a, b) => (b.amount > a.amount ? 1 : -1))
+                .map((calc, key) => {
+                  return (
+                    <Stack
+                      borderLeft={0.5}
+                      borderRight={0.5}
+                      // padding={1}
+                      // direction={"row"}
+                      justifyContent={"space-around"}
+                    >
+                      <BetListCom call={calc} key={key} color={"red"} />
+                    </Stack>
+                  );
+                })}
           </Stack>
         </Stack>
       )}

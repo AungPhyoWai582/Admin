@@ -203,7 +203,6 @@ const Master = ({
           </Stack>
         </Grid>
         <Grid item xs={12} md={6}>
-         
           <Stack spacing={1.5} padding={1}>
             <Typography variant={"caption"} component={"label"} fontSize={16}>
               za <span style={{ color: "red" }}>*</span>
@@ -287,7 +286,7 @@ const Master = ({
             />
           </Stack>
 
-          <Stack spacing={1.5} padding={1}>
+          {/* <Stack spacing={1.5} padding={1}>
             <Typography variant={"caption"} component={"label"} fontSize={16}>
               Divider
             </Typography>
@@ -315,7 +314,7 @@ const Master = ({
                 />
               }
             />
-          </Stack>
+          </Stack> */}
 
           <Stack
             marginTop={1}

@@ -14,6 +14,11 @@ import React from "react";
 const BetListCom = ({ call, key, onClick, children, color }) => {
   console.log(call);
   console.log(children);
+  // Sorting amount
+  const SortingAmount = ({ a, b }) => {
+    return b - a;
+  };
+
   return (
     <Stack
       marginX={0.5}
