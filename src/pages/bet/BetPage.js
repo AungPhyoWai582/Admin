@@ -2587,7 +2587,10 @@ const BetPage = () => {
               Lager
             </Typography>
           </Button> */}
-          <NavLink to={`/lottery/bet/${lotteryId}/lager`}>
+          <NavLink
+            style={{ textDecoration: "none" }}
+            to={`/lottery/bet/${lotteryId}/lager`}
+          >
             <Button variant={"contained"} color={"success"}>
               <span style={{ fontSize: 10 }}>Ledger</span>
             </Button>
