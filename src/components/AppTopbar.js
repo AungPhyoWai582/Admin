@@ -10,6 +10,8 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import { Logout } from "@mui/icons-material";
 import SideBarCom from "./SideBarCom";
+import Clocks from "./Clocks";
+import { green } from "@mui/material/colors";
 
 const AppTopbar = ({ name, authUser, setAuthUser }) => {
   console.log(authUser.user_info.username);
@@ -21,9 +23,9 @@ const AppTopbar = ({ name, authUser, setAuthUser }) => {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1,marginBottom:10 }}>
-        <AppBar position="fixed" color="success">
-          <Toolbar>
+      <Box sx={{ flexGrow: 1, marginBottom: 10 }}>
+        <AppBar position="fixed">
+          <Toolbar sx={{ bgcolor: green[800] }}>
             <IconButton
               size="large"
               edge="start"
@@ -37,6 +39,7 @@ const AppTopbar = ({ name, authUser, setAuthUser }) => {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               {authUser.user_info.username}
             </Typography>
+            <Clocks />
           </Toolbar>
         </AppBar>
       </Box>

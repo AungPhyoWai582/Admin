@@ -10,6 +10,7 @@ import {
   Star,
 } from "@mui/icons-material";
 import BorderColorTwoToneIcon from "@mui/icons-material/BorderColorTwoTone";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import {
   Alert,
   AlertTitle,
@@ -2450,14 +2451,15 @@ const BetPage = () => {
         justifyContent={"center"}
         boxShadow={1}
       >
-        <Stack
-          alignItems={"center"}
-          display={{ xs: "none", md: "block", sm: "block" }}
-          paddingX={{ xs: 1, sm: 1, md: 2 }}
-        >
-          <Clock />
-        </Stack>
         <Stack direction={"row"}>
+          {/* <Stack
+            // justifyContent={"start"}
+            alignItems={"start"}
+            display={{ xs: "none", md: "block", sm: "block" }}
+            paddingX={{ xs: 1, sm: 1, md: 2 }}
+          >
+            <Clock />
+          </Stack> */}
           <Stack>
             <RadioGroup
               row
@@ -2547,7 +2549,7 @@ const BetPage = () => {
               // size={"small"}
               // sx={{ fontSize: 14 }}
             >
-              <span style={{ fontSize: 8 }}>Read</span>
+              <span style={{ fontSize: 10 }}>Read</span>
 
               <input
                 onChange={handleFiles}
@@ -2584,9 +2586,9 @@ const BetPage = () => {
             </Typography>
           </Button> */}
           <NavLink to={`/lottery/bet/${lotteryId}/lager`}>
-            <IconButton size="small" sx={{ color: "black" }}>
-              <Star />
-            </IconButton>
+            <Button variant={"contained"} color={"success"}>
+              <span style={{ fontSize: 10 }}>Ledger</span>
+            </Button>
           </NavLink>
         </Stack>
       </Stack>
@@ -2685,9 +2687,9 @@ const BetPage = () => {
               setBreak();
             }}
             size={"small"}
-            sx={{ bgcolor: green[700] }}
+            sx={{ bgcolor: green[500] }}
           >
-            <Add fontSize="8" />
+            <FileUploadIcon fontSize={"medium"} />
           </IconButton>
         </Stack>
       </Stack>
@@ -2745,13 +2747,13 @@ const BetPage = () => {
           <span style={{ fontSize: 16, paddingInline: 1 }}>Call Delete</span>
         </Button>
       </Stack>
-      <Stack
+      {/* <Stack
         alignItems={"end"}
         display={{ xs: "block", md: "none", sm: "none" }}
         paddingX={{ xs: 1, sm: 1, md: 2 }}
       >
         <Clock />
-      </Stack>
+      </Stack> */}
       {(autoCompleteValue || cusval) && (
         <Stack direction={"row"} spacing={{ xs: 0.5, sm: 1, md: 1 }}>
           <Stack
@@ -3078,6 +3080,7 @@ const BetPage = () => {
             minHeight={400}
             overflow={"scroll"}
             boxShadow={1}
+            position={"relative"}
             // borderBottom={1}
             // padding={1}
             // justifyContent={"space-between"}
@@ -3098,6 +3101,24 @@ const BetPage = () => {
                     </Stack>
                   );
                 })}
+            <Stack
+              direction={"row"}
+              position={"absolute"}
+              bottom={0}
+              // color={"red"}
+              margin={0.5}
+              fontSize={16}
+              fontWeight={700}
+              // border={0.5}
+            >
+              <span style={{ color: "red", paddingLeft: 0.4 }}>
+                {demoLager.extraNumb.length}
+                {" / "}
+                {demoLager.extraNumb
+                  .map((n) => n.amount)
+                  .reduce((n, p) => n + p, 0)}
+              </span>{" "}
+            </Stack>
           </Stack>
         </Stack>
       )}
