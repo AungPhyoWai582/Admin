@@ -209,8 +209,10 @@ const BetPage = () => {
     Axios.get(`/lotterys/${lotteryId}`)
       .then((res) => {
         console.log(res.data.lottery);
-        const { lottery } = res.data;
-        setHot(lottery.hot_tees.split("/"));
+        const { hot_tee } = res.data.lottery;
+        setHot(hot_tee.toString().split("/"));
+        // const hots = hot_tee.split("/");
+        // console.log(hot_tee.toString())
       })
       .catch((err) => console.log(err));
     Axios.get(`/lagers/${lotteryId}`, {
