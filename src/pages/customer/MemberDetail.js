@@ -16,6 +16,11 @@ import {
   Select,
   Stack,
   Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
   TextField,
   Typography,
   useMediaQuery,
@@ -33,6 +38,12 @@ import Tabbar from "../../components/Tabbar";
 const MemberDetail = () => {
   const { masterId } = useParams();
   const [user, setUser] = useState({});
+  const [memberView, setmemberView] = useState({
+    inTotal: 0,
+    outTotal:0,
+    inData: [],
+    outData:[],
+  });
   const [open, setOpen] = useState(false);
   const [openCommission, setOpenCommission] = useState(false);
   const [openAccLimit, setOpenAccLimit] = useState(false);
@@ -48,9 +59,29 @@ const MemberDetail = () => {
       },
     }).then((res) => {
       console.log(res.data.data);
-      const { name, phone } = res.data.data;
+      // const { name, phone,createdAt } = res.data.data;
+      // console.log(res.data.data.createdAt.toString())
       setUser(res.data.data);
       setControlEff(false);
+    });
+
+    // Axios.get(`customers`, {
+    //   headers: {
+    //     authorization: `Bearer ` + localStorage.getItem("access-token"),
+    //   },
+    // }).then((res) => {
+    //   // setCustomers(res.data);
+    //   // setCusval(res.data[0]);
+    // });
+
+    Axios.get(`/admin/member-view/${masterId}`, {
+      headers: {
+        authorization: `Bearer ` + localStorage.getItem("access-token"),
+      },
+    }).then((res) => {
+      console.log(res.data);
+      const { inTotal, inData,outTotal,outData } = res.data.transcation;
+      setmemberView({ inTotal: inTotal, inData: inData,outTotal:outTotal,outData:outData });
     });
   }, [controlEff]);
 
@@ -86,6 +117,10 @@ const MemberDetail = () => {
     setOpenHotLimit(true);
     setUpdateInfo({ hot_limit: hot_limit, superhot_limit: superhot_limit });
   };
+
+  const usercreateAt = new Date(user.createAt);
+  console.log(user.createAt,usercreateAt.getDay(),usercreateAt.getMonth(),usercreateAt.getFullYear())
+
 
   const saveUpdate = () => {
     console.log(updateInfo);
@@ -158,6 +193,7 @@ const MemberDetail = () => {
             <Typography>Za - {user.twoDZ}</Typography>
             <Typography>Role - {user.role}</Typography>
             <Typography>Divider - {user.divider}</Typography>
+            <Typography>Created Date - {usercreateAt.getDate()}/{usercreateAt.getMonth()+1}/{usercreateAt.getFullYear()}</Typography>
           </Stack>
           <Stack
             direction={useMediaQuery("(max-width:450px)") ? "column" : "row"}
@@ -315,7 +351,7 @@ const MemberDetail = () => {
             size="small"
             // color="success"
             variant="text"
-            onClick={(e) => editInfo(e, user.name, user.phone, user.twoDZ)}
+            onClick={(e) => editCommission(e, user.commission)}
           >
             <Typography
               paddingLeft={1}
@@ -443,7 +479,7 @@ const MemberDetail = () => {
             size="small"
             // color="success"
             variant="text"
-            onClick={(e) => editInfo(e, user.name, user.phone, user.twoDZ)}
+            onClick={(e) => editAccLimit(e, user.acc_limit_created)}
           >
             <Typography
               paddingLeft={1}
@@ -571,7 +607,9 @@ const MemberDetail = () => {
             size="small"
             // color="success"
             variant="text"
-            onClick={(e) => editInfo(e, user.name, user.phone, user.twoDZ)}
+            onClick={(e) =>
+              editHotLimit(e, user.hot_limit, user.superhot_limit)
+            }
           >
             <Typography
               paddingLeft={1}
@@ -690,24 +728,105 @@ const MemberDetail = () => {
     </>
   );
   const transcation = (
-    <Stack direction={"row"} height={"100vh"} boxShadow='1' borderColor={grey[300]}>
-      <Box sx={{ width: "30%", typography: "body1", bgcolor: grey[300] }}>
-        <TabContext>
-          <Box>
-            <TabList orientation="vertical" aria-label="lab API tabs example">
-              <Tab label="In" value="1" />
-              <Tab label="Out" value="2" />
-              <Tab label="DownLine" value={"3"} />
-            </TabList>
-          </Box>
-          <TabPanel value="1">In</TabPanel>
-          <TabPanel value="2">Out</TabPanel>
-          <TabPanel value="2">DownLine</TabPanel>
-        </TabContext>
-      </Box>
-      <Box>
-        <Typography>Name : yya nds;lfkjasd;lf</Typography>
-      </Box>
+    <Stack
+      direction={"column"}
+      height={"100vh"}
+      boxShadow="1"
+      spacing={2}
+      borderColor={grey[300]}
+      padding={1}
+    >
+      <Stack direction={"column"} width="100%">
+        <Typography variant="div">
+          In{" "}
+          <span style={{ color: "blue", fontWeight: "bold" }}>
+            {memberView.inTotal}
+          </span>
+        </Typography>
+        <Typography variant="div">
+          Out <span style={{ color: "blue", fontWeight: "bold" }}>{memberView.outTotal}</span>
+        </Typography>
+        {/* <Typography variant="div">
+          Commission{" "}
+          <span style={{ color: "blue", fontWeight: "bold" }}>-</span>
+        </Typography> */}
+      </Stack>
+      <Stack direction={"column"} spacing={1}>
+        <Typography>
+          MemberOpened{" "}
+          <span style={{ color: "green", fontWeight: "bold" }}>
+            {user.acc_created_count ? user.acc_created_count : 0}
+          </span>
+        </Typography>
+        <Stack
+          direction={"column"}
+          maxHeight="200px"
+          overflow="scroll"
+          // spacing={1}
+          border={1}
+          borderColor={grey[300]}
+          padding={1}
+        >
+          {[...memberView.inData].map((x) => {
+            return (
+              <Stack
+                direction={"row"}
+                padding={0.5}
+                justifyContent="space-between"
+                borderBottom={1}
+                borderColor={grey[300]}
+              >
+                <Typography fontSize={14} fontWeight="bold">
+                  {x.username}
+                </Typography>
+                {/* <Typography fontSize={14} fontWeight="bold" color={"green"}>
+                  In
+                </Typography> */}
+                <Typography fontSize={14} fontWeight="bold" color="blue">
+                  {x.totalIn}
+                </Typography>
+              </Stack>
+            );
+          })}
+        </Stack>
+      </Stack>
+      <Stack direction={"column"} spacing={1}>
+        <Typography>
+          Customers{" "}
+          <span style={{ color: "green", fontWeight: "bold" }}>{memberView.outData.length}</span>
+        </Typography>
+        <Stack
+          direction={"column"}
+          maxHeight="200px"
+          overflow="scroll"
+          border={1}
+          borderColor={grey[300]}
+          padding={1}
+        >
+          {[...memberView.outData].map((x) => {
+            return (
+              <Stack
+                direction={"row"}
+                padding={0.5}
+                justifyContent="space-between"
+                borderBottom={1}
+                borderColor={grey[300]}
+              >
+                <Typography fontSize={14} fontWeight="bold">
+                  {x.name}
+                </Typography>
+                {/* <Typography fontSize={14} fontWeight="bold" color={"green"}>
+                  In
+                </Typography> */}
+                <Typography fontSize={14} fontWeight="bold" color="blue">
+                  {x.totalOut}
+                </Typography>
+              </Stack>
+            );
+          })}
+        </Stack>
+      </Stack>
+      {/* </Stack> */}
     </Stack>
   );
   return (
