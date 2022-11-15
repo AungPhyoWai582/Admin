@@ -14,10 +14,6 @@ import React from "react";
 const BetListCom = ({ call, key, onClick, children, color }) => {
   console.log(call);
   console.log(children);
-  // Sorting amount
-  const SortingAmount = ({ a, b }) => {
-    return b - a;
-  };
 
   return (
     <Stack
@@ -28,16 +24,19 @@ const BetListCom = ({ call, key, onClick, children, color }) => {
       // boxShadow={1}
       alignItems={"center"}
       justifyContent={"space-around"}
+      borderBottom={0.3}
     >
       <Typography
         marginX={0.3}
         width={"20%"}
         textAlign={"right"}
         position={"inherit"}
+        fontWeight={900}
         color={color ? `${color}` : "black"}
       >
         {call.number}
       </Typography>
+      {"|"}
       <Typography marginX={0.3} width={"30%"} textAlign={"left"}>
         {call.amount}
       </Typography>

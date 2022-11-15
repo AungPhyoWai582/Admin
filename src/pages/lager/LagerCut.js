@@ -34,7 +34,7 @@ import ModalBox from "../../components/modal/ModalBox";
 import BetListCom from "../../components/BetListCom";
 import { LoadingButton } from "@mui/lab";
 import { exportTextFile } from "../../shared/ExportTxt";
-import { Star } from "@mui/icons-material";
+import { FileUpload, Star } from "@mui/icons-material";
 
 const LagerCut = () => {
   // % and cash control
@@ -199,9 +199,13 @@ const LagerCut = () => {
       console.log("%");
       setLagModCtl(true);
       console.log(breakPercent);
+      const breakPer = Math.round(
+        (Number(breakPercent) / Number(lager.originalBreak)) * 100
+      );
+
       const numbers = [...lager.numbers];
       const Tamount = lager.totalAmount;
-      console.log(numbers, Tamount);
+      console.log(numbers, Tamount, breakPer);
       const data = numbers
         // .sort((a, b) => (b.amount > a.amount ? 1 : -1))
         // .filter((n) => n.amount > lager.originalBreak)
@@ -209,9 +213,8 @@ const LagerCut = () => {
           return {
             number: num.number,
             amount:
-              Math.round(
-                (Number(num.amount) * Number(breakPercent / 100)) / 100
-              ) * 100,
+              Math.round((Number(num.amount) * Number(breakPer / 100)) / 100) *
+              100,
             // amount: Math.round(7549 / 100) * 100,
           };
         });
@@ -221,7 +224,7 @@ const LagerCut = () => {
       setCutLag({
         ...cutLag,
         numbers: data.filter((bd) => bd.amount !== "0"),
-        breakPercent: breakPercent,
+        breakPercent: breakPer.toString(),
         cutAmount: total,
         mainAmount: lager.totalAmount,
       });
@@ -278,6 +281,16 @@ const LagerCut = () => {
           justifyContent={"space-between"}
         >
           <Stack direction={"row"}>
+            <Checkbox
+              size="small"
+              color="success"
+              onChange={() => {
+                setPerandcashCtl(!perandcashCtl);
+                perandcashCtl
+                  ? setBreakPercent("0")
+                  : setBreakPercent(lager.originalBreak);
+              }}
+            />
             <TextField
               label={`${perandcashCtl ? "Origin" : "Break"}`}
               color={"success"}
@@ -288,31 +301,42 @@ const LagerCut = () => {
               value={breakPercent}
               onChange={(e) => setBreakPercent(e.target.value)}
             />
-            <Button
-              size="small"
-              color="secondary"
-              variant="contained"
-              onClick={setBreak}
-            >
-              Set
-            </Button>
+            <Stack alignItems={"center"} direction={"row"} marginX={0.5}>
+              <IconButton
+                size="small"
+                onClick={setBreak}
+                color={"success"}
+                sx={{ bgcolor: green[400], borderRadius: 4 }}
+                // disabled={`${
+                //   lager.numbers.map(
+                //     (am) => Number(am.amount) >= Number(lager.originalBreak)
+                //   ) && perandcashCtl
+                //     ? true
+                //     : false
+                // }`}
+              >
+                <FileUpload fontSize="small" />
+              </IconButton>
+            </Stack>
+
             <Stack direction={"row"} alignItems={"center"}>
-              <Checkbox
-                color="success"
-                onChange={() => {
-                  setPerandcashCtl(!perandcashCtl);
-                  perandcashCtl
-                    ? setBreakPercent("0")
-                    : setBreakPercent(lager.originalBreak);
-                }}
-              />
               <Typography
                 fontSize={14}
                 color={"royalblue"}
                 textAlign={"center"}
               >
-                Break % :{" "}
-                {lager.originalBreak == lager.originalBreak ? "100 %" : "0"}
+                ORG :{" "}
+                {lager.originalBreak ? lager.originalBreak.toString() : "0"}
+              </Typography>
+              <Typography
+                fontSize={14}
+                color={"royalblue"}
+                textAlign={"center"}
+              >
+                AVG :{" "}
+                {lager.originalBreak
+                  ? Math.round(lager.totalAmount / lager.originalBreak) + "%"
+                  : "0"}
               </Typography>
             </Stack>
           </Stack>
@@ -379,13 +403,13 @@ const LagerCut = () => {
                             <TableCell
                               align="left"
                               sx={{
-                                // width: "10px",
+                                // width: "8px",
                                 border: 0.1,
                                 borderColor: grey[300],
                                 borderCollapse: "collapse",
                               }}
                             >
-                              <Typography width={20}>
+                              <Typography>
                                 {num.toString().length === 1
                                   ? "0" + num
                                   : num.toString()}
