@@ -20,18 +20,25 @@ import {
   TableContainer,
   IconButton,
   CircularProgress,
+  Box,
 } from "@mui/material";
 import { blue, green, grey } from "@mui/material/colors";
 import React from "react";
 
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useState } from "react";
 import { RemoveRedEye, Search } from "@mui/icons-material";
 import { useLocation } from "react-router-dom";
 import Axios from "../../shared/Axios";
 import { useEffect } from "react";
-import { fontWeight } from "@mui/system";
+import SelectTime from "../../components/SelectTime";
+// import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+// import { Box, fontWeight } from "@mui/system";
+// import { DateRangePicker, StaticDateRangePicker } from "@mui/lab";
+
+// import DatePicker from "../../components/DatePicker";
+// import { DateRangePicker } from "@mui/lab";
 
 const ShortCup = () => {
   const location = useLocation();
@@ -61,6 +68,7 @@ const ShortCup = () => {
   const [time, setTime] = useState(["All", "AM", "PM"]);
   const [timeselect, setTimeSelect] = useState();
   const [selectChoice, setSelectChoice] = useState();
+  const [dates, setDates] = useState([]);
 
   //in out control
   const [loading, setLoading] = useState(false);
@@ -105,7 +113,7 @@ const ShortCup = () => {
     setLoading(true);
     if (InOutControl === "In") {
       Axios.get(
-        `/reports/members-collections?&start_date=${startDate}&end_date=${endDate}&customer=${autoCompleteValue}&time=${timeselect}`,
+        `/reports/members-collections?&start_date=${dates[0]}&end_date=${dates[1]}&customer=${autoCompleteValue}&time=${timeselect}`,
         {
           headers: {
             authorization: `Bearer ` + localStorage.getItem("access-token"),
@@ -125,7 +133,7 @@ const ShortCup = () => {
     }
     if (InOutControl === "Out") {
       Axios.get(
-        `/reports/total-out?start_date=${startDate}&end_date=${endDate}&time=${timeselect}`,
+        `/reports/total-out?start_date=${dates[0]}&end_date=${dates[0]}&time=${timeselect}`,
         {
           headers: {
             authorization: `Bearer ` + localStorage.getItem("access-token"),
@@ -196,33 +204,9 @@ const ShortCup = () => {
             }
           />
         </FormControl>
-        
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <Stack direction={"row"}>
-            <DatePicker
-              label="Start Date"
-              value={startDate}
-              // style={{backgroundColor:'white'}}
-              onChange={(newValue) => {
-                setStartDate(newValue);
-              }}
-              renderInput={(params) => (
-                <TextField {...params} size={"small"} sx={{ width: 150 }} />
-              )}
-            />
-
-            <DatePicker
-              label="End Date"
-              value={endDate}
-              onChange={(newValue) => {
-                setEndDate(newValue);
-              }}
-              renderInput={(params) => (
-                <TextField {...params} size={"small"} sx={{ width: 150 }} />
-              )}
-            />
-          </Stack>
-        </LocalizationProvider>
+        <Stack direction={"row"}>
+          <SelectTime setDates={setDates} />
+        </Stack>
       </Stack>
       <Stack
         direction={"row"}
@@ -234,7 +218,7 @@ const ShortCup = () => {
         borderRadius={1}
         alignItems={"center"}
       >
-       <FormControl>
+        <FormControl>
           {/* <FormLabel id="demo-controlled-radio-buttons-group">Gender</FormLabel> */}
           <RadioGroup
             aria-labelledby="demo-controlled-radio-buttons-group"
@@ -264,7 +248,6 @@ const ShortCup = () => {
             </Stack>
           </RadioGroup>
         </FormControl>
-
 
         <FormControl
           size="small"

@@ -245,6 +245,7 @@ const Lottery = () => {
                     </IconButton>
                     {l.play === true ? (
                       <NavLink
+                      
                         to={`/lottery/bet/${l._id}`}
                         state={{
                           lotteryId: l._id,
