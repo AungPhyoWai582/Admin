@@ -23,6 +23,7 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  getStepLabelUtilityClass,
   IconButton,
   makeStyles,
   MenuItem,
@@ -100,6 +101,7 @@ const BetPage = () => {
   const textFieldForAmount = useRef(null);
 
   const [inOutCtl, setInOutCtl] = useState(false);
+  const [play,setPlay] = useState(false);
 
   //masterapi ctl
   const [mastercallAPIctl, setMastercallAPI] = useState(false);
@@ -209,8 +211,9 @@ const BetPage = () => {
     Axios.get(`/lotterys/${lotteryId}`)
       .then((res) => {
         console.log(res.data.lottery);
-        const { hot_tee } = res.data.lottery;
+        const { hot_tee,play } = res.data.lottery;
         setHot(hot_tee.toString().split("/"));
+        setPlay(play)
         // const hots = hot_tee.split("/");
         // console.log(hot_tee.toString())
       })
@@ -2543,7 +2546,7 @@ const BetPage = () => {
                 }
               />
             ))}
-          {in_out === "In" && (
+          {in_out === "In" && play && (
             <Button
               variant="contained"
               component="label"
@@ -2597,7 +2600,7 @@ const BetPage = () => {
           </NavLink>
         </Stack>
       </Stack>
-      <Stack
+      {play && <Stack
         padding={1}
         spacing={1}
         direction={"row"}
@@ -2697,7 +2700,7 @@ const BetPage = () => {
             <FileUploadIcon fontSize={"medium"} />
           </IconButton>
         </Stack>
-      </Stack>
+      </Stack>}
 
       <Stack
         position={"relative"}
@@ -3079,17 +3082,22 @@ const BetPage = () => {
                   })}
           </Stack>
           <Stack
+            
+            direction='column'
+            // width={"30%"}
+           
+            // borderBottom={1}
+            // padding={1}
+            // justifyContent={"space-between"}
+          >
+            <Stack 
             alignItems={"center"}
             // width={"30%"}
             maxHeight={400}
             minHeight={400}
             overflow={"scroll"}
             boxShadow={1}
-            position={"relative"}
-            // borderBottom={1}
-            // padding={1}
-            // justifyContent={"space-between"}
-          >
+            >
             {demoLager &&
               demoLager.extraNumb
                 .sort((a, b) => (b.amount > a.amount ? 1 : -1))
@@ -3106,9 +3114,10 @@ const BetPage = () => {
                     </Stack>
                   );
                 })}
+                </Stack>
             <Stack
               direction={"row"}
-              position={"absolute"}
+              justifyContent='center'
               bottom={0}
               // color={"red"}
               margin={0.5}
@@ -3124,7 +3133,9 @@ const BetPage = () => {
                   .reduce((n, p) => n + p, 0)}
               </span>{" "}
             </Stack>
+           
           </Stack>
+          
         </Stack>
       )}
       <Stack
@@ -3171,7 +3182,7 @@ const BetPage = () => {
           padding={2}
           justifyContent={"center"}
         >
-          <Stack
+          {play && <Stack
             direction={"row"}
             padding={2}
             spacing={1}
@@ -3272,7 +3283,7 @@ const BetPage = () => {
                 <Edit fontSize="40px" />
               )}
             </IconButton>
-          </Stack>
+          </Stack>}
         </Stack>
 
         <Stack direction={"row"} justifyContent="center" bgcolor={green[100]}>
@@ -3289,13 +3300,13 @@ const BetPage = () => {
               return (
                 <BetListCom call={calcrud}>
                   {/* <Stack direction={"row"}> */}
-                  <IconButton
+                  {play && <IconButton
                     // color={'#ffcc80'}
                     size="small"
-                    onClick={() => editHandle(calcrud, key)}
+                    onClick={() => play?editHandle(calcrud, key):null}
                   >
                     <Edit fontSize={"6px"} />
-                  </IconButton>
+                  </IconButton>}
                 </BetListCom>
               );
             })}
@@ -3321,7 +3332,7 @@ const BetPage = () => {
           >
             cancel
           </Button>
-          <Button
+          {play && <Button
             variant="contained"
             onClick={() => setComfirmCtl(true)}
             color="error"
@@ -3329,7 +3340,7 @@ const BetPage = () => {
             endIcon={<Delete />}
           >
             Delete call
-          </Button>
+          </Button>}
         </Stack>
       </ModalBox>
 
@@ -3353,7 +3364,7 @@ const BetPage = () => {
           padding={2}
           justifyContent={"center"}
         >
-          <Stack
+          {play && <Stack
             direction={"row"}
             padding={2}
             spacing={1}
@@ -3454,7 +3465,7 @@ const BetPage = () => {
                 <Edit fontSize="40px" />
               )}
             </IconButton>
-          </Stack>
+          </Stack>}
         </Stack>
 
         <Stack direction={"row"} justifyContent="center" bgcolor={green[100]}>
@@ -3471,13 +3482,13 @@ const BetPage = () => {
               return (
                 <BetListCom call={calcrud}>
                   {/* <Stack direction={"row"}> */}
-                  <IconButton
+                  {play && <IconButton
                     // color={'#ffcc80'}
                     size="small"
                     onClick={() => editHandle(calcrud, key)}
                   >
                     <Edit fontSize={"6px"} />
-                  </IconButton>
+                  </IconButton>}
                 </BetListCom>
               );
             })}
@@ -3503,7 +3514,7 @@ const BetPage = () => {
           >
             cancel
           </Button>
-          <Button
+          {play && <Button
             variant="contained"
             onClick={() => setComfirmCtl(true)}
             color="error"
@@ -3511,7 +3522,7 @@ const BetPage = () => {
             endIcon={<Delete />}
           >
             Delete call
-          </Button>
+          </Button>}
         </Stack>
       </ModalBox>
 

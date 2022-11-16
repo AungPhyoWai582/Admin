@@ -7,6 +7,7 @@ import {
   Edit,
   List,
   MenuBook,
+  RemoveRedEye,
   Search,
   Settings,
   Star,
@@ -106,7 +107,11 @@ const Lottery = () => {
 
   const updateLottery = () => {
     setLoading(true);
-    console.log(lotCreate);
+    // if(lotCreate.pout_tee){
+    //   setLotCreate({...lotCreate,play:false})
+    // }
+    // console.log(lotCreate);
+
     Axios.put(`/lotterys/${lotCreate.id}`, lotCreate)
       .then((res) => {
         setLotCreate({
@@ -236,38 +241,57 @@ const Lottery = () => {
                       <List fontSize="small" />
                     </IconButton>
                   </NavLink> */}
-                    <IconButton
-                      size="small"
-                      sx={{ color: "black" }}
-                      onClick={(e) => editLottery(e, l)}
-                    >
-                      <Edit fontSize="small" />
-                    </IconButton>
+
                     {l.play === true ? (
-                      <NavLink
-                      
-                        to={`/lottery/bet/${l._id}`}
-                        state={{
-                          lotteryId: l._id,
-                          hot_tees: l.hot_tee.toString(),
-                        }}
-                      >
+                      <>
                         <IconButton
                           size="small"
                           sx={{ color: "black" }}
-                          // disabled={l.play === true ? true : false}
+                          onClick={(e) => editLottery(e, l)}
                         >
-                          <AddSharp fontSize="small" />
+                          <Edit fontSize="small" />
                         </IconButton>
-                      </NavLink>
+                        <NavLink
+                          to={`/lottery/bet/${l._id}`}
+                          state={{
+                            lotteryId: l._id,
+                            hot_tees: l.hot_tee.toString(),
+                          }}
+                        >
+                          <IconButton
+                            size="small"
+                            sx={{ color: "black" }}
+                            // disabled={l.play === true ? true : false}
+                          >
+                            <AddSharp fontSize="small" />
+                          </IconButton>
+                        </NavLink>
+                      </>
                     ) : (
-                      <IconButton
-                        size="small"
-                        sx={{ color: "black" }}
-                        onClick={(e) => deleteLottery(e, l._id)}
-                      >
-                        <Delete fontSize="small" />
-                      </IconButton>
+                      <>
+                        <IconButton
+                          size="small"
+                          sx={{ color: "black" }}
+                          onClick={(e) => deleteLottery(e, l._id)}
+                        >
+                          <Delete fontSize="small" />
+                        </IconButton>
+                        <NavLink
+                          to={`/lottery/bet/${l._id}`}
+                          state={{
+                            lotteryId: l._id,
+                            hot_tees: l.hot_tee.toString(),
+                          }}
+                        >
+                          <IconButton
+                            size="small"
+                            sx={{ color: "black" }}
+                            // disabled={l.play === true ? true : false}
+                          >
+                            <RemoveRedEye fontSize="small" />
+                          </IconButton>
+                        </NavLink>
+                      </>
                     )}
                   </Stack>
                 </Stack>

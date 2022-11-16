@@ -35,6 +35,7 @@ const MemberCreate = ({ userinfo }) => {
     superhot_limit: "",
     accLimit: false,
     acc_limit_created: "",
+    userRelation:{},
   });
   const [customer, setCustomer] = useState({
     name: "",
