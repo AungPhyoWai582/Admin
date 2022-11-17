@@ -25,12 +25,13 @@ import { useLocation, NavLink } from "react-router-dom";
 import Axios from "../../shared/Axios";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import SelectTime from "../../components/SelectTime";
 
 const Daily = () => {
   const location = useLocation();
   // const { lotteryId } = location.state;
   // console.log(lotteryId);
-
+  const [dates, setDates] = useState([]);
   const [lager, setLager] = useState([]);
   const [reportOut, setReportOut] = useState({ totalOut: {}, calls: [] });
 
@@ -58,7 +59,7 @@ const Daily = () => {
   // console.log(selectChoice);
 
   const searchReport = () => {
-    Axios.get(`/reports/daily?start_date=${startDate}&end_date=${endDate}`, {
+    Axios.get(`/reports/daily?start_date=${dates[0]}&end_date=${dates[1]}`, {
       headers: {
         authorization: `Bearer ` + localStorage.getItem("access-token"),
       },
@@ -71,7 +72,7 @@ const Daily = () => {
   return (
     <Stack>
       <Stack direction={"row"} spacing={2} padding={2} justifyContent={"start"}>
-        <Autocomplete
+        {/* <Autocomplete
           onChange={changeInOut}
           size="small"
           id="combo-box-demo"
@@ -85,31 +86,8 @@ const Daily = () => {
               sx={{ width: 100 }}
             />
           )}
-        />
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DatePicker
-            label="Start Date"
-            value={startDate}
-            onChange={(newValue) => {
-              setStartDate(newValue);
-            }}
-            renderInput={(params) => (
-              <TextField {...params} size={"small"} sx={{ width: 150 }} />
-            )}
-          />
-          {/* </LocalizationProvider>
-        <LocalizationProvider dateAdapter={AdapterDateFns}> */}
-          <DatePicker
-            label="End Date"
-            value={endDate}
-            onChange={(newValue) => {
-              setEndDate(newValue);
-            }}
-            renderInput={(params) => (
-              <TextField {...params} size={"small"} sx={{ width: 150 }} />
-            )}
-          />
-        </LocalizationProvider>
+        /> */}
+        <SelectTime setDates={setDates} />
         <Button
           sx={{ bgcolor: "ButtonShadow" }}
           size="small"
@@ -128,13 +106,12 @@ const Daily = () => {
         stickyHeader
       >
         <TableHead sx={{ bgcolor: "success.light", fontSize: 12 }}>
-          <TableRow></TableRow>
           <TableRow>
             <TableCell sx={{ fontWeight: "bold", fontSize: 12 }}>
               Date
             </TableCell>
+            {/* <TableCell sx={{ fontWeight: "bold", fontSize: 12 }}>Name</TableCell> */}
             <TableCell sx={{ fontWeight: "bold", fontSize: 12 }}>Bet</TableCell>
-            {/* <TableCell sx={{ fontWeight: "bold", fontSize: 12 }}>Bet</TableCell> */}
             <TableCell sx={{ fontWeight: "bold", fontSize: 12 }}>
               GameX
             </TableCell>
@@ -149,21 +126,24 @@ const Daily = () => {
         <TableBody>
           {lager.length ? (
             lager.map((lg) => {
-              const date = new Date(lg._date);
+              // const date = new Date(lg.date);
               return (
                 <>
                   <TableRow>
                     <TableCell sx={{ overflow: "scroll/" }}>
-                      {`${date.getDate()}/${date.getMonth()}/${date.getYear()}`}
+                      {lg.date}
                     </TableCell>
+                    {/* <TableCell>{lg.master.name}</TableCell> */}
                     <TableCell>{lg.totalAmount.toString()}</TableCell>
-                    <TableCell>0</TableCell>
+                    <TableCell>
+                      {lg.pout_tee_amount ? lg.pout_tee_amount.toString() : "0"}
+                    </TableCell>
 
-                    <TableCell>{lg.win}</TableCell>
+                    <TableCell>{lg.totalWin}</TableCell>
                     <TableCell>
                       <NavLink
                         to={"/reports/daily/members"}
-                        state={{ lager: lg, read: lg.in.read }}
+                        state={{ date:lg.date }}
                       >
                         <IconButton size="small" color="success">
                           <RemoveRedEye fontSize="12" />

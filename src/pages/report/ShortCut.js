@@ -188,9 +188,12 @@ const ShortCup = () => {
           <FormControlLabel
             // label={"Time"}
             // labelPlacement="top"
+            sx={{
+              border:'none'
+            }}
             control={
               <Select
-                sx={{ width: 150, height: 30, backgroundColor: "white" }}
+                sx={{ width: 150, height: 30, backgroundColor: "white",border:'none' }}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={timeselect}
@@ -298,9 +301,9 @@ const ShortCup = () => {
         >
           <TableHead sx={{ bgcolor: green[300], fontSize: 12 }}>
             <TableRow>
-              <TableCell sx={{ fontWeight: "bold", fontSize: 12 }} align="left">
+              {/* <TableCell sx={{ fontWeight: "bold", fontSize: 12 }} align="left">
                 Date
-              </TableCell>
+              </TableCell> */}
               <TableCell sx={{ fontWeight: "bold", fontSize: 12 }} align="left">
                 {/* {InOutControl === 'In'?'Name':'ID'} */}
                 Name
@@ -317,11 +320,17 @@ const ShortCup = () => {
               >
                 GameX
               </TableCell>
-              <TableCell
+              {/* <TableCell
                 sx={{ fontWeight: "bold", fontSize: 12 }}
                 align="center"
               >
                 {InOutControl === "Main" ? "OriginalBreak" : "Commission"}
+              </TableCell> */}
+              <TableCell
+                sx={{ fontWeight: "bold", fontSize: 12 }}
+                align="center"
+              >
+                {InOutControl === "Main" ? "OriginalBreak" : "Rel-Commission"}
               </TableCell>
               <TableCell
                 sx={{ fontWeight: "bold", fontSize: 12 }}
@@ -357,12 +366,12 @@ const ShortCup = () => {
             <TableBody>
               {reportIn.memberReport && reportIn.memberReport.length ? (
                 [...reportIn.memberReport].map((rp) => {
-                  const start = new Date(startDate);
-                  const end = new Date(endDate);
+                  // const start = new Date(startDate);
+                  // const end = new Date(endDate);
                   return (
                     <>
                       <TableRow>
-                        <TableCell align="left">{`${start.getDate()}/${start.getMonth()}/${start.getFullYear()} - ${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`}</TableCell>
+                        {/* <TableCell align="left">{`${start.getDate()}/${start.getMonth()}/${start.getFullYear()} - ${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`}</TableCell> */}
                         <TableCell align="left">{rp.name.toString()}</TableCell>
                         <TableCell align="center">
                           {rp.totalAmount.toString()}
@@ -372,8 +381,11 @@ const ShortCup = () => {
                             ? rp.pout_tee_amount.toString()
                             : "0"}
                         </TableCell>
-                        <TableCell align="center" sx={{ color: "red" }}>
+                        {/* <TableCell align="center" sx={{ color: "red" }}>
                           {rp.totalCommission.toString()}
+                        </TableCell> */}
+                        <TableCell align="center" sx={{ color: "red" }}>
+                          {0}
                         </TableCell>
                         <TableCell
                           align="center"
@@ -422,12 +434,12 @@ const ShortCup = () => {
             <TableBody>
               {reportOut.calls && reportOut.calls.length ? (
                 [...reportOut.calls].map((cal) => {
-                  const start = new Date(startDate);
-                  const end = new Date(endDate);
+                  // const start = new Date(startDate);
+                  // const end = new Date(endDate);
                   return (
                     <>
                       <TableRow>
-                        <TableCell align="left">{`${start.getDate()}/${start.getMonth()}/${start.getFullYear()} - ${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`}</TableCell>
+                        {/* <TableCell align="left">{`${start.getDate()}/${start.getMonth()}/${start.getFullYear()} - ${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`}</TableCell> */}
                         <TableCell sx={{ overflow: "scroll/" }} align="left">
                           {cal.customer.name.toString()}
                         </TableCell>

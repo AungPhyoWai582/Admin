@@ -26,15 +26,16 @@ import Axios from "../../shared/Axios";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
-const Daily = () => {
+const DailyMembers = () => {
   const location = useLocation();
+  const {date} = location.state;
 
-  const { lager, read } = location.state;
-  console.log(lager);
+  // const { lager, read } = location.state;
+  // console.log(lager);
   const [memberReport, setMemberReport] = useState([]);
 
   useEffect(() => {
-    Axios.get(`/reports/daily/members?lager=${lager._id}`, {
+    Axios.get(`/reports/daily/members?date=${date}`, {
       headers: {
         authorization: `Bearer ` + localStorage.getItem("access-token"),
       },
@@ -46,6 +47,7 @@ const Daily = () => {
 
   return (
     <Stack>
+      <Typography paddingLeft={1} fontWeight='bold' >{date}</Typography>
       <TableContainer component={Paper} sx={{ padding: "1px" }}>
         {/* {selectChoice === "In" && ( */}
         <Table
@@ -84,7 +86,9 @@ const Daily = () => {
                       {mem.member.name}
                     </TableCell>
                     <TableCell>{mem.totalAmount.toString()}</TableCell>
-                    <TableCell>0</TableCell>
+                    <TableCell>
+                    {mem.pout_tee_amount ? mem.pout_tee_amount.toString() : "0"}
+                    </TableCell>
 
                     <TableCell>{mem.totalWin}</TableCell>
                     <TableCell>
@@ -108,4 +112,4 @@ const Daily = () => {
   );
 };
 
-export default Daily;
+export default DailyMembers;
