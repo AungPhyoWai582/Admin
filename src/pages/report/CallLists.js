@@ -83,7 +83,9 @@ const CallList = () => {
                       {cal._id}
                     </TableCell>
                     <TableCell>{cal.totalAmount.toString()}</TableCell>
-                    <TableCell>0</TableCell>
+                    <TableCell>
+                    {cal.pout_tee_amount ? cal.pout_tee_amount.toString() : "0"}
+                    </TableCell>
 
                     <TableCell>{cal.win.toString()}</TableCell>
                     <TableCell>

@@ -4,7 +4,7 @@ import Clock from "react-live-clock";
 const Clocks = () => {
   return (
     <Typography>
-      <Clock format={` h:mm:ss | dddd`} ticking={true} />
+      <Clock format={` h:mm A | dddd`} ticking={true} />
     </Typography>
   );
 };

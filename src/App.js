@@ -1,5 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
+import "antd/dist/antd.css";
 import Dashboard from "./layout/Dashboard";
 import { Container, Stack, Button, Grid } from "@mui/material";
 import MuiAppBar from "./components/AppTopbar";
