@@ -84,14 +84,32 @@ const Daily = () => {
     <Stack>
       <Stack
         direction={"row"}
-        spacing={4}
+        // spacing={4}
         padding={2}
         justifyContent={"start"}
+        flexDirection="row"
+        flexWrap="wrap"
         alignItems="center"
+        // direction={"row"}
+        // justifyContent="start"
+        // flexDirection={"row"}
+        // flexWrap="wrap"
+        // spacing={2}
+        // padding={1}
+        // paddingLeft={3}
+        // bgcolor={grey[300]}
+        // borderRadius={1}
+        // alignItems="center"
       >
-        <FormControl sx={{ minWidth: 120 }} size="small">
+        <FormControl
+          sx={{ minWidth: 120, paddingRight: 2, height: "30px" }}
+          size="small"
+        >
           <InputLabel id="demo-select-small">Time</InputLabel>
           <Select
+            autoWidth={true}
+            sx={{ height: "30px" }}
+            // size="small"
             label="Time"
             labelId="demo-select-small"
             id="demo-select-small"
@@ -104,17 +122,18 @@ const Daily = () => {
             ))}
           </Select>
         </FormControl>
-        <Stack direction={"row"}>
+        <Stack direction={"row"}  height={"30px"} spacing={1}>
           <SelectTime setDates={setDates} />
           <Button
-          // sx={{ bgcolor: green[300] }}
-          size="small"
-          variant="contained"
-          color={"success"}
-          onClick={searchReport}
-        >
-          <Search sx={{ fontWeight: "bold" }} color={"white"} />
-        </Button>
+            // sx={{ bgcolor: green[300] }}
+
+            size="small"
+            variant="contained"
+            color={"success"}
+            onClick={searchReport}
+          >
+            <Search sx={{ fontWeight: "bold" }} color={"white"} />
+          </Button>
         </Stack>
       </Stack>
       {/* <TableContainer component={Paper} sx={{ padding: "1px" }}> */}

@@ -175,17 +175,19 @@ const ShortCup = () => {
     <Stack padding={2} spacing={1}>
       <Stack
         direction={"row"}
-        justifyContent="center"
+        justifyContent="start"
         flexDirection={"row"}
         flexWrap="wrap"
-        spacing={2}
+        // spacing={2}
         padding={1}
-        paddingLeft={3}
-        bgcolor={grey[300]}
+        // paddingLeft={3}
+        // bgcolor={grey[300]}
+        border={1}
+        borderColor={grey[300]}
         borderRadius={1}
         alignItems="center"
       >
-        <FormControl sx={{ minWidth: 120 }} size="small">
+        <FormControl sx={{minWidth:{xs:'100%',sm:'100%',md:120,xl:120} }} size="small">
           <InputLabel id="demo-select-small">Time</InputLabel>
           <Select
             label="Time"
@@ -200,23 +202,27 @@ const ShortCup = () => {
             ))}
           </Select>
         </FormControl>
-        <Stack direction={"row"}>
+        <Stack direction={"row"} paddingLeft={{xs:0,sm:0,md:2,xl:2}}>
           <SelectTime setDates={setDates} />
         </Stack>
       </Stack>
       <Stack
         direction={"row"}
         flexWrap="wrap"
-        spacing={2}
+        justifyContent={'start'}
+        // spacing={2}
         padding={1}
-        paddingLeft={3}
-        bgcolor={grey[300]}
+        // paddingLeft={3}
+        border={1}
+        borderColor={grey[300]}
+        // boxShadow={1}
         borderRadius={1}
         alignItems={"center"}
       >
-        <FormControl>
+        <FormControl sx={{width:{xs:'100%',sm:'100%',md:'40%',xl:'40%'},alignItems:'left'}}>
           {/* <FormLabel id="demo-controlled-radio-buttons-group">Gender</FormLabel> */}
           <RadioGroup
+          
             aria-labelledby="demo-controlled-radio-buttons-group"
             name="controlled-radio-buttons-group"
             value={InOutControl}
@@ -225,28 +231,28 @@ const ShortCup = () => {
             <Stack direction={"row"}>
               <FormControlLabel
                 value="In"
-                control={<Radio color="success" />}
+                control={<Radio size="small" color="success" />}
                 label="In"
                 labelPlacement="start"
               />
               <FormControlLabel
                 value="Out"
-                control={<Radio color="success" />}
+                control={<Radio size="small" color="success" />}
                 label="Out"
                 labelPlacement="start"
               />
               <FormControlLabel
                 value="Main"
-                control={<Radio color="success" />}
+                control={<Radio size="small" color="success" />}
                 label="Main"
                 labelPlacement="start"
               />
             </Stack>
           </RadioGroup>
         </FormControl>
-
+<Stack direction={'row'} spacing={2} sx={{width:{xs:'100%',sm:'100%',md:'60%',xl:'60%'}}}>
         <FormControl
-        sx={{ minWidth: 120 }}
+        sx={{ minWidth: {xs:'70%',sm:'70%',md:200,xl:200} }}
           size="small"
           disabled={
             InOutControl === "Out" || InOutControl === "Main" ? true : false
@@ -258,6 +264,7 @@ const ShortCup = () => {
                 labelId="demo-select-small"
                 id="demo-select-small"
                 value={autoCompleteValue}
+                size="small"
                 // defaultValue={customer[0].value}
                 label="Members"
                 onChange={handleChange}
@@ -281,6 +288,7 @@ const ShortCup = () => {
         >
           <Search sx={{ fontWeight: "bold" }} color={"white"} />
         </Button>
+        </Stack>
       </Stack>
       <TableContainer sx={{ padding: "1px" }}>
         <Table
