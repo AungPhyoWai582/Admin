@@ -25,6 +25,7 @@ import {
   FormLabel,
   getStepLabelUtilityClass,
   IconButton,
+  InputLabel,
   makeStyles,
   MenuItem,
   Pagination,
@@ -2574,31 +2575,23 @@ const BetPage = () => {
             />
           )) ||
             (in_out === "Out" && (
-              <FormControlLabel
-                labelPlacement="start"
-                sx={{ marginX: 1 }}
-                control={
-                  <Select
-                    sx={{
-                      padding: 0.8,
-                      width: 150,
-                      height: 30,
-                      backgroundColor: teal[50],
-                    }}
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    // value={cusval}
-                    defaultValue={"All"}
-                    onChange={(e) => OnSelect(e)}
-                  >
-                    {customers.map((c) => (
-                      <MenuItem sx={{ width: 200 }} value={c}>
-                        {c.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                }
-              />
+              <FormControl sx={{ minWidth: 120 }} size="small">
+                <InputLabel id="demo-select-small">Customers</InputLabel>
+                <Select
+                  
+                  labelId="demo-select-small"
+                  id="demo-select-small"
+                  // value={cusval}
+                  label={"Customers"}
+                  onChange={(e) => OnSelect(e)}
+                >
+                  {customers.map((c) => (
+                    <MenuItem sx={{ width: 200 }} value={c}>
+                      {c.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             ))}
           {in_out === "In" && play && (
             <Button
