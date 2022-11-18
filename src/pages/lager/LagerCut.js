@@ -319,24 +319,32 @@ const LagerCut = () => {
               </IconButton>
             </Stack>
 
-            <Stack direction={"row"} alignItems={"center"}>
+            <Stack direction={"row"} alignItems={"center"} spacing={1}>
               <Typography
                 fontSize={14}
                 color={"royalblue"}
                 textAlign={"center"}
               >
-                ORG :{" "}
-                {lager.originalBreak ? lager.originalBreak.toString() : "0"}
+                ORG {lager.originalBreak ? lager.originalBreak.toString() : "0"}
               </Typography>
               <Typography
                 fontSize={14}
                 color={"royalblue"}
                 textAlign={"center"}
               >
-                AVG :{" "}
+                AVG{" "}
                 {lager.originalBreak
                   ? Math.round(lager.totalAmount / lager.originalBreak) + "%"
                   : "0"}
+              </Typography>
+              <Typography
+                fontSize={14}
+                color={"royalblue"}
+                textAlign={"center"}
+              >
+                <span>{lager.totalAmount}</span>
+                <br />
+                <span>22</span>
               </Typography>
             </Stack>
           </Stack>
