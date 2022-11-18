@@ -66,6 +66,27 @@ const LagerCut = () => {
   const [loading, setLoading] = useState(false);
 
   // const [customerValue, setCustomerValue] = useState(customers[0]._id);
+  const userinfocom = JSON.parse(localStorage.getItem(`user-info`));
+  //win lose condition function
+  const winLoseCondition = (lager, userinfocom) => {
+    const comm = userinfocom.commission;
+    const za = userinfocom.twoDZ;
+    const lagNum = lager.numbers;
+    const total = lager.totalAmount - (comm / 100) * lager.totalAmount;
+    // console.log(lager, comm, lagNum, total);
+    var count = 0;
+    lagNum &&
+      lagNum.map((num, key) => {
+        // console.log(num);
+        let Numamount = num.amount;
+        if (Number(Numamount) > Number(total - Numamount * za)) {
+          // console.log("om");
+          count++;
+        }
+      });
+    // console.log(count);
+    return count;
+  };
 
   const tableStyles = {
     border: "1px solid black",
@@ -342,10 +363,16 @@ const LagerCut = () => {
                 color={"royalblue"}
                 textAlign={"center"}
               >
-                <span>{lager.totalAmount}</span>
+                <span style={{ color: "green" }}>
+                  {100 - winLoseCondition(lager, userinfocom)}
+                </span>
                 <br />
-                <span>22</span>
+
+                <span style={{ color: "red" }}>
+                  {winLoseCondition(lager, userinfocom)}
+                </span>
               </Typography>
+              <span>{lager.totalAmount}</span>
             </Stack>
           </Stack>
 
