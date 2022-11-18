@@ -102,11 +102,7 @@ const Customer = ({
       >
         <Grid item xs={12} md={6}>
           <Stack spacing={1.5} padding={1}>
-            <Typography variant={"caption"} component={"label"} fontSize={16}>
-              Name <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <FormControlLabel
-              control={
+            
                 <TextField
                   color={"success"}
                   placeholder="add name"
@@ -114,20 +110,16 @@ const Customer = ({
                   variant="outlined"
                   size="small"
                   name="name"
+                  label="name"
                   sx={{ bgcolor: teal[50] }}
                   value={customer.name}
                   onChange={onChangeHandler}
                 />
-              }
-            />
+            
           </Stack>
 
           <Stack spacing={1.5} padding={1}>
-            <Typography variant={"caption"} component={"label"} fontSize={16}>
-              Phone Number <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <FormControlLabel
-              control={
+            
                 <TextField
                   color={"success"}
                   placeholder="add phone no."
@@ -135,21 +127,17 @@ const Customer = ({
                   variant="outlined"
                   size="small"
                   name="phone"
+                  label="phone"
                   sx={{ bgcolor: teal[50] }}
                   value={customer.phone}
                   onChange={onChangeHandler}
                 />
-              }
-            />
+             
           </Stack>
         </Grid>
         <Grid item xs={12} md={6}>
           <Stack spacing={1.5} padding={1}>
-            <Typography variant={"caption"} component={"label"} fontSize={16}>
-              Commission <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <FormControlLabel
-              control={
+           
                 <TextField
                   color={"success"}
                   placeholder="add pay commission"
@@ -157,19 +145,15 @@ const Customer = ({
                   variant="outlined"
                   size="small"
                   name="commission"
+                  label='commission'
                   sx={{ bgcolor: teal[50] }}
                   value={customer.commission.toString()}
                   onChange={onChangeHandler}
                 />
-              }
-            />
+             
           </Stack>
           <Stack spacing={1.5} padding={1}>
-            <Typography variant={"caption"} component={"label"} fontSize={16}>
-              za <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <FormControlLabel
-              control={
+            
                 <TextField
                   color={"success"}
                   placeholder="add za"
@@ -177,12 +161,12 @@ const Customer = ({
                   variant="outlined"
                   size="small"
                   name="twoDz"
+                  label="twoDz"
                   sx={{ bgcolor: teal[50] }}
                   value={customer.twoDz.toString()}
                   onChange={onChangeHandler}
                 />
-              }
-            />
+              
           </Stack>
           {/* <Stack spacing={1.5} padding={1}>
             <Typography variant={"caption"} component={"label"} fontSize={16}>
@@ -217,6 +201,7 @@ const Customer = ({
         {/* <Grid item xs={1} md={12}> */}
         <Stack
           direction={"row"}
+          width={'100%'}
           spacing={2}
           // marginTop={6}
           // width={"80%"}

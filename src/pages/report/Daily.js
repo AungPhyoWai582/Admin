@@ -18,7 +18,10 @@ import {
   TableBody,
   TableRow,
   IconButton,
-  Autocomplete,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { grey, teal } from "@mui/material/colors";
 import { useLocation, NavLink } from "react-router-dom";
@@ -26,6 +29,7 @@ import Axios from "../../shared/Axios";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import SelectTime from "../../components/SelectTime";
+import { FormContext } from "antd/lib/form/context";
 
 const Daily = () => {
   const location = useLocation();
@@ -33,6 +37,9 @@ const Daily = () => {
   // console.log(lotteryId);
   const [dates, setDates] = useState([]);
   const [lager, setLager] = useState([]);
+  const [time, setTime] = useState(["AM", "PM"]);
+  const [timeselect, setTimeSelect] = useState();
+
   const [reportOut, setReportOut] = useState({ totalOut: {}, calls: [] });
 
   //pdf
@@ -59,11 +66,15 @@ const Daily = () => {
   // console.log(selectChoice);
 
   const searchReport = () => {
-    Axios.get(`/reports/daily?start_date=${dates[0]}&end_date=${dates[1]}`, {
-      headers: {
-        authorization: `Bearer ` + localStorage.getItem("access-token"),
-      },
-    }).then((res) => {
+    console.log(timeselect);
+    Axios.get(
+      `/reports/daily?start_date=${dates[0]}&end_date=${dates[1]}&_time=${timeselect}`,
+      {
+        headers: {
+          authorization: `Bearer ` + localStorage.getItem("access-token"),
+        },
+      }
+    ).then((res) => {
       console.log(res.data);
       setLager(res.data.report);
     });
@@ -71,31 +82,40 @@ const Daily = () => {
 
   return (
     <Stack>
-      <Stack direction={"row"} spacing={2} padding={2} justifyContent={"start"}>
-        {/* <Autocomplete
-          onChange={changeInOut}
+      <Stack
+        direction={"row"}
+        spacing={4}
+        padding={2}
+        justifyContent={"start"}
+        alignItems="center"
+      >
+        <FormControl sx={{ minWidth: 120 }} size="small">
+          <InputLabel id="demo-select-small">Time</InputLabel>
+          <Select
+            label="Time"
+            labelId="demo-select-small"
+            id="demo-select-small"
+            value={timeselect}
+            // label="Age"
+            onChange={(e) => setTimeSelect(e.target.value)}
+          >
+            {time.map((t) => (
+              <MenuItem value={t}>{t}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Stack direction={"row"}>
+          <SelectTime setDates={setDates} />
+          <Button
+          // sx={{ bgcolor: green[300] }}
           size="small"
-          id="combo-box-demo"
-          // sx={{ width: 50 }}
-          options={selectType}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="In/Out"
-              size={"small"}
-              sx={{ width: 100 }}
-            />
-          )}
-        /> */}
-        <SelectTime setDates={setDates} />
-        <Button
-          sx={{ bgcolor: "ButtonShadow" }}
-          size="small"
+          variant="contained"
           color={"success"}
           onClick={searchReport}
         >
-          <Search fontSize="10" color={"success"} />
+          <Search sx={{ fontWeight: "bold" }} color={"white"} />
         </Button>
+        </Stack>
       </Stack>
       {/* <TableContainer component={Paper} sx={{ padding: "1px" }}> */}
       {/* {selectChoice === "In" && ( */}
@@ -143,7 +163,7 @@ const Daily = () => {
                     <TableCell>
                       <NavLink
                         to={"/reports/daily/members"}
-                        state={{ date:lg.date }}
+                        state={{ date: lg.date }}
                       >
                         <IconButton size="small" color="success">
                           <RemoveRedEye fontSize="12" />

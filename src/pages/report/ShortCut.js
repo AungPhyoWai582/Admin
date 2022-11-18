@@ -21,6 +21,7 @@ import {
   IconButton,
   CircularProgress,
   Box,
+  InputLabel,
 } from "@mui/material";
 import { blue, green, grey } from "@mui/material/colors";
 import React from "react";
@@ -184,28 +185,20 @@ const ShortCup = () => {
         borderRadius={1}
         alignItems="center"
       >
-        <FormControl size="small">
-          <FormControlLabel
-            // label={"Time"}
-            // labelPlacement="top"
-            sx={{
-              border:'none'
-            }}
-            control={
-              <Select
-                sx={{ width: 150, height: 30, backgroundColor: "white",border:'none' }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={timeselect}
-                // label="Age"
-                onChange={(e) => setTimeSelect(e.target.value)}
-              >
-                {time.map((t) => (
-                  <MenuItem value={t}>{t}</MenuItem>
-                ))}
-              </Select>
-            }
-          />
+        <FormControl sx={{ minWidth: 120 }} size="small">
+          <InputLabel id="demo-select-small">Time</InputLabel>
+          <Select
+            label="Time"
+            labelId="demo-select-small"
+            id="demo-select-small"
+            value={timeselect}
+            // label="Age"
+            onChange={(e) => setTimeSelect(e.target.value)}
+          >
+            {time.map((t) => (
+              <MenuItem value={t}>{t}</MenuItem>
+            ))}
+          </Select>
         </FormControl>
         <Stack direction={"row"}>
           <SelectTime setDates={setDates} />
@@ -253,22 +246,20 @@ const ShortCup = () => {
         </FormControl>
 
         <FormControl
+        sx={{ minWidth: 120 }}
           size="small"
           disabled={
             InOutControl === "Out" || InOutControl === "Main" ? true : false
           }
         >
-          <FormControlLabel
-            // label={"Customers: "}
-            // labelPlacement="top"
-            control={
+          <InputLabel id="demo-select-small">Members</InputLabel>
               <Select
-                sx={{ width: 150, height: 30, backgroundColor: "white" }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                // sx={{ width: 150, height: 30 }}
+                labelId="demo-select-small"
+                id="demo-select-small"
                 value={autoCompleteValue}
                 // defaultValue={customer[0].value}
-                // label="Age"
+                label="Members"
                 onChange={handleChange}
               >
                 {customer.map((cus) => (
@@ -277,8 +268,8 @@ const ShortCup = () => {
                 {/* <MenuItem value={"AM"}>APW</MenuItem>
                 <MenuItem value={"PM"}>NNZ</MenuItem> */}
               </Select>
-            }
-          />
+            
+        
         </FormControl>
 
         <Button
@@ -288,7 +279,7 @@ const ShortCup = () => {
           color={"success"}
           onClick={searchReport}
         >
-          <Search sx={{ fontWeight: "bold" }} color={"primary"} />
+          <Search sx={{ fontWeight: "bold" }} color={"white"} />
         </Button>
       </Stack>
       <TableContainer sx={{ padding: "1px" }}>

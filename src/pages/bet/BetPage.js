@@ -25,6 +25,7 @@ import {
   FormLabel,
   getStepLabelUtilityClass,
   IconButton,
+  InputLabel,
   makeStyles,
   MenuItem,
   Pagination,
@@ -101,7 +102,7 @@ const BetPage = () => {
   const textFieldForAmount = useRef(null);
 
   const [inOutCtl, setInOutCtl] = useState(false);
-  const [play,setPlay] = useState(false);
+  const [play, setPlay] = useState(false);
 
   //masterapi ctl
   const [mastercallAPIctl, setMastercallAPI] = useState(false);
@@ -211,9 +212,9 @@ const BetPage = () => {
     Axios.get(`/lotterys/${lotteryId}`)
       .then((res) => {
         console.log(res.data.lottery);
-        const { hot_tee,play } = res.data.lottery;
+        const { hot_tee, play } = res.data.lottery;
         setHot(hot_tee.toString().split("/"));
-        setPlay(play)
+        setPlay(play);
         // const hots = hot_tee.split("/");
         // console.log(hot_tee.toString())
       })
@@ -2520,31 +2521,23 @@ const BetPage = () => {
             />
           )) ||
             (in_out === "Out" && (
-              <FormControlLabel
-                labelPlacement="start"
-                sx={{ marginX: 1 }}
-                control={
-                  <Select
-                    sx={{
-                      padding: 0.8,
-                      width: 150,
-                      height: 30,
-                      backgroundColor: teal[50],
-                    }}
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    // value={cusval}
-                    defaultValue={"All"}
-                    onChange={(e) => OnSelect(e)}
-                  >
-                    {customers.map((c) => (
-                      <MenuItem sx={{ width: 200 }} value={c}>
-                        {c.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                }
-              />
+              <FormControl sx={{ minWidth: 120 }} size="small">
+                <InputLabel id="demo-select-small">Customers</InputLabel>
+                <Select
+                  
+                  labelId="demo-select-small"
+                  id="demo-select-small"
+                  // value={cusval}
+                  label={"Customers"}
+                  onChange={(e) => OnSelect(e)}
+                >
+                  {customers.map((c) => (
+                    <MenuItem sx={{ width: 200 }} value={c}>
+                      {c.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             ))}
           {in_out === "In" && play && (
             <Button
@@ -2600,86 +2593,87 @@ const BetPage = () => {
           </NavLink>
         </Stack>
       </Stack>
-      {play && <Stack
-        padding={1}
-        spacing={1}
-        direction={"row"}
-        justifyContent={"center"}
-        boxShadow={1}
-      >
-        <Stack alignItems={"center"} direction={"row"} spacing={0.5}>
-          <BetCom
-            width={50}
-            text={"number"}
-            name="number"
-            autoFocus={true}
-            value={onchange.number}
-            textColor={hot.includes(onchange.number) ? "red" : "blue"}
-            onChange={onChangeHandler}
-            inputRef={textFieldForNumber}
-            style={{ position: "relative" }}
-            // numTotalCheck={
-            //   <Chip sx={{ position: "absolute", right: 0 }} label="a" />
-            // }
-            onKeyDown={(event) => {
-              if (event.key.toLowerCase() === "enter") {
-                console.log(event.target);
-                textFieldForAmount.current.focus();
-                // event.target.value.select();
-                //  const form = event.target.form;
-                //  const index = [...form].indexOf(event.target);
-                //  form.elements[index + 1].focus();
-                event.preventDefault();
-              }
-            }}
-            label={"နံပါတ်"}
-          >
-            {masterTotalData.Data.map((num) => num.number).includes(
-              onchange.number
-            ) && (
-              <Chip
-                label={
-                  masterTotalData.Data[
-                    masterTotalData.Data.findIndex(
-                      (obj) => obj.number === onchange.number
-                    )
-                  ].amount
+      {play && (
+        <Stack
+          padding={1}
+          spacing={1}
+          direction={"row"}
+          justifyContent={"center"}
+          boxShadow={1}
+        >
+          <Stack alignItems={"center"} direction={"row"} spacing={0.5}>
+            <BetCom
+              width={50}
+              text={"number"}
+              name="number"
+              autoFocus={true}
+              value={onchange.number}
+              textColor={hot.includes(onchange.number) ? "red" : "blue"}
+              onChange={onChangeHandler}
+              inputRef={textFieldForNumber}
+              style={{ position: "relative" }}
+              // numTotalCheck={
+              //   <Chip sx={{ position: "absolute", right: 0 }} label="a" />
+              // }
+              onKeyDown={(event) => {
+                if (event.key.toLowerCase() === "enter") {
+                  console.log(event.target);
+                  textFieldForAmount.current.focus();
+                  // event.target.value.select();
+                  //  const form = event.target.form;
+                  //  const index = [...form].indexOf(event.target);
+                  //  form.elements[index + 1].focus();
+                  event.preventDefault();
                 }
-                sx={{
-                  position: "absolute",
-                  right: 4,
-                  top: 4,
-                  backgroundColor: green[300],
-                }}
-              />
-            )}
-          </BetCom>
+              }}
+              label={"နံပါတ်"}
+            >
+              {masterTotalData.Data.map((num) => num.number).includes(
+                onchange.number
+              ) && (
+                <Chip
+                  label={
+                    masterTotalData.Data[
+                      masterTotalData.Data.findIndex(
+                        (obj) => obj.number === onchange.number
+                      )
+                    ].amount
+                  }
+                  sx={{
+                    position: "absolute",
+                    right: 4,
+                    top: 4,
+                    backgroundColor: green[300],
+                  }}
+                />
+              )}
+            </BetCom>
 
-          {/* <TwoDSign /> */}
-          <BetCom
-            text={"number"}
-            name="amount"
-            value={onchange.amount}
-            onChange={onChangeHandler}
-            inputRef={textFieldForAmount}
-            onFocus={(event) => event.target.select()}
-            onKeyDown={(event) => {
-              console.log(event.key);
+            {/* <TwoDSign /> */}
+            <BetCom
+              text={"number"}
+              name="amount"
+              value={onchange.amount}
+              onChange={onChangeHandler}
+              inputRef={textFieldForAmount}
+              onFocus={(event) => event.target.select()}
+              onKeyDown={(event) => {
+                console.log(event.key);
 
-              if (
-                event.key.toLowerCase() === "enter" ||
-                event.key.toLowerCase() === "numpadenter"
-              ) {
-                choice(event);
-                textFieldForNumber.current.focus();
-                event.target.value.select();
-                event.preventDefault();
-              }
-            }}
-            // onFocus={false}
-            label={"ထိုးငွေ"}
-          />
-          {/* {editCtlBtn ? (
+                if (
+                  event.key.toLowerCase() === "enter" ||
+                  event.key.toLowerCase() === "numpadenter"
+                ) {
+                  choice(event);
+                  textFieldForNumber.current.focus();
+                  event.target.value.select();
+                  event.preventDefault();
+                }
+              }}
+              // onFocus={false}
+              label={"ထိုးငွေ"}
+            />
+            {/* {editCtlBtn ? (
             <Stack direction={"row"} spacing={1} alignItems={"center"}>
               <IconButton onClick={updateCall} size={"small"}>
                 <Edit fontSize="8" />
@@ -2689,18 +2683,19 @@ const BetPage = () => {
               </IconButton>
             </Stack>
           ) : ( */}
-          <IconButton
-            onClick={(e) => {
-              bet(e, in_out);
-              setBreak();
-            }}
-            size={"small"}
-            sx={{ bgcolor: green[500] }}
-          >
-            <FileUploadIcon fontSize={"medium"} />
-          </IconButton>
+            <IconButton
+              onClick={(e) => {
+                bet(e, in_out);
+                setBreak();
+              }}
+              size={"small"}
+              sx={{ bgcolor: green[500] }}
+            >
+              <FileUploadIcon fontSize={"medium"} />
+            </IconButton>
+          </Stack>
         </Stack>
-      </Stack>}
+      )}
 
       <Stack
         position={"relative"}
@@ -3082,42 +3077,41 @@ const BetPage = () => {
                   })}
           </Stack>
           <Stack
-            
-            direction='column'
+            direction="column"
             // width={"30%"}
-           
+
             // borderBottom={1}
             // padding={1}
             // justifyContent={"space-between"}
           >
-            <Stack 
-            alignItems={"center"}
-            // width={"30%"}
-            maxHeight={400}
-            minHeight={400}
-            overflow={"scroll"}
-            boxShadow={1}
+            <Stack
+              alignItems={"center"}
+              // width={"30%"}
+              maxHeight={400}
+              minHeight={400}
+              overflow={"scroll"}
+              boxShadow={1}
             >
-            {demoLager &&
-              demoLager.extraNumb
-                .sort((a, b) => (b.amount > a.amount ? 1 : -1))
-                .map((calc, key) => {
-                  return (
-                    <Stack
-                      borderLeft={0.5}
-                      borderRight={0.5}
-                      // padding={1}
-                      // direction={"row"}
-                      justifyContent={"space-around"}
-                    >
-                      <BetListCom call={calc} key={key} color={"red"} />
-                    </Stack>
-                  );
-                })}
-                </Stack>
+              {demoLager &&
+                demoLager.extraNumb
+                  .sort((a, b) => (b.amount > a.amount ? 1 : -1))
+                  .map((calc, key) => {
+                    return (
+                      <Stack
+                        borderLeft={0.5}
+                        borderRight={0.5}
+                        // padding={1}
+                        // direction={"row"}
+                        justifyContent={"space-around"}
+                      >
+                        <BetListCom call={calc} key={key} color={"red"} />
+                      </Stack>
+                    );
+                  })}
+            </Stack>
             <Stack
               direction={"row"}
-              justifyContent='center'
+              justifyContent="center"
               bottom={0}
               // color={"red"}
               margin={0.5}
@@ -3133,9 +3127,7 @@ const BetPage = () => {
                   .reduce((n, p) => n + p, 0)}
               </span>{" "}
             </Stack>
-           
           </Stack>
-          
         </Stack>
       )}
       <Stack
@@ -3182,41 +3174,42 @@ const BetPage = () => {
           padding={2}
           justifyContent={"center"}
         >
-          {play && <Stack
-            direction={"row"}
-            padding={2}
-            spacing={1}
-            width="80%"
-            bgcolor={"white"}
-            borderRadius={5}
-          >
-            <BetCom
-              width={50}
-              text={"number"}
-              name="number"
-              autoFocus={true}
-              value={onchange.number}
-              textColor={hot.includes(onchange.number) ? "red" : "blue"}
-              onChange={onChangeHandler}
-              inputRef={textFieldForNumber}
-              style={{ position: "relative" }}
-              // numTotalCheck={
-              //   <Chip sx={{ position: "absolute", right: 0 }} label="a" />
-              // }
-              onKeyDown={(event) => {
-                if (event.key.toLowerCase() === "enter") {
-                  console.log(event.target);
-                  textFieldForAmount.current.focus();
-                  // event.target.value.select();
-                  //  const form = event.target.form;
-                  //  const index = [...form].indexOf(event.target);
-                  //  form.elements[index + 1].focus();
-                  event.preventDefault();
-                }
-              }}
-              label={"နံပါတ်"}
+          {play && (
+            <Stack
+              direction={"row"}
+              padding={2}
+              spacing={1}
+              width="80%"
+              bgcolor={"white"}
+              borderRadius={5}
             >
-              {/* {masterTotalData.Data.map((num) => num.number).includes(
+              <BetCom
+                width={50}
+                text={"number"}
+                name="number"
+                autoFocus={true}
+                value={onchange.number}
+                textColor={hot.includes(onchange.number) ? "red" : "blue"}
+                onChange={onChangeHandler}
+                inputRef={textFieldForNumber}
+                style={{ position: "relative" }}
+                // numTotalCheck={
+                //   <Chip sx={{ position: "absolute", right: 0 }} label="a" />
+                // }
+                onKeyDown={(event) => {
+                  if (event.key.toLowerCase() === "enter") {
+                    console.log(event.target);
+                    textFieldForAmount.current.focus();
+                    // event.target.value.select();
+                    //  const form = event.target.form;
+                    //  const index = [...form].indexOf(event.target);
+                    //  form.elements[index + 1].focus();
+                    event.preventDefault();
+                  }
+                }}
+                label={"နံပါတ်"}
+              >
+                {/* {masterTotalData.Data.map((num) => num.number).includes(
                 onchange.number
               ) && (
                 <Chip
@@ -3235,55 +3228,56 @@ const BetPage = () => {
                   }}
                 />
               )} */}
-            </BetCom>
+              </BetCom>
 
-            {/* <TwoDSign /> */}
-            <BetCom
-              text={"number"}
-              name="amount"
-              value={onchange.amount}
-              onChange={onChangeHandler}
-              inputRef={textFieldForAmount}
-              onFocus={(event) => event.target.select()}
-              onKeyDown={(event) => {
-                console.log(event.key);
+              {/* <TwoDSign /> */}
+              <BetCom
+                text={"number"}
+                name="amount"
+                value={onchange.amount}
+                onChange={onChangeHandler}
+                inputRef={textFieldForAmount}
+                onFocus={(event) => event.target.select()}
+                onKeyDown={(event) => {
+                  console.log(event.key);
 
-                if (
-                  event.key.toLowerCase() === "enter" ||
-                  event.key.toLowerCase() === "numpadenter"
-                ) {
-                  choice(event);
-                  textFieldForNumber.current.focus();
-                  event.target.value.select();
-                  event.preventDefault();
-                }
-              }}
-              // onFocus={false}
-              label={"ထိုးငွေ"}
-            />
-            {/* <IconButton onClick={updateCall} size={"small"}>
+                  if (
+                    event.key.toLowerCase() === "enter" ||
+                    event.key.toLowerCase() === "numpadenter"
+                  ) {
+                    choice(event);
+                    textFieldForNumber.current.focus();
+                    event.target.value.select();
+                    event.preventDefault();
+                  }
+                }}
+                // onFocus={false}
+                label={"ထိုးငွေ"}
+              />
+              {/* <IconButton onClick={updateCall} size={"small"}>
               <Edit fontSize="8" />
             </IconButton> */}
-            {/* <Stack
+              {/* <Stack
             direction={"row"}
             // width="20%"
             bgcolor='red'
             justifyContent={"center"}
             padding={2}
           > */}
-            <IconButton
-              variant="contained"
-              color="warning"
-              onClick={updateCall}
-              sx={{ borderRadius: "10px" }}
-            >
-              {onchange.amount.toString() === "0" ? (
-                <Delete fontSize="40px" />
-              ) : (
-                <Edit fontSize="40px" />
-              )}
-            </IconButton>
-          </Stack>}
+              <IconButton
+                variant="contained"
+                color="warning"
+                onClick={updateCall}
+                sx={{ borderRadius: "10px" }}
+              >
+                {onchange.amount.toString() === "0" ? (
+                  <Delete fontSize="40px" />
+                ) : (
+                  <Edit fontSize="40px" />
+                )}
+              </IconButton>
+            </Stack>
+          )}
         </Stack>
 
         <Stack direction={"row"} justifyContent="center" bgcolor={green[100]}>
@@ -3300,13 +3294,15 @@ const BetPage = () => {
               return (
                 <BetListCom call={calcrud}>
                   {/* <Stack direction={"row"}> */}
-                  {play && <IconButton
-                    // color={'#ffcc80'}
-                    size="small"
-                    onClick={() => play?editHandle(calcrud, key):null}
-                  >
-                    <Edit fontSize={"6px"} />
-                  </IconButton>}
+                  {play && (
+                    <IconButton
+                      // color={'#ffcc80'}
+                      size="small"
+                      onClick={() => (play ? editHandle(calcrud, key) : null)}
+                    >
+                      <Edit fontSize={"6px"} />
+                    </IconButton>
+                  )}
                 </BetListCom>
               );
             })}
@@ -3332,15 +3328,17 @@ const BetPage = () => {
           >
             cancel
           </Button>
-          {play && <Button
-            variant="contained"
-            onClick={() => setComfirmCtl(true)}
-            color="error"
-            sx={{ borderRadius: "10px", textTransform: "none" }}
-            endIcon={<Delete />}
-          >
-            Delete call
-          </Button>}
+          {play && (
+            <Button
+              variant="contained"
+              onClick={() => setComfirmCtl(true)}
+              color="error"
+              sx={{ borderRadius: "10px", textTransform: "none" }}
+              endIcon={<Delete />}
+            >
+              Delete call
+            </Button>
+          )}
         </Stack>
       </ModalBox>
 
@@ -3364,41 +3362,42 @@ const BetPage = () => {
           padding={2}
           justifyContent={"center"}
         >
-          {play && <Stack
-            direction={"row"}
-            padding={2}
-            spacing={1}
-            width="80%"
-            bgcolor={"white"}
-            borderRadius={5}
-          >
-            <BetCom
-              width={50}
-              text={"number"}
-              name="number"
-              autoFocus={true}
-              value={onchange.number}
-              textColor={hot.includes(onchange.number) ? "red" : "blue"}
-              onChange={onChangeHandler}
-              inputRef={textFieldForNumber}
-              style={{ position: "relative" }}
-              // numTotalCheck={
-              //   <Chip sx={{ position: "absolute", right: 0 }} label="a" />
-              // }
-              onKeyDown={(event) => {
-                if (event.key.toLowerCase() === "enter") {
-                  console.log(event.target);
-                  textFieldForAmount.current.focus();
-                  // event.target.value.select();
-                  //  const form = event.target.form;
-                  //  const index = [...form].indexOf(event.target);
-                  //  form.elements[index + 1].focus();
-                  event.preventDefault();
-                }
-              }}
-              label={"နံပါတ်"}
+          {play && (
+            <Stack
+              direction={"row"}
+              padding={2}
+              spacing={1}
+              width="80%"
+              bgcolor={"white"}
+              borderRadius={5}
             >
-              {/* {masterTotalData.Data.map((num) => num.number).includes(
+              <BetCom
+                width={50}
+                text={"number"}
+                name="number"
+                autoFocus={true}
+                value={onchange.number}
+                textColor={hot.includes(onchange.number) ? "red" : "blue"}
+                onChange={onChangeHandler}
+                inputRef={textFieldForNumber}
+                style={{ position: "relative" }}
+                // numTotalCheck={
+                //   <Chip sx={{ position: "absolute", right: 0 }} label="a" />
+                // }
+                onKeyDown={(event) => {
+                  if (event.key.toLowerCase() === "enter") {
+                    console.log(event.target);
+                    textFieldForAmount.current.focus();
+                    // event.target.value.select();
+                    //  const form = event.target.form;
+                    //  const index = [...form].indexOf(event.target);
+                    //  form.elements[index + 1].focus();
+                    event.preventDefault();
+                  }
+                }}
+                label={"နံပါတ်"}
+              >
+                {/* {masterTotalData.Data.map((num) => num.number).includes(
                 onchange.number
               ) && (
                 <Chip
@@ -3417,55 +3416,56 @@ const BetPage = () => {
                   }}
                 />
               )} */}
-            </BetCom>
+              </BetCom>
 
-            {/* <TwoDSign /> */}
-            <BetCom
-              text={"number"}
-              name="amount"
-              value={onchange.amount}
-              onChange={onChangeHandler}
-              inputRef={textFieldForAmount}
-              onFocus={(event) => event.target.select()}
-              onKeyDown={(event) => {
-                console.log(event.key);
+              {/* <TwoDSign /> */}
+              <BetCom
+                text={"number"}
+                name="amount"
+                value={onchange.amount}
+                onChange={onChangeHandler}
+                inputRef={textFieldForAmount}
+                onFocus={(event) => event.target.select()}
+                onKeyDown={(event) => {
+                  console.log(event.key);
 
-                if (
-                  event.key.toLowerCase() === "enter" ||
-                  event.key.toLowerCase() === "numpadenter"
-                ) {
-                  choice(event);
-                  textFieldForNumber.current.focus();
-                  event.target.value.select();
-                  event.preventDefault();
-                }
-              }}
-              // onFocus={false}
-              label={"ထိုးငွေ"}
-            />
-            {/* <IconButton onClick={updateCall} size={"small"}>
+                  if (
+                    event.key.toLowerCase() === "enter" ||
+                    event.key.toLowerCase() === "numpadenter"
+                  ) {
+                    choice(event);
+                    textFieldForNumber.current.focus();
+                    event.target.value.select();
+                    event.preventDefault();
+                  }
+                }}
+                // onFocus={false}
+                label={"ထိုးငွေ"}
+              />
+              {/* <IconButton onClick={updateCall} size={"small"}>
               <Edit fontSize="8" />
             </IconButton> */}
-            {/* <Stack
+              {/* <Stack
             direction={"row"}
             // width="20%"
             bgcolor='red'
             justifyContent={"center"}
             padding={2}
           > */}
-            <IconButton
-              variant="contained"
-              color="warning"
-              onClick={updateOutCall}
-              sx={{ borderRadius: "10px" }}
-            >
-              {onchange.amount.toString() === "0" ? (
-                <Delete fontSize="40px" />
-              ) : (
-                <Edit fontSize="40px" />
-              )}
-            </IconButton>
-          </Stack>}
+              <IconButton
+                variant="contained"
+                color="warning"
+                onClick={updateOutCall}
+                sx={{ borderRadius: "10px" }}
+              >
+                {onchange.amount.toString() === "0" ? (
+                  <Delete fontSize="40px" />
+                ) : (
+                  <Edit fontSize="40px" />
+                )}
+              </IconButton>
+            </Stack>
+          )}
         </Stack>
 
         <Stack direction={"row"} justifyContent="center" bgcolor={green[100]}>
@@ -3482,13 +3482,15 @@ const BetPage = () => {
               return (
                 <BetListCom call={calcrud}>
                   {/* <Stack direction={"row"}> */}
-                  {play && <IconButton
-                    // color={'#ffcc80'}
-                    size="small"
-                    onClick={() => editHandle(calcrud, key)}
-                  >
-                    <Edit fontSize={"6px"} />
-                  </IconButton>}
+                  {play && (
+                    <IconButton
+                      // color={'#ffcc80'}
+                      size="small"
+                      onClick={() => editHandle(calcrud, key)}
+                    >
+                      <Edit fontSize={"6px"} />
+                    </IconButton>
+                  )}
                 </BetListCom>
               );
             })}
@@ -3514,15 +3516,17 @@ const BetPage = () => {
           >
             cancel
           </Button>
-          {play && <Button
-            variant="contained"
-            onClick={() => setComfirmCtl(true)}
-            color="error"
-            sx={{ borderRadius: "10px", textTransform: "none" }}
-            endIcon={<Delete />}
-          >
-            Delete call
-          </Button>}
+          {play && (
+            <Button
+              variant="contained"
+              onClick={() => setComfirmCtl(true)}
+              color="error"
+              sx={{ borderRadius: "10px", textTransform: "none" }}
+              endIcon={<Delete />}
+            >
+              Delete call
+            </Button>
+          )}
         </Stack>
       </ModalBox>
 

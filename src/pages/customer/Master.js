@@ -101,11 +101,7 @@ const Master = ({
       >
         <Grid item xs={12} md={6}>
           <Stack spacing={1.5} padding={1}>
-            <Typography variant={"caption"} component={"label"} fontSize={16}>
-              UserName <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <FormControlLabel
-              control={
+           
                 <TextField
                   color={"success"}
                   placeholder="add username"
@@ -115,18 +111,14 @@ const Master = ({
                   name="username"
                   sx={{ bgcolor: teal[50] }}
                   value={master.username}
+                  label="username"
                   // value={userinfo.username}
                   onChange={onChangeHandler}
                 />
-              }
-            />
+            
           </Stack>
           <Stack spacing={1.5} padding={1}>
-            <Typography variant={"caption"} component={"label"} fontSize={16}>
-              Name <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <FormControlLabel
-              control={
+            
                 <TextField
                   color={"success"}
                   placeholder="add name"
@@ -134,19 +126,15 @@ const Master = ({
                   variant="outlined"
                   size="small"
                   name="name"
+                  label="name"
                   sx={{ bgcolor: teal[50] }}
                   value={master.name}
                   onChange={onChangeHandler}
                 />
-              }
-            />
+             
           </Stack>
           <Stack spacing={1.5} padding={1}>
-            <Typography variant={"caption"} component={"label"} fontSize={16}>
-              Password <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <FormControlLabel
-              control={
+              
                 <TextField
                   color={"success"}
                   placeholder="add password"
@@ -154,19 +142,15 @@ const Master = ({
                   variant="outlined"
                   size="small"
                   name="password"
+                  label={"password"}
                   sx={{ bgcolor: teal[50] }}
                   value={master.password.toString()}
                   onChange={onChangeHandler}
                 />
-              }
-            />
+              
           </Stack>
           <Stack spacing={1.5} padding={1}>
-            <Typography variant={"caption"} component={"label"} fontSize={16}>
-              Phone Number <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <FormControlLabel
-              control={
+            
                 <TextField
                   color={"success"}
                   placeholder="add phone no."
@@ -174,19 +158,15 @@ const Master = ({
                   variant="outlined"
                   size="small"
                   name="phone"
+                  label="phone"
                   sx={{ bgcolor: teal[50] }}
                   value={master.phone}
                   onChange={onChangeHandler}
                 />
-              }
-            />
+             
           </Stack>
           <Stack spacing={1.5} padding={1}>
-            <Typography variant={"caption"} component={"label"} fontSize={16}>
-              Commission <span style={{ color: "red" }}>%</span>
-            </Typography>
-            <FormControlLabel
-              control={
+           
                 <TextField
                   color={"success"}
                   placeholder="add pay commission"
@@ -194,21 +174,17 @@ const Master = ({
                   variant="outlined"
                   size="small"
                   name="commission"
+                  label="commission"
                   sx={{ bgcolor: teal[50] }}
                   value={master.commission.toString()}
                   onChange={onChangeHandler}
                 />
-              }
-            />
+             
           </Stack>
         </Grid>
         <Grid item xs={12} md={6}>
           <Stack spacing={1.5} padding={1}>
-            <Typography variant={"caption"} component={"label"} fontSize={16}>
-              za <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <FormControlLabel
-              control={
+            
                 <TextField
                   color={"success"}
                   placeholder="add za"
@@ -216,19 +192,15 @@ const Master = ({
                   variant="outlined"
                   size="small"
                   name="twoDz"
+                  label="twoDz"
                   sx={{ bgcolor: teal[50] }}
                   value={master.twoDz.toString()}
                   onChange={onChangeHandler}
                 />
-              }
-            />
+              
           </Stack>
           <Stack spacing={1.5} padding={1}>
-            <Typography variant={"caption"} component={"label"} fontSize={16}>
-              Lager Break <span style={{ color: "red" }}>*</span>
-            </Typography>
-            <FormControlLabel
-              control={
+            
                 <TextField
                   color={"success"}
                   placeholder="add numbers count"
@@ -236,20 +208,16 @@ const Master = ({
                   variant="outlined"
                   size="small"
                   name="lager_break"
+                  label="lager_break"
                   sx={{ bgcolor: teal[50] }}
                   value={master.lager_break.toString()}
                   onChange={onChangeHandler}
                 />
-              }
-            />
+             
           </Stack>
 
           <Stack spacing={1.5} padding={1}>
-            <Typography variant={"caption"} component={"label"} fontSize={16}>
-              hot limit <span style={{ color: "red" }}>%</span>
-            </Typography>
-            <FormControlLabel
-              control={
+           
                 <TextField
                   color={"success"}
                   placeholder="add limit for hot numbers"
@@ -257,20 +225,16 @@ const Master = ({
                   variant="outlined"
                   size="small"
                   name="hot_limit"
+                  label="hot_limit"
                   sx={{ bgcolor: teal[50] }}
                   value={master.hot_limit.toString()}
                   onChange={onChangeHandler}
                 />
-              }
-            />
+             
           </Stack>
 
           <Stack spacing={1.5} padding={1}>
-            <Typography variant={"caption"} component={"label"} fontSize={16}>
-              super hot limit <span style={{ color: "red" }}>%</span>
-            </Typography>
-            <FormControlLabel
-              control={
+           
                 <TextField
                   color={"success"}
                   placeholder="add limit for super hot numbers"
@@ -278,12 +242,12 @@ const Master = ({
                   variant="outlined"
                   size="small"
                   name="superhot_limit"
+                  label="superhot_limit"
                   sx={{ bgcolor: teal[50] }}
                   value={master.superhot_limit.toString()}
                   onChange={onChangeHandler}
                 />
-              }
-            />
+             
           </Stack>
 
           {/* <Stack spacing={1.5} padding={1}>
@@ -352,6 +316,7 @@ const Master = ({
         </Grid>
         {/* <Grid item xs={1} md={12}> */}
         <Stack
+        width={'100%'}
           direction={"row"}
           spacing={2}
           // marginTop={6}
