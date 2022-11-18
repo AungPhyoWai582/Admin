@@ -18,6 +18,7 @@ const BetCom = ({
   type,
   sx,
   children,
+  bgcolor,
 }) => {
   return (
     <Stack sx={style}>
@@ -38,9 +39,10 @@ const BetCom = ({
         onFocus={onFocus}
         sx={{
           "& .MuiInputBase-root": {
-              color: textColor
-          }
-      }}
+            color: textColor,
+            bgcolor: bgcolor,
+          },
+        }}
         // style={{color:'red'}}
         // color='red'
       ></TextField>

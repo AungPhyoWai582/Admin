@@ -33,6 +33,7 @@ import {
   RadioGroup,
   Select,
   Stack,
+  Switch,
   TableCell,
   TableContainer,
   TableRow,
@@ -93,6 +94,7 @@ import ModalBox from "../../components/modal/ModalBox";
 import { ClassNames } from "@emotion/react";
 import LagerCut from "../lager/LagerCut";
 import Clock from "../../components/Clocks";
+import { winNumberCount } from "../../shared/ExportTxt";
 
 const BetPage = () => {
   // For input refs
@@ -245,6 +247,7 @@ const BetPage = () => {
           if (masters) {
             const masters = res.data.data;
             setMasters([...masters]);
+            console.log(masters);
             // setCalllistctrl(false);
             if (masters) {
               setAutoCompleteValue(masters[0]);
@@ -2197,10 +2200,23 @@ const BetPage = () => {
   };
 
   //crud delete
-  const mscallcrud = (cal, key) => {
-    const afterDelete = call.numbers.filter((arr, key1) => key1 !== key);
-    setCall({ ...call, numbers: afterDelete });
-    // setAutoCompleteCtrl(false);
+  const mscallcrud = (e, cal, key) => {
+    switch (e.detail) {
+      case 1:
+        {
+          const afterDelete = call.numbers.filter((arr, key1) => key1 !== key);
+          setCall({ ...call, numbers: afterDelete });
+        }
+
+        break;
+      case 2: {
+        const deleteDown = call.numbers.filter((arr, key1) => key1 < key);
+        console.log(deleteDown);
+        setCall({ ...call, numbers: deleteDown });
+      }
+      default:
+        break;
+    }
   };
   const mastercallDelete = (callid) => {
     setLoading(true);
@@ -2365,7 +2381,46 @@ const BetPage = () => {
 
   const [value, setValue] = React.useState(masters);
   const [inputValue, setInputValue] = React.useState("");
+  //DoubleClick
+  const doubleClick = (e, cal, key) => {
+    console.log(e.detail, cal, key);
+    switch (e.detail) {
+      case 1:
+        {
+          console.log(cal);
+          setCallTotal(cal.totalAmount);
+          setCallCount(cal.numbers.length);
+        }
 
+        break;
+      case 2:
+        {
+          setMasterCallCrud({
+            id: cal._id,
+            numbers: cal.numbers,
+          });
+
+          // console.log(cal.totalAmount)
+          setAutoCompleteCtrl(true);
+          // setDelButtCtl(true);
+          setCrudOpen(true);
+        }
+        break;
+
+      default:
+        break;
+    }
+  };
+  //extra number click
+  const extraNumClick = (e, { demoLager }) => {
+    console.log(demoLager);
+    // const total =
+    //   demoLager &&
+    //   demoLager.extraNumb
+    //     .map((n, k) => Number(n.amount))
+    //     .reduce((n, p) => n + p, 0);
+    // console.log(total, demoLager);
+  };
   // table height custom
   // const useStyles = makeStyles({
   //   tableRow: {
@@ -2591,7 +2646,11 @@ const BetPage = () => {
             style={{ textDecoration: "none" }}
             to={`/lottery/bet/${lotteryId}/lager`}
           >
-            <Button variant={"contained"} color={"success"}>
+            <Button
+              variant={"contained"}
+              color={"success"}
+              onClick={() => winNumberCount(lager)}
+            >
               <span style={{ fontSize: 10 }}>Ledger</span>
             </Button>
           </NavLink>
@@ -2607,6 +2666,7 @@ const BetPage = () => {
         <Stack alignItems={"center"} direction={"row"} spacing={0.5}>
           <BetCom
             width={50}
+            bgcolor={`${green[100]}`}
             text={"number"}
             name="number"
             autoFocus={true}
@@ -2898,6 +2958,7 @@ const BetPage = () => {
             // borderBottom={1}
             // padding={1}
             // spacing={1}
+            justifyContent={"center"}
           >
             {/* <TableContainer>
               <TableRow className={useStyles.tableRow}>
@@ -2919,8 +2980,14 @@ const BetPage = () => {
                       //   alignItems={"center"}
                       //   bgcolor={"ActiveBorder"}
                       // >
-                      <>
+
+                      <Stack
+                        // width={"100%"}
+                        alignItems={"center"}
+                        // bgcolor={"ActiveBorder"}
+                      >
                         <Box
+                          alignItems={"center"}
                           direction={"row"}
                           // width={{ sx: 180 }}
                           marginY={0.3}
@@ -2933,13 +3000,14 @@ const BetPage = () => {
                           <BetListCom call={cal} key={key}>
                             <IconButton
                               size="small"
-                              onClick={() => mscallcrud(cal, key)}
+                              onDoubleClick={() => console.log("Double")}
+                              onClick={(e) => mscallcrud(e, cal, key)}
                             >
                               <Typography
                                 fontSize={8}
                                 textAlign={"center"}
                                 width={20}
-                                color={green[900]}
+                                // color={green[900]}
                               >
                                 {key + 1}
                               </Typography>
@@ -2950,7 +3018,7 @@ const BetPage = () => {
                             </IconButton>
                           </BetListCom>
                         </Box>
-                      </>
+                      </Stack>
                     ))
                     .reverse()
                 : // autocompleteCtrl &&
@@ -2976,17 +3044,18 @@ const BetPage = () => {
                           // onMouseOver={()=>{
 
                           // }}
-                          onClick={() => {
-                            setMasterCallCrud({
-                              id: cal._id,
-                              numbers: cal.numbers,
-                            });
-                            setCallTotal(cal.totalAmount);
-                            setCallCount(cal.numbers.length);
-                            // console.log(cal.totalAmount)
-                            setAutoCompleteCtrl(true);
-                            // setDelButtCtl(true);
-                            setCrudOpen(true);
+                          onClick={(e) => {
+                            doubleClick(e, cal, key);
+                            // setMasterCallCrud({
+                            //   id: cal._id,
+                            //   numbers: cal.numbers,
+                            // });
+                            // setCallTotal(cal.totalAmount);
+                            // setCallCount(cal.numbers.length);
+                            // // console.log(cal.totalAmount)
+                            // setAutoCompleteCtrl(true);
+                            // // setDelButtCtl(true);
+                            // setCrudOpen(true);
                           }}
                         >
                           {cal.numbers
@@ -3086,6 +3155,7 @@ const BetPage = () => {
             overflow={"scroll"}
             boxShadow={1}
             position={"relative"}
+            // onClick={() => extraNumClick()}
             // borderBottom={1}
             // padding={1}
             // justifyContent={"space-between"}
@@ -3096,6 +3166,7 @@ const BetPage = () => {
                 .map((calc, key) => {
                   return (
                     <Stack
+                      component={"button"}
                       borderLeft={0.5}
                       borderRight={0.5}
                       // padding={1}
@@ -3106,24 +3177,6 @@ const BetPage = () => {
                     </Stack>
                   );
                 })}
-            <Stack
-              direction={"row"}
-              position={"absolute"}
-              bottom={0}
-              // color={"red"}
-              margin={0.5}
-              fontSize={16}
-              fontWeight={700}
-              // border={0.5}
-            >
-              <span style={{ color: "red", paddingLeft: 0.4 }}>
-                {demoLager.extraNumb.length}
-                {" / "}
-                {demoLager.extraNumb
-                  .map((n) => n.amount)
-                  .reduce((n, p) => n + p, 0)}
-              </span>{" "}
-            </Stack>
           </Stack>
         </Stack>
       )}
@@ -3139,15 +3192,10 @@ const BetPage = () => {
         spacing={{ xs: 1, sm: 2, md: 3 }}
       >
         <Typography fontWeight={900} fontSize={14}>
-          <span style={{ color: "red" }}>Call Total</span> :{" "}
-          {call.numbers
-            .map((am) => Number(am.amount))
-            .reduce((p, n) => p + n, 0)
-            .toString()}
+          <span style={{ color: "red" }}>Call Total</span> : {callTotal}
         </Typography>
         <Typography fontWeight={900} fontSize={14}>
-          <span style={{ color: "red" }}>Count</span> :{" "}
-          {call.numbers.length.toString()}
+          <span style={{ color: "red" }}>Count</span> : {callCount}
         </Typography>
         <Typography fontWeight={900} fontSize={14}>
           <span style={{ color: "red" }}>Net Total</span> :{" "}

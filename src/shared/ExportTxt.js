@@ -17,3 +17,7 @@ export const exportTextFile = (cutLag) => {
   document.body.appendChild(element);
   element.click();
 };
+
+export const winNumberCount = (lager) => {
+  console.log(lager);
+};
