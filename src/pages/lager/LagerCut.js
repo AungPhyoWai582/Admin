@@ -47,6 +47,7 @@ const LagerCut = () => {
   const [cutLag, setCutLag] = useState({
     customer: "",
     breakPercent: 0,
+    breakAmount: 0,
     mainAmount: 0,
     cutAmount: 0,
     numbers: [],
@@ -246,6 +247,7 @@ const LagerCut = () => {
         ...cutLag,
         numbers: data.filter((bd) => bd.amount !== "0"),
         breakPercent: breakPer.toString(),
+        breakAmount: breakPercent,
         cutAmount: total,
         mainAmount: lager.totalAmount,
       });
@@ -275,6 +277,21 @@ const LagerCut = () => {
         setLagModCtl(false);
       })
       .catch((err) => console.log(err));
+    Axios.put(
+      `/lagers/${lager._id}`,
+      { originalBreak: lager.originalBreak - cutLag.breakAmount },
+      {
+        headers: {
+          authorization: "Bearer " + localStorage.getItem("access-token"),
+        },
+      }
+    )
+      .then((res) => {
+        console.log(res.data);
+        setUseEffCtrl(true);
+        // setInOutCtl(true);
+      })
+      .catch((err) => console.log(err.message));
   };
   console.log(cutLag);
 
