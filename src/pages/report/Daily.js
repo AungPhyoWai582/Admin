@@ -122,7 +122,7 @@ const Daily = () => {
             ))}
           </Select>
         </FormControl>
-        <Stack direction={"row"}  height={"30px"} spacing={1}>
+        <Stack direction={"row"} height={"30px"} spacing={1}>
           <SelectTime setDates={setDates} />
           <Button
             // sx={{ bgcolor: green[300] }}

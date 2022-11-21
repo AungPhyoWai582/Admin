@@ -34,6 +34,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Snackbar,
   Stack,
   Switch,
   TableCell,
@@ -191,7 +192,7 @@ const BetPage = () => {
     extraNumb: [],
     numbers: [],
   });
-  const [callDemo, setCallDemo] = useState([]);
+  const [confirmBeterr, setConfirmBeterr] = useState(false);
   //calllist control state
   const [calllistctrl, setCalllistctrl] = useState(false);
 
@@ -275,7 +276,7 @@ const BetPage = () => {
     }
     // setHotNumbers( calculateHotTee(JSON.parse(localStorage.getItem('user-info')),hot_tees,lager.in.numbers,lager.in.totalAmount))
   }, [inOutCtl === true]);
-  // console.log(masters);
+  console.log(demoLager.extraNumb);
   useEffect(() => {
     if (in_out === "In") {
       Axios.get(`/call/${lotteryId}`, {
@@ -401,7 +402,7 @@ const BetPage = () => {
               hotTotal = hotLimitCalculate.hotTotal;
               remainHotNumbers.push({
                 number: a.number,
-                remain: hotLimitCalculate.remainBet,
+                remain: hotLimitCalculate.remain,
               });
               // return;
             }
@@ -2399,6 +2400,7 @@ const BetPage = () => {
         break;
       case 2:
         {
+          console.log("i am 2");
           setMasterCallCrud({
             id: cal._id,
             numbers: cal.numbers,
@@ -2415,74 +2417,55 @@ const BetPage = () => {
         break;
     }
   };
-  //extra number click
-  const extraNumClick = (e, { demoLager }) => {
-    console.log(demoLager);
-    // const total =
-    //   demoLager &&
-    //   demoLager.extraNumb
-    //     .map((n, k) => Number(n.amount))
-    //     .reduce((n, p) => n + p, 0);
-    // console.log(total, demoLager);
-  };
-  // table height custom
-  // const useStyles = makeStyles({
-  //   tableRow: {
-  //     height: 30,
-  //   },
-  //   tableCell: {
-  //     padding: "0px 16px",
-  //   },
-  // });
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        // color="inherit"
+        onClick={() => setSuccess(false)}
+      >
+        <Close fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
   return (
     <Stack height={"100%"} bgcolor={"white"}>
       {success && (
-        <Alert
-          severity="success"
-          sx={{
-            color: "green",
-            // fontWeight: "bold",
-            bgcolor: green[200],
-          }}
-          action={
-            <IconButton
-              aria-label="close"
-              color="success"
-              size="small"
-              onClick={() => {
-                setSuccess(false);
-              }}
-            >
-              <Close fontSize="12" />
-            </IconButton>
-          }
+        <Snackbar
+          open={success}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          autoHideDuration={6000}
+          onClose={() => setSuccess(false)}
+          message="Confirm Bet"
+          action={action}
         >
-          Lottery Updated !
-        </Alert>
+          <Alert severity="info">Confirm Bet</Alert>
+        </Snackbar>
       )}
       {error && (
-        <Alert
-          severity="error"
-          sx={{
-            color: "red",
-            // fontWeight: "bold",
-            bgcolor: red[200],
-          }}
+        <Snackbar
+          open={success}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          autoHideDuration={6000}
+          onClose={() => setError(false)}
+          message="Error Bet"
           action={
-            <IconButton
-              aria-label="close"
-              color="error"
-              size="small"
-              onClick={() => {
-                setError(false);
-              }}
-            >
-              <Close fontSize="12" />
-            </IconButton>
+            <React.Fragment>
+              <IconButton
+                size="small"
+                aria-label="close"
+                // color="inherit"
+                onClick={() => setError(false)}
+              >
+                <Close fontSize="small" />
+              </IconButton>
+            </React.Fragment>
           }
         >
-          Error
-        </Alert>
+          <Alert severity="error">Error Bet</Alert>
+        </Snackbar>
       )}
       {beterrorcontrol === true && (
         <Alert
@@ -2579,7 +2562,6 @@ const BetPage = () => {
               <FormControl sx={{ minWidth: 120 }} size="small">
                 <InputLabel id="demo-select-small">Customers</InputLabel>
                 <Select
-                  
                   labelId="demo-select-small"
                   id="demo-select-small"
                   // value={cusval}
@@ -2645,7 +2627,7 @@ const BetPage = () => {
             <Button
               variant={"contained"}
               color={"success"}
-              onClick={() => winNumberCount(lager)}
+              // onClick={() => winNumberCount(lager)}
             >
               <span style={{ fontSize: 10 }}>Ledger</span>
             </Button>
@@ -2744,10 +2726,13 @@ const BetPage = () => {
             </Stack>
           ) : ( */}
             <IconButton
-              onClick={(e) => {
-                bet(e, in_out);
-                setBreak();
-              }}
+              onClick={
+                call.numbers.length &&
+                ((e) => {
+                  bet(e, in_out);
+                  setBreak();
+                })
+              }
               size={"small"}
               sx={{ bgcolor: green[500] }}
             >
@@ -2818,7 +2803,14 @@ const BetPage = () => {
         <Clock />
       </Stack> */}
       {(autoCompleteValue || cusval) && (
-        <Stack direction={"row"} spacing={{ xs: 0.5, sm: 1, md: 1 }}>
+        <Stack
+          direction={"row"}
+          spacing={{ xs: 0.5, sm: 1, md: 1 }}
+          bgcolor={grey[300]}
+          height="100%"
+          padding={1}
+          justifyContent="space-between"
+        >
           <Stack
             // display={{ md: "none" }}
             bgcolor={grey[300]}
@@ -2896,8 +2888,8 @@ const BetPage = () => {
               flexDirection={"row"}
               flexWrap="wrap"
               alignItems={"center"}
-              // borderRadius={1}
-              // bgcolor={green[300]}
+              borderRadius={1}
+              bgcolor={green[300]}
             >
               {hot &&
                 hot.map((h, key) => {
@@ -2948,7 +2940,7 @@ const BetPage = () => {
             // position={"initial"}
             // direction={"column"}
             alignItems={"center"}
-            width={"35%"}
+            width={"45%"}
             maxHeight={400}
             minHeight={400}
             overflow={"auto"}
@@ -2982,7 +2974,7 @@ const BetPage = () => {
                       <Stack
                         // width={"100%"}
                         alignItems={"center"}
-                        // bgcolor={"ActiveBorder"}
+                        bgcolor={"white"}
                       >
                         <Box
                           alignItems={"center"}
@@ -2998,7 +2990,7 @@ const BetPage = () => {
                           <BetListCom call={cal} key={key}>
                             <IconButton
                               size="small"
-                              onDoubleClick={() => console.log("Double")}
+                              // onDoubleClick={() => console.log("Double")}
                               onClick={(e) => mscallcrud(e, cal, key)}
                             >
                               <Typography
@@ -3032,13 +3024,13 @@ const BetPage = () => {
                       return (
                         <Stack
                           position={"relative"}
-                          bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
+                          bgcolor={`${key % 2 == 0 ? green[200] : "white"}`}
                           borderLeft={0.5}
                           borderRight={0.5}
                           justifyContent={"space-around"}
                           // component={"button"}
                           sx={{ cursor: "pointer" }}
-                          // onDoubleClick={()=>alert('double click')}
+                          // onDoubleClick={() => alert("double click")}
                           // onMouseOver={()=>{
 
                           // }}
@@ -3160,6 +3152,7 @@ const BetPage = () => {
               minHeight={400}
               overflow={"scroll"}
               boxShadow={1}
+              bgcolor="white"
             >
               {demoLager &&
                 demoLager.extraNumb
@@ -3167,11 +3160,12 @@ const BetPage = () => {
                   .map((calc, key) => {
                     return (
                       <Stack
-                        component={"button"}
+                        // component={"button"}
                         borderLeft={0.5}
                         borderRight={0.5}
                         // padding={1}
                         // direction={"row"}
+                        // bgcolor="white"
                         justifyContent={"space-around"}
                       >
                         <BetListCom call={calc} key={key} color={"red"} />

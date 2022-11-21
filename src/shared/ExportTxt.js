@@ -18,6 +18,6 @@ export const exportTextFile = (cutLag) => {
   element.click();
 };
 
-export const winNumberCount = (lager) => {
-  console.log(lager);
-};
+// export const winNumberCount = (lager) => {
+//   console.log(lager);
+// };
