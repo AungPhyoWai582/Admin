@@ -2814,10 +2814,10 @@ const BetPage = () => {
           <Stack
             // display={{ md: "none" }}
             bgcolor={grey[300]}
-            spacing={1}
+            spacing={{ xs: 0, sm: 1 }}
             flexDirection={"column"}
             flexWrap={"wrap"}
-            padding={1}
+            padding={{ xs: 0, sm: 1 }}
             overflow="scroll"
             justifyContent={{ xs: "start", sm: "start", md: "start" }}
             width={{ xs: "20%", sm: "20%", md: "25%" }}
@@ -2839,9 +2839,12 @@ const BetPage = () => {
                 textAlign={"center"}
                 alignItems="center"
               >
-                Hot Limit :
+                Hot Limit{" "}
+                <span style={{ color: "red" }}>
+                  {(masterTotalData.Total * autoCompleteValue.hot_limit) / 100}
+                </span>
               </Typography>
-              <Typography
+              {/* <Typography
                 // width="100%"
                 textAlign={"center"}
                 alignItems="center"
@@ -2850,13 +2853,15 @@ const BetPage = () => {
                 color={"blue"}
               >
                 {(masterTotalData.Total * autoCompleteValue.hot_limit) / 100}
-              </Typography>
+              </Typography> */}
             </Stack>
             <Stack
               width={"100%"}
               flexDirection={"row"}
               flexWrap="wrap"
               alignItems={"center"}
+              flexGrow={"initial"}
+              // margin={1}
               // borderRadius={1}
               // bgcolor={green[300]}
               // paddingLeft={0.5}
@@ -2869,9 +2874,13 @@ const BetPage = () => {
                 textAlign={"center"}
                 alignItems="center"
               >
-                Super Hot :
+                Super Hot{" "}
+                <span style={{ color: "red" }}>
+                  {masterTotalData.Total *
+                    (autoCompleteValue.superhot_limit / 100)}
+                </span>
               </Typography>
-              <Typography
+              {/* <Typography
                 // width="100%"
                 textAlign={"center"}
                 alignItems="center"
@@ -2881,7 +2890,7 @@ const BetPage = () => {
               >
                 {masterTotalData.Total *
                   (autoCompleteValue.superhot_limit / 100)}
-              </Typography>
+              </Typography> */}
             </Stack>
             <Stack
               width={"100%"}
@@ -2962,55 +2971,52 @@ const BetPage = () => {
             </TableContainer> */}
             {in_out === "In" &&
               (call.numbers.length // autocompleteCtrl === false
-                ? call.numbers
+                ? call.numbers.map((cal, key) => (
+                    // <Stack
+                    //   width={"100%"}
+                    //   alignItems={"center"}
+                    //   bgcolor={"ActiveBorder"}
+                    // >
 
-                    .map((cal, key) => (
-                      // <Stack
-                      //   width={"100%"}
-                      //   alignItems={"center"}
-                      //   bgcolor={"ActiveBorder"}
-                      // >
-
-                      <Stack
-                        // width={"100%"}
+                    <Stack
+                      // width={"100%"}
+                      alignItems={"center"}
+                      bgcolor={"white"}
+                    >
+                      <Box
                         alignItems={"center"}
-                        bgcolor={"white"}
+                        direction={"row"}
+                        // width={{ sx: 180 }}
+                        marginY={0.3}
+                        justifyContent={{
+                          sx: "space-between",
+                          sm: "space-around",
+                          md: "space-around",
+                        }}
                       >
-                        <Box
-                          alignItems={"center"}
-                          direction={"row"}
-                          // width={{ sx: 180 }}
-                          marginY={0.3}
-                          justifyContent={{
-                            sx: "space-between",
-                            sm: "space-around",
-                            md: "space-around",
-                          }}
-                        >
-                          <BetListCom call={cal} key={key}>
-                            <IconButton
-                              size="small"
-                              // onDoubleClick={() => console.log("Double")}
-                              onClick={(e) => mscallcrud(e, cal, key)}
+                        <BetListCom call={cal} key={key}>
+                          <IconButton
+                            size="small"
+                            // onDoubleClick={() => console.log("Double")}
+                            onClick={(e) => mscallcrud(e, cal, key)}
+                          >
+                            <Typography
+                              fontSize={8}
+                              textAlign={"center"}
+                              width={20}
+                              // color={green[900]}
                             >
-                              <Typography
-                                fontSize={8}
-                                textAlign={"center"}
-                                width={20}
-                                // color={green[900]}
-                              >
-                                {key + 1}
-                              </Typography>
-                              <Delete
-                                sx={{ textalign: "center" }}
-                                fontSize="small"
-                              />
-                            </IconButton>
-                          </BetListCom>
-                        </Box>
-                      </Stack>
-                    ))
-                    .reverse()
+                              {key + 1}
+                            </Typography>
+                            <Delete
+                              sx={{ textalign: "center" }}
+                              fontSize="small"
+                            />
+                          </IconButton>
+                        </BetListCom>
+                      </Box>
+                    </Stack>
+                  ))
                 : // autocompleteCtrl &&
                   //   autoCompleteValue &&
 

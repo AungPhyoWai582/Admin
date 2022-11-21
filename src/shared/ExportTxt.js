@@ -18,6 +18,5 @@ export const exportTextFile = (cutLag) => {
   element.click();
 };
 
-// export const winNumberCount = (lager) => {
-//   console.log(lager);
-// };
+// lagercut handle
+export const dissableBtn = () => {};

@@ -346,9 +346,11 @@ const LagerCut = () => {
                 color={"success"}
                 sx={{ bgcolor: green[400], borderRadius: 4 }}
                 // disabled={`${
+                //   lager &&
                 //   lager.numbers.map(
                 //     (am) => Number(am.amount) >= Number(lager.originalBreak)
-                //   ) && perandcashCtl
+                //   ) &&
+                //   perandcashCtl
                 //     ? true
                 //     : false
                 // }`}
@@ -384,12 +386,10 @@ const LagerCut = () => {
                   {100 - winLoseCondition(lager, userinfocom)}
                 </span>
                 <br />
-
                 <span style={{ color: "red" }}>
                   {winLoseCondition(lager, userinfocom)}
                 </span>
               </Typography>
-              <span>{lager.totalAmount}</span>
             </Stack>
           </Stack>
 
@@ -411,7 +411,7 @@ const LagerCut = () => {
                 sx={{ color: "black" }}
                 // disabled={l.play === true ? true : false}
               >
-                <ArrowForwardIcon />
+                <ArrowForwardIcon fontSize={"large"} />
               </IconButton>
             </NavLink>
           </Stack>
@@ -456,8 +456,8 @@ const LagerCut = () => {
                               align="left"
                               sx={{
                                 // width: "8px",
-                                border: 0.1,
-                                borderColor: grey[300],
+                                border: 0.3,
+                                borderColor: "black",
                                 borderCollapse: "collapse",
                               }}
                             >
@@ -483,9 +483,9 @@ const LagerCut = () => {
                               align="right"
                               sx={{
                                 // width: "500px",
-                                border: 0.1,
+                                border: 0.3,
                                 color: blue[500],
-                                borderColor: grey[300],
+                                borderColor: "black",
                                 borderCollapse: "collapse",
                               }}
                             >

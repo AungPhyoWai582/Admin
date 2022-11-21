@@ -5,6 +5,11 @@ import {
   ListAlt,
   StarBorder,
 } from "@mui/icons-material";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+
+import LockResetIcon from "@mui/icons-material/LockReset";
+import SaveAsIcon from "@mui/icons-material/SaveAs";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import {
   Avatar,
   Box,
@@ -84,7 +89,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
             >
               <ListItem sx={{ ":hover": { bgcolor: teal[100] } }}>
                 <ListItemIcon>
-                  <NoteAddIcon />
+                  <ReceiptLongIcon />
                 </ListItemIcon>
                 <ListItemText primary="Lotery" />
               </ListItem>
@@ -108,7 +113,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
               onClick={subMember}
             >
               <ListItemIcon>
-                <ListAlt />
+                <PeopleAltIcon />
               </ListItemIcon>
               <ListItemText primary="Masters" />
               {subopen ? <ExpandLess /> : <ExpandMore />}
@@ -122,7 +127,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
                 >
                   <ListItemButton sx={{ pl: 4 }}>
                     <ListItemIcon>
-                      <StarBorder />
+                      <SaveAsIcon />
                     </ListItemIcon>
 
                     <ListItemText primary="Create" />
@@ -135,7 +140,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
                 >
                   <ListItemButton sx={{ pl: 4 }}>
                     <ListItemIcon>
-                      <StarBorder />
+                      <FormatListNumberedIcon />
                     </ListItemIcon>
 
                     <ListItemText primary="List" />
@@ -162,7 +167,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
                 >
                   <ListItemButton sx={{ pl: 4 }}>
                     <ListItemIcon>
-                      <StarBorder />
+                      <SaveAsIcon />
                     </ListItemIcon>
 
                     <ListItemText primary="Daily" />
@@ -191,7 +196,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
             >
               <ListItem sx={{ ":hover": { bgcolor: teal[100] } }}>
                 <ListItemIcon>
-                  <FormatListNumberedIcon />
+                  <LockResetIcon />
                 </ListItemIcon>
                 <ListItemText primary="Change Password"></ListItemText>
               </ListItem>
@@ -208,7 +213,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
             >
               <ListItem sx={{ ":hover": { bgcolor: teal[100] } }}>
                 <ListItemIcon>
-                  <NoteAddIcon />
+                  <AccountCircleIcon />
                 </ListItemIcon>
                 <ListItemText primary="Account" />
               </ListItem>
