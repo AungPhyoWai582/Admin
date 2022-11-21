@@ -25,7 +25,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { green, grey, teal } from "@mui/material/colors";
+import { blueGrey, green, grey, red, teal } from "@mui/material/colors";
 import { Box } from "@mui/system";
 import { LoadingButton, TabContext, TabList, TabPanel } from "@mui/lab";
 import React, { useState } from "react";
@@ -139,6 +139,19 @@ const MemberDetail = () => {
     });
   };
 
+  const suspended = () => {
+    let obj = {suspend:!user.suspend};
+    console.log(obj)
+    Axios.put(`/masters/${user._id}`, obj, {
+      headers: {
+        authorization: `Bearer ` + localStorage.getItem("access-token"),
+      },
+    }).then((res) => {
+      console.log(res.data);
+      setControlEff(true);
+    }).catch(err=>console.log(err));
+  }
+
   console.log(updateInfo);
 
   const memberDetail = (
@@ -200,9 +213,10 @@ const MemberDetail = () => {
             spacing={1}
           >
             <Button
+            
               size="small"
               variant="contained"
-              color={"info"}
+              sx={{bgcolor:blueGrey[500],boxShadow:'none'}}
               fullWidth={useMediaQuery("(max-width:450px)") ? true : false}
             >
               <Typography textTransform={"none"} fontSize={12}>
@@ -212,8 +226,10 @@ const MemberDetail = () => {
             <Button
               size="small"
               variant="contained"
-              color="error"
+              // color={user.suspend===true?'error':'success'}
+              sx={{bgcolor:user.suspend===true?red[500]:green[500],boxShadow:'none'}}
               fullWidth={useMediaQuery("(max-width:450px)") ? true : false}
+              onClick={suspended}
             >
               <Typography textTransform={"none"} fontSize={12}>
                 Suspend
