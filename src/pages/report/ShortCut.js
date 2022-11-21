@@ -187,7 +187,10 @@ const ShortCup = () => {
         borderRadius={1}
         alignItems="center"
       >
-        <FormControl sx={{minWidth:{xs:'100%',sm:'100%',md:120,xl:120} }} size="small">
+        <FormControl
+          sx={{ minWidth: { xs: "100%", sm: "100%", md: 120, xl: 120 } }}
+          size="small"
+        >
           <InputLabel id="demo-select-small">Time</InputLabel>
           <Select
             label="Time"
@@ -202,14 +205,14 @@ const ShortCup = () => {
             ))}
           </Select>
         </FormControl>
-        <Stack direction={"row"} paddingLeft={{xs:0,sm:0,md:2,xl:2}}>
+        <Stack direction={"row"} paddingLeft={{ xs: 0, sm: 0, md: 2, xl: 2 }}>
           <SelectTime setDates={setDates} />
         </Stack>
       </Stack>
       <Stack
         direction={"row"}
         flexWrap="wrap"
-        justifyContent={'start'}
+        justifyContent={"start"}
         // spacing={2}
         padding={1}
         // paddingLeft={3}
@@ -219,10 +222,14 @@ const ShortCup = () => {
         borderRadius={1}
         alignItems={"center"}
       >
-        <FormControl sx={{width:{xs:'100%',sm:'100%',md:'40%',xl:'40%'},alignItems:'left'}}>
+        <FormControl
+          sx={{
+            width: { xs: "100%", sm: "100%", md: "40%", xl: "40%" },
+            alignItems: "left",
+          }}
+        >
           {/* <FormLabel id="demo-controlled-radio-buttons-group">Gender</FormLabel> */}
           <RadioGroup
-          
             aria-labelledby="demo-controlled-radio-buttons-group"
             name="controlled-radio-buttons-group"
             value={InOutControl}
@@ -250,44 +257,46 @@ const ShortCup = () => {
             </Stack>
           </RadioGroup>
         </FormControl>
-<Stack direction={'row'} spacing={2} sx={{width:{xs:'100%',sm:'100%',md:'60%',xl:'60%'}}}>
-        <FormControl
-        sx={{ minWidth: {xs:'70%',sm:'70%',md:200,xl:200} }}
-          size="small"
-          disabled={
-            InOutControl === "Out" || InOutControl === "Main" ? true : false
-          }
+        <Stack
+          direction={"row"}
+          spacing={2}
+          sx={{ width: { xs: "100%", sm: "100%", md: "60%", xl: "60%" } }}
         >
-          <InputLabel id="demo-select-small">Members</InputLabel>
-              <Select
-                // sx={{ width: 150, height: 30 }}
-                labelId="demo-select-small"
-                id="demo-select-small"
-                value={autoCompleteValue}
-                size="small"
-                // defaultValue={customer[0].value}
-                label="Members"
-                onChange={handleChange}
-              >
-                {customer.map((cus) => (
-                  <MenuItem value={cus.value}>{cus.name}</MenuItem>
-                ))}
-                {/* <MenuItem value={"AM"}>APW</MenuItem>
+          <FormControl
+            sx={{ minWidth: { xs: "70%", sm: "70%", md: 200, xl: 200 } }}
+            size="small"
+            disabled={
+              InOutControl === "Out" || InOutControl === "Main" ? true : false
+            }
+          >
+            <InputLabel id="demo-select-small">Members</InputLabel>
+            <Select
+              // sx={{ width: 150, height: 30 }}
+              labelId="demo-select-small"
+              id="demo-select-small"
+              value={autoCompleteValue}
+              size="small"
+              // defaultValue={customer[0].value}
+              label="Members"
+              onChange={handleChange}
+            >
+              {customer.map((cus) => (
+                <MenuItem value={cus.value}>{cus.name}</MenuItem>
+              ))}
+              {/* <MenuItem value={"AM"}>APW</MenuItem>
                 <MenuItem value={"PM"}>NNZ</MenuItem> */}
-              </Select>
-            
-        
-        </FormControl>
+            </Select>
+          </FormControl>
 
-        <Button
-          // sx={{ bgcolor: green[300] }}
-          size="small"
-          variant="contained"
-          color={"success"}
-          onClick={searchReport}
-        >
-          <Search sx={{ fontWeight: "bold" }} color={"white"} />
-        </Button>
+          <Button
+            // sx={{ bgcolor: green[300] }}
+            size="small"
+            variant="contained"
+            color={"success"}
+            onClick={searchReport}
+          >
+            <Search sx={{ fontWeight: "bold" }} color={"white"} />
+          </Button>
         </Stack>
       </Stack>
       <TableContainer sx={{ padding: "1px" }}>
