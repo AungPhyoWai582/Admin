@@ -40,6 +40,7 @@ import { useLocation, useParams } from "react-router-dom";
 import ModalBox from "../../components/modal/ModalBox";
 import Axios from "../../shared/Axios";
 import Tabbar from "../../components/Tabbar";
+import moment from "moment";
 
 const MemberDetail = () => {
   const { masterId } = useParams();
@@ -174,6 +175,9 @@ const MemberDetail = () => {
 
   const suspended = () => {
     let obj = { suspend: !user.suspend };
+    if(obj.suspend===true){
+      obj.suspendAt=moment(Date.now()).format('YYYY-MM-DD')
+    }
     console.log(obj);
     Axios.put(`/masters/${user._id}`, obj, {
       headers: {
@@ -319,9 +323,9 @@ const MemberDetail = () => {
             <Typography>Role - {user.role}</Typography>
             <Typography>Divider - {user.divider}</Typography>
             <Typography>
-              Created Date - {usercreateAt.getDate()}/
-              {usercreateAt.getMonth() + 1}/{usercreateAt.getFullYear()}
+              Created Date - {moment(user.createAt).format('YYYY-MM-DD')}
             </Typography>
+            {user.suspend===true && <Typography>Suspended - {moment(user.suspendAt).format('YYYY-MM-DD')}</Typography>}
           </Stack>
           <Stack
             direction={useMediaQuery("(max-width:450px)") ? "column" : "row"}
