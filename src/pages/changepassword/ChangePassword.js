@@ -9,15 +9,25 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { teal } from "@mui/material/colors";
+import { green, teal } from "@mui/material/colors";
 import React, { useState } from "react";
 import BetButtonCom from "../../components/BetButtonCom";
 import BetCom from "../../components/BetCom";
 import Axios from "../../shared/Axios";
 
-const ChangePassword = () => {
-  //alert Control
-  const [alertCtl, setAlertCtl] = useState(false);
+const ChangePassword = ({ authUser, setAuthUser }) => {
+  //success alert Control
+  const [successAlt, setSuccessAlt] = useState({
+    status: false,
+    msg: "",
+  });
+
+  //error alert Control
+  const [errorAlt, setErrorAlt] = useState({
+    status: false,
+    msg: "",
+  });
+
   // password
   const [changePass, setChangePass] = useState({
     oldPassword: "",
@@ -36,26 +46,49 @@ const ChangePassword = () => {
   //confirm
   const updatePassword = (changePass) => {
     if (changePass.newPassword.length < 7) {
-      setAlertCtl(true);
+      setErrorAlt({
+        status: true,
+        msg: "new password is minimum 8 characters",
+      });
       return;
     } else {
-      Axios.put(`/changepassword`, changePass, {
+      console.log(changePass);
+      Axios.put(`/auth/changepassword`, changePass, {
         headers: {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err));
+        .then((res) => {
+          setSuccessAlt({status:true,msg:'Successfully Password Changed'})
+          console.log(res.data);
+          setAuthUser({
+            token: null,
+            authorize: false,
+            user_info: {},
+          });
+          localStorage.removeItem("access-token");
+          //   localStorage.setItem("auth", true);
+          localStorage.removeItem("user-info");
+        })
+        .catch((err) => {
+          if (err) {
+            const { error, success } = err.response.data;
+            console.log(error,success)
+            setErrorAlt({ status: true, msg: error });
+          }
+        });
     }
   };
   return (
     <Stack alignItems={"center"} padding={1} marginTop={2}>
-      {alertCtl && (
+{/* Error Alert */}
+
+      {errorAlt.status && (
         <Snackbar
-          open={alertCtl}
+          open={errorAlt.status}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
           autoHideDuration={6000}
-          onClose={() => setAlertCtl(false)}
+          onClose={() => setErrorAlt({ status: false, msg: "" })}
           // message="Error Bet"
           action={
             <React.Fragment>
@@ -63,7 +96,7 @@ const ChangePassword = () => {
                 size="small"
                 // aria-label="close"
                 // color="inherit"
-                onClick={() => setAlertCtl(false)}
+                onClick={() => setErrorAlt({ status: false, msg: "" })}
               >
                 <Close fontSize="small" />
               </IconButton>
@@ -71,7 +104,33 @@ const ChangePassword = () => {
           }
         >
           <Alert severity={"warning"} color={"warning"}>
-            Incorrect Password
+            {errorAlt.msg.toString()}
+          </Alert>
+        </Snackbar>
+      )}
+{/* Success Alert */}
+{successAlt.status && (
+        <Snackbar
+          open={successAlt.status}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          autoHideDuration={6000}
+          onClose={() => setSuccessAlt({ status: false, msg: "" })}
+          // message="Error Bet"
+          action={
+            <React.Fragment>
+              <IconButton
+                size="small"
+                // aria-label="close"
+                // color="inherit"
+                onClick={() => setSuccessAlt({ status: false, msg: "" })}
+              >
+                <Close fontSize="small" />
+              </IconButton>
+            </React.Fragment>
+          }
+        >
+          <Alert severity={"warning"} color={"warning"}>
+            {successAlt.msg.toString()}
           </Alert>
         </Snackbar>
       )}
@@ -89,7 +148,8 @@ const ChangePassword = () => {
             Old Password
           </Typography>
           <TextField
-            color={"success"}
+            color={"primary"}
+            // border='none'
             placeholder="add old password"
             fullWidth
             variant="outlined"
@@ -105,7 +165,7 @@ const ChangePassword = () => {
             New Password
           </Typography>
           <TextField
-            color={"success"}
+            color={"primary"}
             placeholder="add new password"
             fullWidth
             variant="outlined"
@@ -121,7 +181,7 @@ const ChangePassword = () => {
             Confirm Password
           </Typography>
           <TextField
-            color={"success"}
+            color={"primary"}
             placeholder="add confirm password"
             fullWidth
             variant="outlined"
@@ -132,22 +192,21 @@ const ChangePassword = () => {
             onChange={(e) => changepasswordFunction(e)}
           />
         </Stack>
-        <Stack
-          direction={"row"}
-          spacing={1}
-          padding={2}
-          justifyContent="center"
-        >
-          <Button size="medium" color="success" variant={"contained"}>
+        <Stack direction={"row"} spacing={1} padding={2} justifyContent="end">
+          {/* <Button size="medium" color="success" variant={"contained"}>
             Cancle
-          </Button>
+          </Button> */}
           <Button
             size="medium"
-            color="success"
+            sx={{
+              bgcolor: green[500],
+              boxShadow: "none",
+              textTransform: "none",
+            }}
             variant={"contained"}
             onClick={() => updatePassword(changePass)}
           >
-            OK
+            Change
           </Button>
         </Stack>
       </Stack>

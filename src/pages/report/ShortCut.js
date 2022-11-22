@@ -188,7 +188,7 @@ const ShortCup = () => {
         alignItems="center"
       >
         <FormControl
-          sx={{ minWidth: { xs: "100%", sm: "100%", md: 120, xl: 120 } }}
+          sx={{ minWidth:120 }}
           size="small"
         >
           <InputLabel id="demo-select-small">Time</InputLabel>
@@ -224,7 +224,7 @@ const ShortCup = () => {
       >
         <FormControl
           sx={{
-            width: { xs: "100%", sm: "100%", md: "40%", xl: "40%" },
+            width: { xs: "100%", sm: "100%", md: "50%", xl: "50%" },
             alignItems: "left",
           }}
         >
@@ -260,10 +260,11 @@ const ShortCup = () => {
         <Stack
           direction={"row"}
           spacing={2}
-          sx={{ width: { xs: "100%", sm: "100%", md: "60%", xl: "60%" } }}
+          
+          sx={{ width: { xs: "60%", sm: "60%", md: "60%", xl: "60%" } }}
         >
           <FormControl
-            sx={{ minWidth: { xs: "70%", sm: "70%", md: 200, xl: 200 } }}
+            sx={{ minWidth: 120,height:'30px' }}
             size="small"
             disabled={
               InOutControl === "Out" || InOutControl === "Main" ? true : false

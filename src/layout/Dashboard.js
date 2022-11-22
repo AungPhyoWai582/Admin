@@ -83,7 +83,7 @@ const Dashboard = () => {
         path="/reports/agent/:agentId/calls/:lotteryId/:callId"
         element={<CallDetail />}
       />
-      <Route path="/change_password" element={<ChangePassword />} />
+      <Route path="/change_password" element={<ChangePassword authUser={authUser} setAuthUser={setAuthUser} />} />
       <Route
         path="/account_info"
         element={<AccountInfo authUser={authUser} />}
