@@ -1,10 +1,15 @@
 import {
+  BorderColorOutlined,
   Cancel,
+  Close,
   Edit,
   EditOutlined,
+  LockOpenOutlined,
+  Loop,
   VisibilityOutlined,
 } from "@mui/icons-material";
 import {
+  Alert,
   Button,
   FormControl,
   FormControlLabel,
@@ -14,6 +19,7 @@ import {
   Modal,
   Paper,
   Select,
+  Snackbar,
   Stack,
   Tab,
   Table,
@@ -34,23 +40,33 @@ import { useLocation, useParams } from "react-router-dom";
 import ModalBox from "../../components/modal/ModalBox";
 import Axios from "../../shared/Axios";
 import Tabbar from "../../components/Tabbar";
+import moment from "moment";
 
 const MemberDetail = () => {
   const { masterId } = useParams();
   const [user, setUser] = useState({});
   const [memberView, setmemberView] = useState({
     inTotal: 0,
-    outTotal:0,
+    outTotal: 0,
     inData: [],
-    outData:[],
+    outData: [],
   });
+
+  const [resetPassword, setResetPassword] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
+
   const [open, setOpen] = useState(false);
+  const [openResetPass, setOpenResetPass] = useState(false);
   const [openCommission, setOpenCommission] = useState(false);
   const [openAccLimit, setOpenAccLimit] = useState(false);
   const [openHotLimit, setOpenHotLimit] = useState(false);
   const [updateInfo, setUpdateInfo] = useState({});
 
   const [controlEff, setControlEff] = useState(false);
+  const [successAlt, setSuccessAlt] = useState({ status: false, msg: "" });
+  const [errorAlt, setErrorAlt] = useState({ status: false, msg: "" });
 
   useEffect(() => {
     Axios.get(`/masters/${masterId}`, {
@@ -80,8 +96,13 @@ const MemberDetail = () => {
       },
     }).then((res) => {
       console.log(res.data);
-      const { inTotal, inData,outTotal,outData } = res.data.transcation;
-      setmemberView({ inTotal: inTotal, inData: inData,outTotal:outTotal,outData:outData });
+      const { inTotal, inData, outTotal, outData } = res.data.transcation;
+      setmemberView({
+        inTotal: inTotal,
+        inData: inData,
+        outTotal: outTotal,
+        outData: outData,
+      });
     });
   }, [controlEff]);
 
@@ -118,9 +139,22 @@ const MemberDetail = () => {
     setUpdateInfo({ hot_limit: hot_limit, superhot_limit: superhot_limit });
   };
 
-  const usercreateAt = new Date(user.createAt);
-  console.log(user.createAt,usercreateAt.getDay(),usercreateAt.getMonth(),usercreateAt.getFullYear())
+  const editResetPass = (e) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    setResetPassword({
+      ...resetPassword,
+      [name]: value,
+    });
+  };
 
+  const usercreateAt = new Date(user.createAt);
+  console.log(
+    user.createAt,
+    usercreateAt.getDay(),
+    usercreateAt.getMonth(),
+    usercreateAt.getFullYear()
+  );
 
   const saveUpdate = () => {
     console.log(updateInfo);
@@ -140,19 +174,50 @@ const MemberDetail = () => {
   };
 
   const suspended = () => {
-    let obj = {suspend:!user.suspend};
-    console.log(obj)
+    let obj = { suspend: !user.suspend };
+    if(obj.suspend===true){
+      obj.suspendAt=moment(Date.now()).format('YYYY-MM-DD')
+    }
+    console.log(obj);
     Axios.put(`/masters/${user._id}`, obj, {
       headers: {
         authorization: `Bearer ` + localStorage.getItem("access-token"),
       },
-    }).then((res) => {
-      console.log(res.data);
-      setControlEff(true);
-    }).catch(err=>console.log(err));
-  }
+    })
+      .then((res) => {
+        console.log(res.data);
+        setControlEff(true);
+      })
+      .catch((err) => console.log(err));
+  };
 
-  console.log(updateInfo);
+  const saveResetPassword = () => {
+    console.log(resetPassword);
+    Axios.put(`/auth/resetpassword/${user._id}`, resetPassword, {
+      headers: {
+        authorization: `Bearer ` + localStorage.getItem("access-token"),
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+        setControlEff(true);
+        setOpenResetPass(false);
+        setResetPassword({ newPassword: "", confirmPassword: "" });
+        setSuccessAlt({
+          status: true,
+          msg: "Password Reset Successfully",
+        });
+      })
+      .catch((err) => {
+        if (err) {
+          const { error, success } = err.response.data;
+          console.log(error, success);
+          setErrorAlt({ status: true, msg: error });
+        }
+      });
+  };
+
+  // console.log(resetPassword);
 
   const memberDetail = (
     <>
@@ -165,6 +230,57 @@ const MemberDetail = () => {
         boxShadow={1}
         bgcolor={grey[100]}
       >
+        {errorAlt.status && (
+          <Snackbar
+            open={errorAlt.status}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            autoHideDuration={6000}
+            onClose={() => setErrorAlt({ status: false, msg: "" })}
+            // message="Error Bet"
+            action={
+              <React.Fragment>
+                <IconButton
+                  size="small"
+                  // aria-label="close"
+                  // color="inherit"
+                  onClick={() => setErrorAlt({ status: false, msg: "" })}
+                >
+                  <Close fontSize="small" />
+                </IconButton>
+              </React.Fragment>
+            }
+          >
+            <Alert severity={"error"} color={"error"}>
+              {errorAlt.msg.toString()}
+            </Alert>
+          </Snackbar>
+        )}
+        {/* Success Alert */}
+        {successAlt.status && (
+          <Snackbar
+            open={successAlt.status}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            autoHideDuration={6000}
+            onClose={() => setSuccessAlt({ status: false, msg: "" })}
+            // message="Error Bet"
+            action={
+              <React.Fragment>
+                <IconButton
+                  size="small"
+                  // aria-label="close"
+                  // color="inherit"
+                  onClick={() => setSuccessAlt({ status: false, msg: "" })}
+                >
+                  <Close fontSize="small" />
+                </IconButton>
+              </React.Fragment>
+            }
+          >
+            <Alert severity={"success"} color={"success"}>
+              {successAlt.msg.toString()}
+            </Alert>
+          </Snackbar>
+        )}
         <Stack
           direction={"row"}
           justifyContent="space-between"
@@ -187,7 +303,7 @@ const MemberDetail = () => {
             >
               Basic Info
             </Typography>
-            <Edit sx={{ color: "black" }} fontSize="14" />
+            <BorderColorOutlined sx={{ color: "black" }} fontSize="14" />
           </Button>
         </Stack>
         <Stack
@@ -206,28 +322,41 @@ const MemberDetail = () => {
             <Typography>Za - {user.twoDZ}</Typography>
             <Typography>Role - {user.role}</Typography>
             <Typography>Divider - {user.divider}</Typography>
-            <Typography>Created Date - {usercreateAt.getDate()}/{usercreateAt.getMonth()+1}/{usercreateAt.getFullYear()}</Typography>
+            <Typography>
+              Created Date - {moment(user.createAt).format('YYYY-MM-DD')}
+            </Typography>
+            {user.suspend===true && <Typography>Suspended - {moment(user.suspendAt).format('YYYY-MM-DD')}</Typography>}
           </Stack>
           <Stack
             direction={useMediaQuery("(max-width:450px)") ? "column" : "row"}
             spacing={1}
           >
             <Button
-            
               size="small"
               variant="contained"
-              sx={{bgcolor:blueGrey[500],boxShadow:'none'}}
+              startIcon={<Loop fontSize="14" />}
+              sx={{ bgcolor: blueGrey[500], color: "white", boxShadow: "none" }}
               fullWidth={useMediaQuery("(max-width:450px)") ? true : false}
+              onClick={() => setOpenResetPass(true)}
             >
-              <Typography textTransform={"none"} fontSize={12}>
+              <Typography
+                alignItems="center"
+                textTransform={"none"}
+                fontSize={12}
+              >
                 Reset Password
               </Typography>
             </Button>
             <Button
               size="small"
               variant="contained"
+              startIcon={<LockOpenOutlined fontSize="14" />}
               // color={user.suspend===true?'error':'success'}
-              sx={{bgcolor:user.suspend===true?red[500]:green[500],boxShadow:'none'}}
+              sx={{
+                bgcolor: user.suspend === true ? red[500] : green[500],
+                color: "white",
+                boxShadow: "none",
+              }}
               fullWidth={useMediaQuery("(max-width:450px)") ? true : false}
               onClick={suspended}
             >
@@ -237,6 +366,74 @@ const MemberDetail = () => {
             </Button>
           </Stack>
         </Stack>
+        <ModalBox open={openResetPass} setOpen={setOpenResetPass}>
+          <Stack
+            direction={"row"}
+            justifyContent="space-between"
+            borderBottom={0.1}
+            width={"100%"}
+            borderColor={grey[300]}
+            // padding={1}
+          ></Stack>
+          <Stack
+            padding={1}
+            paddingY={3}
+            spacing={1}
+            borderBottom={0.1}
+            borderColor={grey[300]}
+          >
+            <TextField
+              size="small"
+              color="secondary"
+              label="newPassword"
+              name="newPassword"
+              value={resetPassword.newPassword}
+              onChange={editResetPass}
+            />
+            <TextField
+              size="small"
+              color="secondary"
+              label="confirmPassword"
+              name="confirmPassword"
+              value={resetPassword.confirmPassword}
+              onChange={editResetPass}
+            />
+          </Stack>
+          <Stack
+            direction={"row"}
+            justifyContent="flex-end"
+            padding={1}
+            spacing={1}
+          >
+            <LoadingButton
+              loadingPosition="start"
+              loading={false}
+              size="small"
+              color={"error"}
+              variant="contained"
+              onClick={() => {
+                setOpenResetPass(false);
+                setResetPassword({ newPassword: "", confirmPassword: "" });
+              }}
+            >
+              <Typography textTransform={"none"} fontSize={12}>
+                Cancel
+              </Typography>
+            </LoadingButton>
+            <LoadingButton
+              loading={false}
+              loadingPosition="start"
+              size="small"
+              color={"success"}
+              variant="contained"
+              onClick={saveResetPassword}
+            >
+              <Typography textTransform={"none"} fontSize={12}>
+                Save
+              </Typography>
+            </LoadingButton>
+          </Stack>
+        </ModalBox>
         <ModalBox open={open} setOpen={setOpen}>
           <Stack
             direction={"row"}
@@ -760,7 +957,10 @@ const MemberDetail = () => {
           </span>
         </Typography>
         <Typography variant="div">
-          Out <span style={{ color: "blue", fontWeight: "bold" }}>{memberView.outTotal}</span>
+          Out{" "}
+          <span style={{ color: "blue", fontWeight: "bold" }}>
+            {memberView.outTotal}
+          </span>
         </Typography>
         {/* <Typography variant="div">
           Commission{" "}
@@ -809,7 +1009,9 @@ const MemberDetail = () => {
       <Stack direction={"column"} spacing={1}>
         <Typography>
           Customers{" "}
-          <span style={{ color: "green", fontWeight: "bold" }}>{memberView.outData.length}</span>
+          <span style={{ color: "green", fontWeight: "bold" }}>
+            {memberView.outData.length}
+          </span>
         </Typography>
         <Stack
           direction={"column"}

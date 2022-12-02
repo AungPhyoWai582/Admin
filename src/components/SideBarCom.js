@@ -2,6 +2,9 @@ import {
   AccountCircle,
   ExpandLess,
   ExpandMore,
+  KeyboardArrowDown,
+  KeyboardArrowRight,
+  KeyboardArrowUp,
   ListAlt,
   StarBorder,
 } from "@mui/icons-material";
@@ -32,7 +35,7 @@ import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import BuildCircleIcon from "@mui/icons-material/BuildCircle";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import { grey, teal } from "@mui/material/colors";
+import { green, grey, teal } from "@mui/material/colors";
 
 const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
   // console.log(name);
@@ -83,11 +86,11 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
           <Divider />
           <List>
             <NavLink
-              style={{ textDecoration: "none" }}
+              style={{ textDecoration: "none",color:grey[700]}}
               to="/lotery"
               onClick={() => setHandleOpen(false)}
             >
-              <ListItem sx={{ ":hover": { bgcolor: teal[100] } }}>
+              <ListItem components={'div'}>
                 <ListItemIcon>
                   <ReceiptLongIcon />
                 </ListItemIcon>
@@ -109,14 +112,14 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
             </NavLink> */}
 
             <ListItemButton
-              sx={{ ":hover": { bgcolor: teal[100] } }}
+              sx={{ ":hover": { bgcolor: teal[100] },color:grey[700] }}
               onClick={subMember}
             >
               <ListItemIcon>
                 <PeopleAltIcon />
               </ListItemIcon>
               <ListItemText primary="Masters" />
-              {subopen ? <ExpandLess /> : <ExpandMore />}
+              {subopen ? <KeyboardArrowDown /> : <KeyboardArrowUp />}
             </ListItemButton>
             <Collapse in={!subopen} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
@@ -127,7 +130,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
                 >
                   <ListItemButton sx={{ pl: 4 }}>
                     <ListItemIcon>
-                      <SaveAsIcon />
+                      {/* <SaveAsIcon /> */}
                     </ListItemIcon>
 
                     <ListItemText primary="Create" />
@@ -140,7 +143,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
                 >
                   <ListItemButton sx={{ pl: 4 }}>
                     <ListItemIcon>
-                      <FormatListNumberedIcon />
+                      {/* <FormatListNumberedIcon /> */}
                     </ListItemIcon>
 
                     <ListItemText primary="List" />
@@ -149,14 +152,15 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
               </List>
             </Collapse>
             <ListItemButton
-              sx={{ ":hover": { bgcolor: teal[100] } }}
+              sx={{ ":hover": { bgcolor: teal[100] },color:grey[700] }}
               onClick={() => setReportOpen(!reportOpen)}
             >
               <ListItemIcon>
                 <ListAlt />
               </ListItemIcon>
               <ListItemText primary="Reports" />
-              {reportOpen ? <ExpandLess /> : <ExpandMore />}
+              {reportOpen ? <KeyboardArrowDown /> : <KeyboardArrowUp />}
+              
             </ListItemButton>
             <Collapse in={!reportOpen} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
@@ -167,7 +171,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
                 >
                   <ListItemButton sx={{ pl: 4 }}>
                     <ListItemIcon>
-                      <SaveAsIcon />
+                      {/* <SaveAsIcon /> */}
                     </ListItemIcon>
 
                     <ListItemText primary="Daily" />
@@ -180,7 +184,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
                 >
                   <ListItemButton sx={{ pl: 4 }}>
                     <ListItemIcon>
-                      <StarBorder />
+                      {/* <StarBorder /> */}
                     </ListItemIcon>
 
                     <ListItemText primary="Total" />
@@ -194,7 +198,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
               to="/change_password"
               onClick={() => setHandleOpen(false)}
             >
-              <ListItem sx={{ ":hover": { bgcolor: teal[100] } }}>
+              <ListItem sx={{ ":hover": { bgcolor: teal[100] },color:grey[700] }}>
                 <ListItemIcon>
                   <LockResetIcon />
                 </ListItemIcon>
@@ -211,7 +215,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
               to="/account_info"
               onClick={() => setHandleOpen(false)}
             >
-              <ListItem sx={{ ":hover": { bgcolor: teal[100] } }}>
+              <ListItem sx={{ ":hover": { bgcolor: teal[100] },color:grey[700] }}>
                 <ListItemIcon>
                   <AccountCircleIcon />
                 </ListItemIcon>
@@ -219,7 +223,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
               </ListItem>
             </NavLink>
             <ListItem
-              sx={{ ":hover": { bgcolor: teal[100] }, cursor: "pointer" }}
+              sx={{ ":hover": { bgcolor: teal[100] }, cursor: "pointer" ,color:grey[700]}}
               onClick={logout}
             >
               <ListItemIcon>
