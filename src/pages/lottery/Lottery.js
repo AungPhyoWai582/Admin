@@ -21,6 +21,7 @@ import {
   FormControlLabel,
   IconButton,
   ListItemText,
+  Snackbar,
   Stack,
   Switch,
   TextField,
@@ -46,6 +47,13 @@ const Lottery = () => {
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("add");
   const [loading, setLoading] = useState(false);
+
+  //Lottery Create Alert
+  const [alertCtl, setAlertCtl] = useState({
+    error: false,
+    status: false,
+    msg: "",
+  });
 
   useEffect(() => {
     setPlay(true);
@@ -99,10 +107,17 @@ const Lottery = () => {
           play: false,
         });
         setEffCtrl(true);
+        setAlertCtl({ error: false, status: true, msg: "Create Lottery" });
         setOpen(false);
         setLoading(false);
       })
-      .catch((err) => Alert(err));
+      .catch((err) =>
+        setAlertCtl({
+          error: true,
+          status: true,
+          msg: `${err.response.status}${" "}${err.response.statusText}`,
+        })
+      );
   };
 
   const updateLottery = () => {
@@ -125,7 +140,13 @@ const Lottery = () => {
         setType("add");
         setLoading(false);
       })
-      .catch((err) => Alert(err));
+      .catch((err) =>
+        setAlertCtl({
+          error: true,
+          status: true,
+          msg: `${err.response.status}${" "}${err.response.statusText}`,
+        })
+      );
   };
 
   const deleteLottery = (e, id) => {
@@ -148,6 +169,29 @@ const Lottery = () => {
   return (
     <>
       <Stack spacing={1} padding={1}>
+        {alertCtl.status && (
+          <Snackbar
+            open={alertCtl.status}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            autoHideDuration={4000}
+            onClose={() => {
+              setAlertCtl({ status: false, msg: "" });
+              setLoading(false);
+            }}
+            action={true}
+            // vertical={"top"}
+          >
+            <Alert
+              severity={`${alertCtl.error ? "error" : "info"}`}
+              sx={{
+                color: `${!alertCtl.error ? "black" : "red"}`,
+                backgroungColor: `${alertCtl.error ? "black" : "red"}`,
+              }}
+            >
+              {alertCtl.msg}
+            </Alert>
+          </Snackbar>
+        )}
         <Stack padding={1} justifyContent="space-around" direction={"row"}>
           <IconButton
             size="small"
