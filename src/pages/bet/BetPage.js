@@ -98,6 +98,7 @@ import { ClassNames } from "@emotion/react";
 import LagerCut from "../lager/LagerCut";
 import Clock from "../../components/Clocks";
 import { winNumberCount } from "../../shared/ExportTxt";
+import moment from "moment";
 
 const BetPage = () => {
   // For input refs
@@ -206,6 +207,7 @@ const BetPage = () => {
   const [in_out, set_in_out] = useState("In");
   const [customers, setCustomers] = useState([]);
   const [cusval, setCusval] = useState();
+  const [Timer, setTimer] = useState("")
   const [singleCusCall, setSingleCusCall] = useState({
     Lagnumbers: "",
     Total: [],
@@ -215,9 +217,11 @@ const BetPage = () => {
     Axios.get(`/lotterys/${lotteryId}`)
       .then((res) => {
         console.log(res.data.lottery);
-        const { hot_tee, play } = res.data.lottery;
+        const { hot_tee, play,Timer } = res.data.lottery;
+        console.log(Timer);
         setHot(hot_tee.toString().split("/"));
         setPlay(play);
+        setTimer(Timer);
         // const hots = hot_tee.split("/");
         // console.log(hot_tee.toString())
       })
@@ -334,9 +338,11 @@ const BetPage = () => {
     setCalllistctrl(false);
   }, [inOutCtl, autocompleteCtrl, mastercallAPIctl]);
 
-  console.log(mastercalls);
+  console.log(Timer);
 
   console.log(autoCompleteValue);
+
+  console.log(moment(localStorage.getItem('')))
 
   // out Customer select
   const OnSelect = (e) => {
@@ -2418,6 +2424,10 @@ const BetPage = () => {
     }
   };
 
+  // const timerFunc = Timer => {
+  //   const start
+  // }
+
   const action = (
     <React.Fragment>
       <IconButton
@@ -2492,42 +2502,49 @@ const BetPage = () => {
         // spacing={1}
         flexDirection={"row"}
         flexWrap="wrap"
+        // item={"center"}
         justifyContent={"center"}
         boxShadow={1}
       >
-        <Stack direction={"row"}>
-          {/* <Stack
-            // justifyContent={"start"}
-            alignItems={"start"}
-            display={{ xs: "none", md: "block", sm: "block" }}
-            paddingX={{ xs: 1, sm: 1, md: 2 }}
-          >
-            <Clock />
-          </Stack> */}
-          <Stack>
-            <RadioGroup
-              row
-              aria-labelledby="demo-row-radio-buttons-group-label"
-              name="row-radio-buttons-group"
-              value={in_out}
-              onChange={(e) => {
-                set_in_out(e.target.value);
-                setInOutCtl(true);
-                setCalllistctrl(true);
-              }}
+        <Stack
+          width={"100%"}
+          direction={"row"}
+          alignItems="center"
+          justifyContent={"center"}
+        >
+          {Timer && (
+            <Typography
+              bgcolor={green[200]}
+              color={"red"}
+              paddingX={2}
+              marginRight={2}
+              sx={{ fontWeight: "bold", fontSize: 20, borderRadius: 1 }}
             >
-              <FormControlLabel
-                value="In"
-                control={<Radio size="small" color="success" />}
-                label="In"
-              />
-              <FormControlLabel
-                value="Out"
-                control={<Radio size="small" color="success" />}
-                label="Out"
-              />
-            </RadioGroup>
-          </Stack>
+              {moment().add(Number(Timer/10000),'minutes').format('hh:mm:ss')}
+            </Typography>
+          )}
+          <RadioGroup
+            row
+            aria-labelledby="demo-row-radio-buttons-group-label"
+            name="row-radio-buttons-group"
+            value={in_out}
+            onChange={(e) => {
+              set_in_out(e.target.value);
+              setInOutCtl(true);
+              setCalllistctrl(true);
+            }}
+          >
+            <FormControlLabel
+              value="In"
+              control={<Radio size="small" color="success" />}
+              label="In"
+            />
+            <FormControlLabel
+              value="Out"
+              control={<Radio size="small" color="success" />}
+              label="Out"
+            />
+          </RadioGroup>
         </Stack>
         <Stack direction={"row"} spacing={1} alignItems={"center"}>
           {(in_out === "In" && (

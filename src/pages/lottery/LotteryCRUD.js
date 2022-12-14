@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { green, red, teal } from "@mui/material/colors";
 import React from "react";
+import { useState } from "react";
 
 const LotteryCRUD = ({
   setLotCreate,
@@ -26,9 +27,13 @@ const LotteryCRUD = ({
   switchControll,
   updateLottery,
   AddLottery,
-  loading,
+  loading
 }) => {
   console.log(lotCreate);
+
+  const [Timer,setTimer] = useState('');
+ 
+
   return (
     <Drawer anchor="top" open={open} onClose={() => setOpen(false)}>
       <Box
@@ -86,7 +91,31 @@ const LotteryCRUD = ({
               labelPlacement="start"
             />
           </Stack>
+          {type==='edit' && <Stack
+            spacing={2}
+            padding={1.5}
+            direction="row"
+            alignItems={'center'}
+            justifyContent={"space-between"}
+          >
+            <Typography variant="caption" fontSize={16}>
+              Warning Time
+            </Typography>
 
+            <TextField
+                  color={"warning"}
+                  placeholder="add Timer"
+                  variant="outlined"
+                  size="small"
+                  name="Timer"
+                  label={"Timer"}
+                  sx={{ width:100,bgcolor:red[100]}}
+                  value={lotCreate.Timer}
+                  onChange={createLottery}
+                />
+
+            {/* <Button onClick={()=>console.log(lotCreate)}>set</Button> */}
+          </Stack>}
           <Stack spacing={1.5} padding={1}>
             <Typography variant="caption" fontSize={16}>
               hot_tee
@@ -165,7 +194,7 @@ const LotteryCRUD = ({
               <LoadingButton
                 variant="outlined"
                 loading={loading}
-                loadingPosition='start'
+                loadingPosition="start"
                 // startIcon={<Save disabled />}
                 // sx={{ backgroundColor:green[500], color: red[500] }}
                 color="secondary"

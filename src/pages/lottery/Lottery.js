@@ -34,6 +34,7 @@ import Axios from "../../shared/Axios";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import LotteryCRUD from "./LotteryCRUD";
+import moment from "moment";
 
 const Lottery = () => {
   const [lottery, setLottery] = useState([]);
@@ -46,6 +47,7 @@ const Lottery = () => {
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("add");
   const [loading, setLoading] = useState(false);
+  const [TimerCtrl,setTimerCtrl] = useState(false);
 
   useEffect(() => {
     setPlay(true);
@@ -71,12 +73,14 @@ const Lottery = () => {
 
   const editLottery = (e, l) => {
     e.preventDefault();
+    setTimerCtrl(true)
     setLotCreate({
       id: l._id,
       pout_tee: l.pout_tee,
       hot_tee: l.hot_tee,
       _time: l._time,
       play: l.play,
+      Timer:l.Timer
     });
     setOpen(true);
     setType("edit");
@@ -107,6 +111,12 @@ const Lottery = () => {
 
   const updateLottery = () => {
     setLoading(true);
+
+    // if(lotCreate.Timer != 0){
+    //   console.log('Timer')
+    //   const endTime = timerFunc(lotCreate.Timer);
+    //   localStorage.setItem('Timer',endTime);
+    // }
     // if(lotCreate.pout_tee){
     //   setLotCreate({...lotCreate,play:false})
     // }
@@ -115,6 +125,7 @@ const Lottery = () => {
     Axios.put(`/lotterys/${lotCreate.id}`, lotCreate)
       .then((res) => {
         setLotCreate({
+          // ...lotCreate,
           pout_tee: null,
           hot_tee: [],
           _time: null,
@@ -122,6 +133,7 @@ const Lottery = () => {
         });
         setEffCtrl(true);
         setOpen(false);
+        setTimerCtrl(false)
         setType("add");
         setLoading(false);
       })
@@ -141,6 +153,20 @@ const Lottery = () => {
         setEffCtrl(true);
       })
       .catch((err) => Alert(err));
+  };
+
+  setTimeout(()=>{
+
+  },timerFunc(lotCreate.Timer))
+
+  const timerFunc = (Timer) => {
+    const start = 60*1000*Number(Timer);
+    // const minuteReminder = start.minute() % Number(Timer);
+    // console.log(minuteReminder)
+    // const end = start.add(Number(Timer), "minutes").seconds()
+
+    console.log(start)
+    return Number(start)
   };
 
   // const showLotterys = lottery.filter(lot=>lot.play === play);
@@ -307,6 +333,7 @@ const Lottery = () => {
         lotCreate={lotCreate}
         setLotCreate={setLotCreate}
         setOpen={setOpen}
+TimerCtrl={TimerCtrl}
         createLottery={createLottery}
         switchControll={switchControll}
         editLottery={editLottery}

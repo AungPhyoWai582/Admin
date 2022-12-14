@@ -56,3 +56,9 @@ export const catchHotLimit = (num, hots, masterTotalData, call, hotLimit) => {
     return obj;
   }
 };
+
+
+export const Access = (endTime) => {
+console.log(endTime)
+  
+}
