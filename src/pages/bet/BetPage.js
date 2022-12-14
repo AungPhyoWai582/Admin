@@ -1,72 +1,38 @@
-import {
-  Add,
-  AddSharp,
-  ArrowBack,
-  ArrowForward,
-  Cancel,
-  Close,
-  Delete,
-  Edit,
-  Star,
-} from "@mui/icons-material";
-import BorderColorTwoToneIcon from "@mui/icons-material/BorderColorTwoTone";
+import { Cancel, Close, Delete, Edit, Star } from "@mui/icons-material";
+
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import {
   Alert,
-  AlertTitle,
   Autocomplete,
   Box,
   Button,
   Chip,
-  CircularProgress,
-  Dialog,
   FormControl,
   FormControlLabel,
-  FormLabel,
-  getStepLabelUtilityClass,
   IconButton,
   InputLabel,
-  makeStyles,
   MenuItem,
-  Pagination,
-  PaginationItem,
-  Paper,
   Radio,
   RadioGroup,
   Select,
   Snackbar,
   Stack,
-  Switch,
-  TableCell,
-  TableContainer,
-  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
-import {
-  blue,
-  cyan,
-  deepOrange,
-  green,
-  grey,
-  lightBlue,
-  orange,
-  red,
-  teal,
-  yellow,
-} from "@mui/material/colors";
-import { arrayIncludes } from "@mui/x-date-pickers/internals/utils/utils";
-import axios from "axios";
+import { green, grey } from "@mui/material/colors";
+// import { arrayIncludes } from "@mui/x-date-pickers/internals/utils/utils";
+
 import React, { useContext, useEffect, useRef, useState } from "react";
-import ReactFileReader from "react-file-reader";
+// import ReactFileReader from "react-file-reader";
 import { NavLink, useLocation, useParams } from "react-router-dom";
 import BetButtonCom from "../../components/BetButtonCom";
 import BetCom from "../../components/BetCom";
 import BetListCom from "../../components/BetListCom";
-import LagerCom from "../../components/LagerCom";
-import TwoDSign from "../../components/TwoDSign";
+// import LagerCom from "../../components/LagerCom";
+// import TwoDSign from "../../components/TwoDSign";
 import Axios from "../../shared/Axios";
-import Lager from "../../pages/lager/Lager";
+// import Lager from "../../pages/lager/Lager";
 import "./Bet.css";
 import {
   startStar,
@@ -86,18 +52,17 @@ import {
   backpate,
   forwardPate,
 } from "./Betsign";
-import LagerTable from "../../components/LagerTable";
-import {
-  calculateHotTee,
-  catchHotLimit,
-  catchHotLimitFromFunc,
-  SortingAmount,
-} from "./BetPage.method";
+// import LagerTable from "../../components/LagerTable";
+import { catchHotLimit } from "./BetPage.method";
 import ModalBox from "../../components/modal/ModalBox";
+<<<<<<< HEAD
 import { ClassNames } from "@emotion/react";
 import LagerCut from "../lager/LagerCut";
 import Clock from "../../components/Clocks";
 import { winNumberCount } from "../../shared/ExportTxt";
+=======
+import Marquee from "react-fast-marquee";
+>>>>>>> cf96cc0f407359ac9a2c38e13b8011a6b9c85ff4
 import moment from "moment";
 
 const BetPage = () => {
@@ -110,29 +75,29 @@ const BetPage = () => {
 
   //masterapi ctl
   const [mastercallAPIctl, setMastercallAPI] = useState(false);
-  const [extraCtl, setExtraCtl] = useState(false);
+  // const [extraCtl, setExtraCtl] = useState(false);
   const [callTotal, setCallTotal] = useState(0);
   const [callCount, setCallCount] = useState(0);
-  const [calltotalCtrl, setCalltotalCtrl] = useState(false);
+  // const [calltotalCtrl, setCalltotalCtrl] = useState(false);
 
   // delButton control
-  const [delButtCtl, setDelButtCtl] = useState(false);
+  // const [delButtCtl, setDelButtCtl] = useState(false);
   const [confirmCtl, setComfirmCtl] = useState(false);
   const [crudOpen, setCrudOpen] = useState(false);
   const [crudOutOpen, setCrudOutOpen] = useState(false);
 
   //loading
   const [loading, setLoading] = useState(false);
-  const [loadSuccess, setLoadSuccess] = useState(false);
+  // const [loadSuccess, setLoadSuccess] = useState(false);
 
   // autocompleter ctrl
   const [autocompleteCtrl, setAutoCompleteCtrl] = useState(false);
 
-  const [selectChoice, setSelectChoice] = useState();
+  // const [selectChoice, setSelectChoice] = useState();
   // const [enternumtol, setEnternumtol] = useState({ number: "", total: "" });
 
   const [beterrorcontrol, setBeterrorcontrol] = useState(false);
-  const [callandBetlistctleff, setCallandBetlistctleff] = useState(true);
+  // const [callandBetlistctleff, setCallandBetlistctleff] = useState(true);
 
   const [mastercalls, setMastercalls] = useState([]);
   const [masterOutCalls, setMasterOutCall] = useState([]);
@@ -144,12 +109,12 @@ const BetPage = () => {
     superHotLimit: 0,
     numbers: [],
   });
-  const [outCalls, setOutCalls] = useState({
-    customer: "",
-    hotLimit: 0,
-    superHotLimit: 0,
-    numbers: [],
-  });
+  // const [outCalls, setOutCalls] = useState({
+  //   customer: "",
+  //   hotLimit: 0,
+  //   superHotLimit: 0,
+  //   numbers: [],
+  // });
   // const [callList, setCallList] = useState([]);
 
   const [masters, setMasters] = useState([]);
@@ -159,20 +124,20 @@ const BetPage = () => {
   const { lotteryId } = useParams();
   // const location = useLocation();
   // const { hot_tees } = location.state;
-  const [hotNumbers, setHotNumbers] = useState();
+  // const [hotNumbers, setHotNumbers] = useState();
   // console.log(hot);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
 
   //callList crud
-  const [editCtlBtn, setEditCtlBtn] = useState(false);
+  // const [editCtlBtn, setEditCtlBtn] = useState(false);
   const [mastercallcrud, setMasterCallCrud] = useState({ id: "", numbers: [] });
   const [masteroutcallcrud, setMasterOutCallCrud] = useState({
     id: "",
     numbers: [],
   });
 
-  const [keydemo, setKeyDemo] = useState();
+  // const [keydemo, setKeyDemo] = useState();
   //For twoD sign state
   const [autoCompleteValue, setAutoCompleteValue] = useState();
 
@@ -182,10 +147,10 @@ const BetPage = () => {
   });
 
   //lager open
-  const [lagerOpen, setLagerOpen] = useState(false);
+  // const [lagerOpen, setLagerOpen] = useState(false);
 
   //Lager Break
-  const [lagerBreak, setLagerBreak] = useState("0");
+  // const [lagerBreak, setLagerBreak] = useState("0");
   const [demoLager, setDemolager] = useState({
     originalBreak: lager && lager.originalBreak ? lager.originalBreak : 0,
     average: 0,
@@ -193,9 +158,9 @@ const BetPage = () => {
     extraNumb: [],
     numbers: [],
   });
-  const [confirmBeterr, setConfirmBeterr] = useState(false);
+  // const [confirmBeterr, setConfirmBeterr] = useState(false);
   //calllist control state
-  const [calllistctrl, setCalllistctrl] = useState(false);
+  // const [calllistctrl, setCalllistctrl] = useState(false);
 
   const [masterTotalData, setMasterTotalData] = useState({
     Data: [],
@@ -207,11 +172,21 @@ const BetPage = () => {
   const [in_out, set_in_out] = useState("In");
   const [customers, setCustomers] = useState([]);
   const [cusval, setCusval] = useState();
+<<<<<<< HEAD
   const [Timer, setTimer] = useState("")
   const [singleCusCall, setSingleCusCall] = useState({
     Lagnumbers: "",
     Total: [],
   });
+=======
+
+  //Edit Time Store
+  const [beforeOnchange, setBeforeOnchange] = useState({});
+  // const [singleCusCall, setSingleCusCall] = useState({
+  //   Lagnumbers: "",
+  //   Total: [],
+  // });
+>>>>>>> cf96cc0f407359ac9a2c38e13b8011a6b9c85ff4
 
   useEffect(() => {
     Axios.get(`/lotterys/${lotteryId}`)
@@ -335,7 +310,7 @@ const BetPage = () => {
     // }
     setAutoCompleteCtrl(false);
     setMastercallAPI(false);
-    setCalllistctrl(false);
+    // setCalllistctrl(false);
   }, [inOutCtl, autocompleteCtrl, mastercallAPIctl]);
 
   console.log(Timer);
@@ -1272,8 +1247,8 @@ const BetPage = () => {
 
           setOnchange({ number: "", amount: onchange.amount });
           setBeterrorcontrol(false);
-          setEditCtlBtn(false);
-          setCallandBetlistctleff(false);
+          // setEditCtlBtn(false);
+          // setCallandBetlistctleff(false);
           setAutoCompleteCtrl(false);
         } else {
           setBeterrorcontrol(true);
@@ -2166,10 +2141,11 @@ const BetPage = () => {
           setMastercallAPI(true);
           setInOutCtl(true);
         })
-        // .then((res) => {
-        //   setSuccess(false);
-        //   setLoading(false);
-        // })
+        .then((res) => {
+          setCallCount();
+          setSuccess(false);
+          setLoading(false);
+        })
         .catch((err) => console.log(err));
     }
 
@@ -2278,6 +2254,7 @@ const BetPage = () => {
   const editHandle = (cal, key) => {
     // console.log(key);
     // setEditCtlBtn(true);
+    setBeforeOnchange({ number: cal.number, amount: cal.amount });
     setOnchange({
       number: cal.number,
       amount: cal.amount,
@@ -2290,31 +2267,49 @@ const BetPage = () => {
     // console.log(onchange);
     // console.log(mastercallcrud);
     const numbers = [...mastercallcrud.numbers];
-    const index = numbers.findIndex((obj) => obj.number == onchange.number);
+    const index = numbers.findIndex(
+      (obj) => obj.number == beforeOnchange.number
+    );
     numbers[index] = onchange;
-
-    console.log(numbers);
+    const time = moment(Date.now()).format("YYYY-MM-DD / h:mm:ss A");
+    // console.log(time, numbers[index], onchange.amount);
+    // const before = numbers[index];
+    let afterChange = onchange;
+    const thisChange = {
+      change: `${
+        onchange.amount == beforeOnchange.amount ? "Number" : "Amount"
+      }`,
+    };
+    console.log(time, thisChange, afterChange, beforeOnchange);
 
     // setMasterCallCrud({ ...mastercallcrud, numbers: numbers });
-    Axios.put(
-      `/call/${lotteryId}/${mastercallcrud.id}`,
-      {
-        // master:autoCompleteValue._id,
-        numbers: numbers,
-      },
-      {
-        headers: {
-          authorization: `Bearer ` + localStorage.getItem("access-token"),
-        },
-      }
-    ).then((res) => {
-      setLoading(false);
-      setMasterCallCrud({ id: "", numbers: [] });
-      // setEditCtlBtn(false);
-      setCrudOpen(false);
-      setMastercallAPI(true);
-      setInOutCtl(true);
-    });
+    // Axios.put(
+    //   `/call/${lotteryId}/${mastercallcrud.id}`,
+    //   {
+    //     // master:autoCompleteValue._id,
+    //     numbers: numbers,
+    //     edit: {
+    //       time: time,
+    //       change: thisChange,
+    //       before: beforeOnchange,
+    //       after: afterChange,
+    //     },
+    //   },
+    //   {
+    //     headers: {
+    //       authorization: `Bearer ` + localStorage.getItem("access-token"),
+    //     },
+    //   }
+    // ).then((res) => {
+    //   setLoading(false);
+    //   setMasterCallCrud({ id: "", numbers: [] });
+    //   setOnchange({ number: "", amount: onchange.amount });
+    //   // setEditCtlBtn(false);
+    //   setCrudOpen(false);
+    //   setMastercallAPI(true);
+    //   setInOutCtl(true);
+    //   setSuccess(true);
+    // });
   };
 
   const updateOutCall = () => {
@@ -2379,19 +2374,19 @@ const BetPage = () => {
   };
 
   //CallOutLager
-  const changeInOut = (e) => {
-    setSelectChoice(e.target.value);
-  };
+  // const changeInOut = (e) => {
+  //   setSelectChoice(e.target.value);
+  // };
 
   // get autocomplete option function
-  const getAutoChoCus = (cus) => {
-    return cus.username;
-  };
+  // const getAutoChoCus = (cus) => {
+  //   return cus.username;
+  // };
 
   // console.log(cusval);
 
-  const [value, setValue] = React.useState(masters);
-  const [inputValue, setInputValue] = React.useState("");
+  // const [value, setValue] = React.useState(masters);
+  // const [inputValue, setInputValue] = React.useState("");
   //DoubleClick
   const doubleClick = (e, cal, key) => {
     console.log(e.detail, cal, key);
@@ -2406,7 +2401,7 @@ const BetPage = () => {
         break;
       case 2:
         {
-          console.log("i am 2");
+          // console.log("i am 2");
           setMasterCallCrud({
             id: cal._id,
             numbers: cal.numbers,
@@ -2506,6 +2501,7 @@ const BetPage = () => {
         justifyContent={"center"}
         boxShadow={1}
       >
+<<<<<<< HEAD
         <Stack
           width={"100%"}
           direction={"row"}
@@ -2519,6 +2515,28 @@ const BetPage = () => {
               paddingX={2}
               marginRight={2}
               sx={{ fontWeight: "bold", fontSize: 20, borderRadius: 1 }}
+=======
+        <Stack direction={"row"}>
+          {/* <Stack
+            // justifyContent={"start"}
+            alignItems={"start"}
+            display={{ xs: "none", md: "block", sm: "block" }}
+            paddingX={{ xs: 1, sm: 1, md: 2 }}
+          >
+            <Clock />
+          </Stack> */}
+          <Stack>
+            <RadioGroup
+              row
+              aria-labelledby="demo-row-radio-buttons-group-label"
+              name="row-radio-buttons-group"
+              value={in_out}
+              onChange={(e) => {
+                set_in_out(e.target.value);
+                setInOutCtl(true);
+                // setCalllistctrl(true);
+              }}
+>>>>>>> cf96cc0f407359ac9a2c38e13b8011a6b9c85ff4
             >
               {moment().add(Number(Timer/10000),'minutes').format('hh:mm:ss')}
             </Typography>
@@ -2761,7 +2779,7 @@ const BetPage = () => {
 
       <Stack
         position={"relative"}
-        display={`${!delButtCtl && "none"}`}
+        // display={`${!delButtCtl && "none"}`}
         // justifyContent={"right"}
         width={"100%"}
         direction={"row"}
@@ -2783,42 +2801,9 @@ const BetPage = () => {
             />
           )}
         /> */}
-
-        <Button
-          sx={{
-            height: 30,
-            textTransform: "none",
-            textAlign: "center",
-          }}
-          variant={"contained"}
-          color={"success"}
-          onClick={() => {
-            setDelButtCtl(false);
-            setEditCtlBtn(false);
-            setMasterCallCrud({ id: "", numbers: [] });
-          }}
-        >
-          <span style={{ fontSize: 16, paddingInline: 1 }}>Close</span>
-        </Button>
-        <Button
-          sx={{
-            height: 30,
-            textTransform: "none",
-          }}
-          variant={"contained"}
-          color={"success"}
-          onClick={() => setComfirmCtl(true)}
-        >
-          <span style={{ fontSize: 16, paddingInline: 1 }}>Call Delete</span>
-        </Button>
+        <Marquee>Hello</Marquee>
       </Stack>
-      {/* <Stack
-        alignItems={"end"}
-        display={{ xs: "block", md: "none", sm: "none" }}
-        paddingX={{ xs: 1, sm: 1, md: 2 }}
-      >
-        <Clock />
-      </Stack> */}
+
       {(autoCompleteValue || cusval) && (
         <Stack
           direction={"row"}
@@ -2988,52 +2973,54 @@ const BetPage = () => {
             </TableContainer> */}
             {in_out === "In" &&
               (call.numbers.length // autocompleteCtrl === false
-                ? call.numbers.map((cal, key) => (
-                    // <Stack
-                    //   width={"100%"}
-                    //   alignItems={"center"}
-                    //   bgcolor={"ActiveBorder"}
-                    // >
+                ? call.numbers
+                    .map((cal, key) => (
+                      // <Stack
+                      //   width={"100%"}
+                      //   alignItems={"center"}
+                      //   bgcolor={"ActiveBorder"}
+                      // >
 
-                    <Stack
-                      // width={"100%"}
-                      alignItems={"center"}
-                      bgcolor={"white"}
-                    >
-                      <Box
+                      <Stack
+                        // width={"100%"}
                         alignItems={"center"}
-                        direction={"row"}
-                        // width={{ sx: 180 }}
-                        marginY={0.3}
-                        justifyContent={{
-                          sx: "space-between",
-                          sm: "space-around",
-                          md: "space-around",
-                        }}
+                        bgcolor={"white"}
                       >
-                        <BetListCom call={cal} key={key}>
-                          <IconButton
-                            size="small"
-                            // onDoubleClick={() => console.log("Double")}
-                            onClick={(e) => mscallcrud(e, cal, key)}
-                          >
-                            <Typography
-                              fontSize={8}
-                              textAlign={"center"}
-                              width={20}
-                              // color={green[900]}
+                        <Box
+                          alignItems={"center"}
+                          direction={"row"}
+                          // width={{ sx: 180 }}
+                          marginY={0.3}
+                          justifyContent={{
+                            sx: "space-between",
+                            sm: "space-around",
+                            md: "space-around",
+                          }}
+                        >
+                          <BetListCom call={cal} key={key}>
+                            <IconButton
+                              size="small"
+                              // onDoubleClick={() => console.log("Double")}
+                              onClick={(e) => mscallcrud(e, cal, key)}
                             >
-                              {key + 1}
-                            </Typography>
-                            <Delete
-                              sx={{ textalign: "center" }}
-                              fontSize="small"
-                            />
-                          </IconButton>
-                        </BetListCom>
-                      </Box>
-                    </Stack>
-                  ))
+                              <Typography
+                                fontSize={8}
+                                textAlign={"center"}
+                                width={20}
+                                // color={green[900]}
+                              >
+                                {key + 1}
+                              </Typography>
+                              <Delete
+                                sx={{ textalign: "center" }}
+                                fontSize="small"
+                              />
+                            </IconButton>
+                          </BetListCom>
+                        </Box>
+                      </Stack>
+                    ))
+                    .reverse()
                 : // autocompleteCtrl &&
                   //   autoCompleteValue &&
 
@@ -3072,7 +3059,7 @@ const BetPage = () => {
                           }}
                         >
                           {cal.numbers
-                            .sort((a, b) => (b.amount > a.amount ? 1 : -1))
+                            // .sort((a, b) => (b.amount > a.amount ? 1 : -1))
                             .map((ca, key) => {
                               return (
                                 <Stack
@@ -3091,8 +3078,7 @@ const BetPage = () => {
                             })}
                         </Stack>
                       );
-                    })
-                    .reverse())}
+                    }))}
 
             {in_out === "Out" && call.numbers.length
               ? call.numbers

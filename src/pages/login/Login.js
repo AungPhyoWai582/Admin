@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Grid, Paper, Avatar } from "@mui/material";
+import { Grid, Paper, Avatar, Snackbar, Alert } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import "../../App.js";
 import {
@@ -24,6 +24,12 @@ const Login = ({ authUser, setAuthUser }) => {
   const btnStyle = { margin: "8px" };
 
   const [user, setUser] = useState({ username: "", password: "" });
+
+  //control
+  const [alertCtl, setAlertCtl] = useState({
+    status: false,
+    msg: "",
+  });
 
   const onChangeHandler = (e) => {
     let { name, value } = e.target;
@@ -52,13 +58,37 @@ const Login = ({ authUser, setAuthUser }) => {
           setAuthUser({ token: null, authorize: false, user_info: {} });
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        // console.log(err.response.statusText, err.response.status);
+        setAlertCtl({
+          status: true,
+          msg: `${(err.response.status, err.response.statusText)}`,
+        });
+        console.log(alertCtl);
+      });
   };
 
   return (
     <Grid>
       <Paper elevation={10} style={paperStyle}>
         <Grid align="center">
+          {alertCtl.status && (
+            <Snackbar
+              open={alertCtl.status}
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+              autoHideDuration={4000}
+              onClose={() => setAlertCtl({ status: false, msg: "" })}
+              action={true}
+              // vertical={"top"}
+            >
+              <Alert
+                severity="error"
+                sx={{ color: "red", backgroungColor: "red" }}
+              >
+                {alertCtl.msg}
+              </Alert>
+            </Snackbar>
+          )}
           <Avatar style={avatarStyle}>
             <LockOutlinedIcon />
           </Avatar>

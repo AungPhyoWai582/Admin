@@ -23,7 +23,7 @@ const AppTopbar = ({ name, authUser, setAuthUser }) => {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1, marginBottom: 10 }}>
+      <Box sx={{ flexGrow: 1, marginBottom: { xs: 5, sm: 7 } }}>
         <AppBar position="fixed">
           <Toolbar sx={{ bgcolor: green[800] }}>
             <IconButton

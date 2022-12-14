@@ -26,6 +26,7 @@ import MemberDetail from "../pages/customer/MemberDetail";
 import { grey } from "@mui/material/colors";
 import BetPage from "../pages/bet/BetPage";
 import LagerCut from "../pages/lager/LagerCut";
+import { Stack } from "@mui/system";
 
 const Dashboard = () => {
   const [authUser, setAuthUser] = useState({
@@ -106,15 +107,17 @@ const Dashboard = () => {
           <Route path="/*" element={<Navigate to="/login" replace />} />
         </Routes>
       ) : (
-        <Grid container overflow={"hidden"}>
-          <Grid item xs={12} margin={{ md: 0 }}>
-            <AppTopbar
-              // name={"nnz"}
-              authUser={authUser}
-              setAuthUser={setAuthUser}
-            />
+        <Grid container overflow={"hidden"} spacing={1}>
+          <Grid item xs={12}>
+            <Stack>
+              <AppTopbar
+                // name={"nnz"}
+                authUser={authUser}
+                setAuthUser={setAuthUser}
+              />
+            </Stack>
           </Grid>
-          <Grid item xs={12} padding={{ xs: 0, md: 0 }}>
+          <Grid item xs={12}>
             {routes}
           </Grid>
         </Grid>
