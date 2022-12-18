@@ -1,10 +1,10 @@
 import axios from "axios";
 
 const Axios = axios.create({
-  // baseURL: "https://bet2d.herokuapp.com/api/v1/",
+  baseURL: "https://bet2d.onrender.com/api/v1/",
 
   // baseURL: "http://localhost:3000/api/v1/",
-  baseURL:"https://node.startrick.com/api/v1/",
+  // baseURL:"http://13.212.38.180/api/v1/",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",

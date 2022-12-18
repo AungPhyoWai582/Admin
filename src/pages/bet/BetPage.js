@@ -2812,6 +2812,40 @@ const BetPage = () => {
           <span style={{ fontSize: 16, paddingInline: 1 }}>Call Delete</span>
         </Button>
       </Stack>
+      <Stack direction={'row'} padding={1} justifyContent={'space-between'}>
+      <Stack
+        paddingX={1}
+        // border={1}
+        width='100%'
+        flexDirection={"row"}
+        flexWrap='wrap'
+        justifyContent={{
+          xs: "space-between",
+          sm: "space-between",
+          md: "flex-start",
+        }}
+        alignItems='center'
+        // spacing={{ xs: 1, sm: 2, md: 3 }}
+      >
+        <Typography fontWeight={900} fontSize={10}>
+          <span style={{ color: "red" }}>id</span> : {1937847323}
+        </Typography>
+        <Typography fontWeight={900} fontSize={10}>
+          <span style={{ color: "red" }}>Time</span> : {'17/12/2022 10:00am'}
+        </Typography>
+        <Typography fontWeight={900} fontSize={10}>
+          <span style={{ color: "red" }}>Call Total</span> : {callTotal}
+        </Typography>
+        <Typography fontWeight={900} fontSize={10}>
+          <span style={{ color: "red" }}>Count</span> : {callCount}
+        </Typography>
+        <Typography fontWeight={900} fontSize={10}>
+          <span style={{ color: "red" }}>Net Total</span> :{" "}
+          {masterTotalData !== null ? masterTotalData.Total.toString() : "0"}
+        </Typography>
+      </Stack>
+      <Button variant="outlined" size="small">print</Button>
+</Stack>
       {/* <Stack
         alignItems={"end"}
         display={{ xs: "block", md: "none", sm: "none" }}
@@ -3217,28 +3251,7 @@ const BetPage = () => {
           </Stack>
         </Stack>
       )}
-      <Stack
-        padding={1}
-        border={1}
-        direction={"row"}
-        justifyContent={{
-          xs: "space-between",
-          sm: "space-between",
-          md: "flex-start",
-        }}
-        spacing={{ xs: 1, sm: 2, md: 3 }}
-      >
-        <Typography fontWeight={900} fontSize={14}>
-          <span style={{ color: "red" }}>Call Total</span> : {callTotal}
-        </Typography>
-        <Typography fontWeight={900} fontSize={14}>
-          <span style={{ color: "red" }}>Count</span> : {callCount}
-        </Typography>
-        <Typography fontWeight={900} fontSize={14}>
-          <span style={{ color: "red" }}>Net Total</span> :{" "}
-          {masterTotalData !== null ? masterTotalData.Total.toString() : "0"}
-        </Typography>
-      </Stack>
+      
 
       <ModalBox open={crudOpen} setOpen={setCrudOpen} setOnchange={setOnchange}>
         <Stack direction={"row"} justifyContent="space-around">
