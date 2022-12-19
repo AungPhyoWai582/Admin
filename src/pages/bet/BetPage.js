@@ -94,11 +94,9 @@ import {
   SortingAmount,
 } from "./BetPage.method";
 import ModalBox from "../../components/modal/ModalBox";
-import { ClassNames } from "@emotion/react";
-import LagerCut from "../lager/LagerCut";
-import Clock from "../../components/Clocks";
-import { winNumberCount } from "../../shared/ExportTxt";
+import { useReactToPrint } from "react-to-print";
 import moment from "moment";
+import Print from "../../components/Print";
 
 const BetPage = () => {
   // For input refs
@@ -111,8 +109,11 @@ const BetPage = () => {
   //masterapi ctl
   const [mastercallAPIctl, setMastercallAPI] = useState(false);
   const [extraCtl, setExtraCtl] = useState(false);
-  const [callTotal, setCallTotal] = useState(0);
-  const [callCount, setCallCount] = useState(0);
+  const [callDetail,setCallDetail] = useState({
+    ID:'',name:'',time:'',numbers:[],callTotal:0,callCount:0
+  })
+  // const [callTotal, setCallTotal] = useState(0);
+  // const [callCount, setCallCount] = useState(0);
   const [calltotalCtrl, setCalltotalCtrl] = useState(false);
 
   // delButton control
@@ -207,17 +208,24 @@ const BetPage = () => {
   const [in_out, set_in_out] = useState("In");
   const [customers, setCustomers] = useState([]);
   const [cusval, setCusval] = useState();
-  const [Timer, setTimer] = useState("")
+  const [Timer, setTimer] = useState("");
   const [singleCusCall, setSingleCusCall] = useState({
     Lagnumbers: "",
     Total: [],
+  });
+
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: "2d slip",
+    onAfterPrint: () => alert("Print Success"),
   });
 
   useEffect(() => {
     Axios.get(`/lotterys/${lotteryId}`)
       .then((res) => {
         console.log(res.data.lottery);
-        const { hot_tee, play,Timer } = res.data.lottery;
+        const { hot_tee, play, Timer } = res.data.lottery;
         console.log(Timer);
         setHot(hot_tee.toString().split("/"));
         setPlay(play);
@@ -342,7 +350,7 @@ const BetPage = () => {
 
   console.log(autoCompleteValue);
 
-  console.log(moment(localStorage.getItem('')))
+  console.log(moment(localStorage.getItem("")));
 
   // out Customer select
   const OnSelect = (e) => {
@@ -2399,8 +2407,17 @@ const BetPage = () => {
       case 1:
         {
           console.log(cal);
-          setCallTotal(cal.totalAmount);
-          setCallCount(cal.numbers.length);
+          setCallDetail({
+            ID:cal._id,
+            name:cal.master.name,
+            time:moment(cal.betTime).format('YYYY-MM-DD , h:mm:ss a'),
+            callTotal:cal.totalAmount,
+            callCount:cal.numbers.length,
+            numbers:cal.numbers
+          })
+          // setCallTotal(cal.totalAmount);
+          // setCallCount(cal.numbers.length);
+          // set
         }
 
         break;
@@ -2520,7 +2537,9 @@ const BetPage = () => {
               marginRight={2}
               sx={{ fontWeight: "bold", fontSize: 20, borderRadius: 1 }}
             >
-              {moment().add(Number(Timer/10000),'minutes').format('hh:mm:ss')}
+              {moment()
+                .add(Number(Timer / 10000), "minutes")
+                .format("hh:mm:ss")}
             </Typography>
           )}
           <RadioGroup
@@ -2812,40 +2831,45 @@ const BetPage = () => {
           <span style={{ fontSize: 16, paddingInline: 1 }}>Call Delete</span>
         </Button>
       </Stack>
-      <Stack direction={'row'} padding={1} justifyContent={'space-between'}>
-      <Stack
-        paddingX={1}
-        // border={1}
-        width='100%'
-        flexDirection={"row"}
-        flexWrap='wrap'
-        justifyContent={{
-          xs: "space-between",
-          sm: "space-between",
-          md: "flex-start",
-        }}
-        alignItems='center'
-        // spacing={{ xs: 1, sm: 2, md: 3 }}
-      >
-        <Typography fontWeight={900} fontSize={10}>
-          <span style={{ color: "red" }}>id</span> : {1937847323}
-        </Typography>
-        <Typography fontWeight={900} fontSize={10}>
-          <span style={{ color: "red" }}>Time</span> : {'17/12/2022 10:00am'}
-        </Typography>
-        <Typography fontWeight={900} fontSize={10}>
-          <span style={{ color: "red" }}>Call Total</span> : {callTotal}
-        </Typography>
-        <Typography fontWeight={900} fontSize={10}>
-          <span style={{ color: "red" }}>Count</span> : {callCount}
-        </Typography>
-        <Typography fontWeight={900} fontSize={10}>
-          <span style={{ color: "red" }}>Net Total</span> :{" "}
-          {masterTotalData !== null ? masterTotalData.Total.toString() : "0"}
-        </Typography>
+      <Stack direction={"row"} padding={1} justifyContent={"space-between"}>
+        <Stack
+          paddingX={1}
+          // border={1}
+          width="100%"
+          flexDirection={"row"}
+          flexWrap="wrap"
+          justifyContent={{
+            xs: "space-between",
+            sm: "space-between",
+            md: "flex-start",
+          }}
+          alignItems="center"
+          // spacing={{ xs: 1, sm: 2, md: 3 }}
+        >
+          <Typography fontWeight={900} fontSize={10}>
+            <span style={{ color: "red" }}>id</span> : {callDetail.ID}
+          </Typography>
+          <Typography fontWeight={900} fontSize={10}>
+            <span style={{ color: "red" }}>Time</span> : {callDetail.time}
+          </Typography>
+          <Typography fontWeight={900} fontSize={10}>
+            <span style={{ color: "red" }}>Call Total</span> : {callDetail.callTotal}
+          </Typography>
+          <Typography fontWeight={900} fontSize={10}>
+            <span style={{ color: "red" }}>Count</span> : {callDetail.callCount}
+          </Typography>
+          <Typography fontWeight={900} fontSize={10}>
+            <span style={{ color: "red" }}>Net Total</span> :{" "}
+            {masterTotalData !== null ? masterTotalData.Total.toString() : "0"}
+          </Typography>
+        </Stack>
+        <Button onClick={handlePrint} variant="outlined" size="small">
+          print
+        </Button>
+        <div style={{ display: "none" }}>
+          <Print componentRef={componentRef} ID={callDetail.ID} name={callDetail.name} time={callDetail.time} numbers={callDetail.numbers} totalAmount={callDetail.callTotal} />
+        </div>
       </Stack>
-      <Button variant="outlined" size="small">print</Button>
-</Stack>
       {/* <Stack
         alignItems={"end"}
         display={{ xs: "block", md: "none", sm: "none" }}
@@ -3166,7 +3190,7 @@ const BetPage = () => {
                             id: cal._id,
                             numbers: cal.numbers,
                           });
-                          setCallTotal(cal.totalAmount);
+                          setCallDetail({...callDetail,callTotal:cal.totalAmount});
                           setAutoCompleteCtrl(true);
                           setCrudOutOpen(true);
                         }}
@@ -3251,15 +3275,14 @@ const BetPage = () => {
           </Stack>
         </Stack>
       )}
-      
 
       <ModalBox open={crudOpen} setOpen={setCrudOpen} setOnchange={setOnchange}>
         <Stack direction={"row"} justifyContent="space-around">
           <Typography fontWeight={"bold"} color={"blue"}>
-            Total : {callTotal}{" "}
+            Total : {callDetail.callTotal}{" "}
           </Typography>
           <Typography fontWeight={"bold"} color={"blue"}>
-            Count : {callCount}
+            Count : {callDetail.callCount}
           </Typography>
         </Stack>
         <Stack
@@ -3444,10 +3467,10 @@ const BetPage = () => {
       >
         <Stack direction={"row"} justifyContent="space-around">
           <Typography fontWeight={"bold"} color={"blue"}>
-            Total : {callTotal}{" "}
+            Total : {callDetail.callTotal}{" "}
           </Typography>
           <Typography fontWeight={"bold"} color={"blue"}>
-            Count : {callCount}
+            Count : {callDetail.callCount}
           </Typography>
         </Stack>
         <Stack
