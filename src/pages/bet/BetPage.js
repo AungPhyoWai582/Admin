@@ -2867,7 +2867,7 @@ const BetPage = () => {
           print
         </Button>
         <div style={{ display: "none" }}>
-          <Print componentRef={componentRef} ID={callDetail.ID} name={callDetail.name} time={callDetail.time} numbers={callDetail.numbers} totalAmount={callDetail.callTotal} />
+          <Print componentRef={componentRef} ID={callDetail.ID} count={callDetail.callCount} name={callDetail.name} time={callDetail.time} numbers={callDetail.numbers} totalAmount={callDetail.callTotal} />
         </div>
       </Stack>
       {/* <Stack
