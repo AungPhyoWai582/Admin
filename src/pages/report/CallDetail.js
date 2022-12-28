@@ -48,7 +48,7 @@ const CallDetail = ({ authUser }) => {
               {/* <Typography fontWeight={"bold"}> :</Typography> */}
               <Typography fontSize={{ xs: 12, sm: 14, md: 16 }}>
                 {" "}
-                BetId - {call._id}
+                BetId - {call.callId}
               </Typography>
             </Stack>
             <Stack direction={"row"} spacing={2}>

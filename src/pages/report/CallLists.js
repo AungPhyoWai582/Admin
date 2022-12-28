@@ -80,7 +80,7 @@ const CallList = () => {
                 <>
                   <TableRow>
                     <TableCell sx={{ overflow: "scroll/" }}>
-                      {cal._id}
+                      {cal.callId}
                     </TableCell>
                     <TableCell>{cal.totalAmount.toString()}</TableCell>
                     <TableCell>
