@@ -135,7 +135,7 @@ const ShortCup = () => {
     }
     if (InOutControl === "Out") {
       Axios.get(
-        `/reports/total-out?start_date=${dates[0]}&end_date=${dates[0]}&time=${timeselect}`,
+        `/reports/total-out?start_date=${dates[0]}&end_date=${dates[1]}&time=${timeselect}`,
         {
           headers: {
             authorization: `Bearer ` + localStorage.getItem("access-token"),
@@ -152,7 +152,7 @@ const ShortCup = () => {
     }
     if (InOutControl === "Main") {
       Axios.get(
-        `/reports/main-collections?start_date=${startDate}&end_date=${endDate}&time=${timeselect}`,
+        `/reports/main-collections?start_date=${dates[0]}&end_date=${dates[1]}&time=${timeselect}`,
         {
           headers: {
             authorization: `Bearer ` + localStorage.getItem("access-token"),
@@ -336,7 +336,7 @@ const ShortCup = () => {
                 sx={{ fontWeight: "bold", fontSize: 12 }}
                 align="center"
               >
-                {InOutControl === "Main" ? "OriginalBreak" : "Rel-Commission"}
+                {InOutControl === "Main" && "OriginalBreak"}
               </TableCell>
               <TableCell
                 sx={{ fontWeight: "bold", fontSize: 12 }}
@@ -525,7 +525,7 @@ const ShortCup = () => {
                   return (
                     <>
                       <TableRow>
-                        <TableCell align="left">{`${start.getDate()}/${start.getMonth()}/${start.getFullYear()} - ${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`}</TableCell>
+                        {/* <TableCell align="left">{`${start.getDate()}/${start.getMonth()}/${start.getFullYear()} - ${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`}</TableCell> */}
                         <TableCell sx={{ overflow: "scroll/" }} align="left">
                           {cal.user.username.toString()}
                         </TableCell>
