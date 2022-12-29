@@ -29,10 +29,13 @@ const CallDetail = ({ authUser }) => {
   return (
     <>
       <Box boxShadow={1} margin={"auto"} padding={1}>
-        <Paper sx={{ backgroundColor: "success.light" }}>
-          <Stack
+        <Paper
+        // sx={{ backgroundColor: "success.light" }}
+        >
+          {/* <Stack
             // direction={"row"}
             margin={1}
+            padding={1}
             // spacing={3}
             justifyContent={{
               xs: "space-between",
@@ -40,44 +43,38 @@ const CallDetail = ({ authUser }) => {
               sm: "space-between",
             }}
             flexDirection={"initial"}
+            flexShrink={"unset"}
             flexWrap={"wrap"}
-            flexGrow={"inherit"}
+            // flexGrow={2}
           >
-            {/* <Stack spacing={2} padding={1} direction={"column"}> */}
             <Stack direction={"row"} spacing={2}>
-              {/* <Typography fontWeight={"bold"}> :</Typography> */}
               <Typography fontSize={{ xs: 12, sm: 14, md: 16 }}>
                 {" "}
                 BetId - {call.callId}
               </Typography>
             </Stack>
-            <Stack direction={"row"} spacing={2}>
-              {/* <Typography fontWeight={"bold"}> :</Typography> */}
-              <Typography fontSize={{ xs: 12, sm: 14, md: 16 }}>
-                Time - {call.betTime}
-              </Typography>
-            </Stack>
 
             <Stack direction={"row"} spacing={2}>
-              {/* <Typography fontWeight={"bold"}> :</Typography> */}
               <Typography fontSize={{ xs: 12, sm: 14, md: 16 }}>
                 Total - {call.totalAmount}
               </Typography>
             </Stack>
             <Stack direction={"row"} spacing={2}>
-              {/* <Typography fontWeight={"bold"}> :</Typography> */}
               <Typography fontSize={{ xs: 12, sm: 14, md: 16 }}>
                 Status - {call.status}
               </Typography>
             </Stack>
             <Stack direction={"row"} spacing={2}>
-              {/* <Typography fontWeight={"bold"}>  :</Typography> */}
               <Typography fontSize={{ xs: 12, sm: 14, md: 16 }}>
                 Win - {call.win}
               </Typography>
             </Stack>
-            {/* </Stack> */}
-          </Stack>
+            <Stack direction={"row"} spacing={2}>
+              <Typography fontSize={{ xs: 12, sm: 14, md: 16 }}>
+                Time - {call.betTime}
+              </Typography>
+            </Stack>
+          </Stack> */}
           <Stack
             direction={"row"}
             // padding={1}
@@ -85,8 +82,9 @@ const CallDetail = ({ authUser }) => {
             // justifyContent={"flex-end"}
           >
             {/* <TableContainer sx={{ backgroundColor: "white" }}> */}
+
             <Table sx={{ backgroundColor: "white" }} stickyHeader>
-              <TableHead>
+              {/* <TableHead>
                 <TableRow>
                   <TableCell align="center">
                     <Typography fontWeight="bold">No</Typography>
@@ -98,7 +96,7 @@ const CallDetail = ({ authUser }) => {
                     <Typography fontWeight="bold">Amount</Typography>
                   </TableCell>
                 </TableRow>
-              </TableHead>
+              </TableHead> */}
               <TableBody>
                 {call.numbers.map((cal, key) => (
                   <TableRow key={key}>

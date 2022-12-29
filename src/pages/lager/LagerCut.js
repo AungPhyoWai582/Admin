@@ -26,7 +26,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { blue, green, grey, red, teal } from "@mui/material/colors";
 
 import { useState, useEffect } from "react";
-import { Navigate, NavLink, useParams } from "react-router-dom";
+import { Navigate, NavLink, useLocation, useParams } from "react-router-dom";
 
 import Axios from "../../shared/Axios";
 // import { CheckBox, SaveAlt } from "@mui/icons-material";
@@ -37,6 +37,12 @@ import { exportTextFile } from "../../shared/ExportTxt";
 import { FileUpload, Star } from "@mui/icons-material";
 
 const LagerCut = () => {
+  //
+  const location = useLocation();
+  const extraTotal = location.state.extraArray
+    .map((am, key) => Number(am.amount))
+    .reduce((n, p) => n + p, 0);
+
   // % and cash control
   const [perandcashCtl, setPerandcashCtl] = useState(false);
   //lager Cut Mod CTL
@@ -88,7 +94,7 @@ const LagerCut = () => {
     // console.log(count);
     return count;
   };
-
+  // console.log(extra);
   const tableStyles = {
     border: "1px solid black",
     borderColor: grey[300],
@@ -373,8 +379,10 @@ const LagerCut = () => {
                 textAlign={"center"}
               >
                 AVG{" "}
-                {lager.originalBreak
-                  ? Math.round(lager.totalAmount / lager.originalBreak) + "%"
+                {lager.originalBreak && extraTotal
+                  ? Math.round(
+                      (lager.totalAmount - extraTotal) / lager.originalBreak
+                    ) + "%"
                   : "0"}
               </Typography>
               <Typography

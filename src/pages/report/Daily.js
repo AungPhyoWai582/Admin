@@ -195,7 +195,7 @@ const Daily = () => {
             })
           ) : (
             <TableRow>
-              <TableCell colSpan={3}>
+              {/* <TableCell colSpan={3}>
                 <Typography
                   padding={1}
                   fontSize={18}
@@ -206,7 +206,7 @@ const Daily = () => {
                 >
                   Reports Not Found !!!
                 </Typography>
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           )}
         </TableBody>

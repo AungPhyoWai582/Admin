@@ -109,9 +109,14 @@ const BetPage = () => {
   //masterapi ctl
   const [mastercallAPIctl, setMastercallAPI] = useState(false);
   const [extraCtl, setExtraCtl] = useState(false);
-  const [callDetail,setCallDetail] = useState({
-    ID:'',name:'',time:'',numbers:[],callTotal:0,callCount:0
-  })
+  const [callDetail, setCallDetail] = useState({
+    ID: "",
+    name: "",
+    time: "",
+    numbers: [],
+    callTotal: 0,
+    callCount: 0,
+  });
   // const [callTotal, setCallTotal] = useState(0);
   // const [callCount, setCallCount] = useState(0);
   const [calltotalCtrl, setCalltotalCtrl] = useState(false);
@@ -2408,13 +2413,13 @@ const BetPage = () => {
         {
           console.log(cal);
           setCallDetail({
-            ID:cal._id,
-            name:cal.master.name,
-            time:moment(cal.betTime).format('YYYY-MM-DD , h:mm:ss a'),
-            callTotal:cal.totalAmount,
-            callCount:cal.numbers.length,
-            numbers:cal.numbers
-          })
+            ID: cal.callId,
+            name: cal.master.name,
+            time: moment(cal.betTime).format("YYYY-MM-DD , h:mm:ss a"),
+            callTotal: cal.totalAmount,
+            callCount: cal.numbers.length,
+            numbers: cal.numbers,
+          });
           // setCallTotal(cal.totalAmount);
           // setCallCount(cal.numbers.length);
           // set
@@ -2529,7 +2534,7 @@ const BetPage = () => {
           alignItems="center"
           justifyContent={"center"}
         >
-          {Timer && (
+          {Timer ? (
             <Typography
               bgcolor={green[200]}
               color={"red"}
@@ -2541,6 +2546,8 @@ const BetPage = () => {
                 .add(Number(Timer / 10000), "minutes")
                 .format("hh:mm:ss")}
             </Typography>
+          ) : (
+            ""
           )}
           <RadioGroup
             row
@@ -2659,6 +2666,7 @@ const BetPage = () => {
           <NavLink
             style={{ textDecoration: "none" }}
             to={`/lottery/bet/${lotteryId}/lager`}
+            state={{ extraArray: demoLager.extraNumb }}
           >
             <Button
               variant={"contained"}
@@ -2850,24 +2858,33 @@ const BetPage = () => {
             <span style={{ color: "red" }}>id</span> : {callDetail.ID}
           </Typography>
           <Typography fontWeight={900} fontSize={10}>
-            <span style={{ color: "red" }}>Time</span> : {callDetail.time}
-          </Typography>
-          <Typography fontWeight={900} fontSize={10}>
-            <span style={{ color: "red" }}>Call Total</span> : {callDetail.callTotal}
-          </Typography>
-          <Typography fontWeight={900} fontSize={10}>
             <span style={{ color: "red" }}>Count</span> : {callDetail.callCount}
+          </Typography>
+          <Typography fontWeight={900} fontSize={10}>
+            <span style={{ color: "red" }}>Call Total</span> :{" "}
+            {callDetail.callTotal}
           </Typography>
           <Typography fontWeight={900} fontSize={10}>
             <span style={{ color: "red" }}>Net Total</span> :{" "}
             {masterTotalData !== null ? masterTotalData.Total.toString() : "0"}
+          </Typography>
+          <Typography fontWeight={900} fontSize={10}>
+            <span style={{ color: "red" }}>Time</span> : {callDetail.time}
           </Typography>
         </Stack>
         <Button onClick={handlePrint} variant="outlined" size="small">
           print
         </Button>
         <div style={{ display: "none" }}>
-          <Print componentRef={componentRef} ID={callDetail.ID} count={callDetail.callCount} name={callDetail.name} time={callDetail.time} numbers={callDetail.numbers} totalAmount={callDetail.callTotal} />
+          <Print
+            componentRef={componentRef}
+            ID={callDetail.ID}
+            count={callDetail.callCount}
+            name={callDetail.name}
+            time={callDetail.time}
+            numbers={callDetail.numbers}
+            totalAmount={callDetail.callTotal}
+          />
         </div>
       </Stack>
       {/* <Stack
@@ -3190,7 +3207,10 @@ const BetPage = () => {
                             id: cal._id,
                             numbers: cal.numbers,
                           });
-                          setCallDetail({...callDetail,callTotal:cal.totalAmount});
+                          setCallDetail({
+                            ...callDetail,
+                            callTotal: cal.totalAmount,
+                          });
                           setAutoCompleteCtrl(true);
                           setCrudOutOpen(true);
                         }}

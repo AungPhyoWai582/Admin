@@ -11,13 +11,16 @@ import {
   Link,
 } from "@mui/material";
 import Axios from "../../shared/Axios.js";
+import { Stack } from "@mui/system";
+import { lightGreen } from "@mui/material/colors";
 // import Axios from "../../utils/Axios.js";
 const Login = ({ authUser, setAuthUser }) => {
   const paperStyle = {
-    padding: 20,
-    heigth: "70vh",
-    width: 280,
-    margin: "20px auto",
+    // backgroundColor: lightGreen[50],
+    padding: 15,
+    // heigth: "75vh",
+    width: 300,
+    margin: "100px  auto",
   };
 
   const avatarStyle = { backgroundColor: "green" };
@@ -59,10 +62,10 @@ const Login = ({ authUser, setAuthUser }) => {
         }
       })
       .catch((err) => {
-        // console.log(err.response.statusText, err.response.status);
+        console.log(err.response);
         setAlertCtl({
           status: true,
-          msg: `${(err.response.status, err.response.statusText)}`,
+          msg: `${err.response.status.toString()}`,
         });
         console.log(alertCtl);
       });
@@ -70,8 +73,8 @@ const Login = ({ authUser, setAuthUser }) => {
 
   return (
     <Grid>
-      <Paper elevation={10} style={paperStyle}>
-        <Grid align="center">
+      <Paper elevation={0} style={paperStyle}>
+        <Grid align="center" sx={{ paddingBottom: 5 }}>
           {alertCtl.status && (
             <Snackbar
               open={alertCtl.status}
@@ -92,40 +95,42 @@ const Login = ({ authUser, setAuthUser }) => {
           <Avatar style={avatarStyle}>
             <LockOutlinedIcon />
           </Avatar>
-          <h2>အကောင့်၀င်ရန်</h2>
+          <h2>Login</h2>
         </Grid>
-        <TextField
-          label="Username"
-          placeholder="Enter Username"
-          fullWidth
-          name="username"
-          value={user.username}
-          onChange={onChangeHandler}
-        />
-        <TextField
-          sx={{ marginTop: 1 }}
-          label="Password"
-          placeholder="Enter Password"
-          fullWidth
-          type="password"
-          name="password"
-          value={user.password}
-          onChange={onChangeHandler}
-        />
-        <FormControlLabel
-          control={<Checkbox name="checked" color="primary" />}
-          label="Remember me"
-        />
-        <Button
-          type="submit"
-          color="success"
-          variant="contained"
-          sytle={btnStyle}
-          fullWidth
-          onClick={login}
-        >
-          ၀င်ရန်
-        </Button>
+        <Stack spacing={3} padding={1}>
+          <TextField
+            label="Username"
+            placeholder="Enter Username"
+            fullWidth
+            name="username"
+            value={user.username}
+            onChange={onChangeHandler}
+          />
+          <TextField
+            sx={{ marginTop: 1 }}
+            label="Password"
+            placeholder="Enter Password"
+            fullWidth
+            type="password"
+            name="password"
+            value={user.password}
+            onChange={onChangeHandler}
+          />
+          <FormControlLabel
+            control={<Checkbox name="checked" color="primary" />}
+            label="Remember me"
+          />
+          <Button
+            type="submit"
+            color="success"
+            variant="contained"
+            sytle={btnStyle}
+            // fullWidth
+            onClick={login}
+          >
+            ၀င်ရန်
+          </Button>
+        </Stack>
       </Paper>
     </Grid>
   );
