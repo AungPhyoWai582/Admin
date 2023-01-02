@@ -336,7 +336,7 @@ const ShortCup = () => {
                 sx={{ fontWeight: "bold", fontSize: 12 }}
                 align="center"
               >
-                {InOutControl === "Main" && "OriginalBreak"}
+                {InOutControl === "Main" && "OriginalBreak" || InOutControl==="Out"&& "Commission" || InOutControl==="In" && "Rel-Commission"}
               </TableCell>
               <TableCell
                 sx={{ fontWeight: "bold", fontSize: 12 }}

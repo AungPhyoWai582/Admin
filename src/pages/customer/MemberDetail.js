@@ -1031,7 +1031,7 @@ const MemberDetail = () => {
                 borderColor={grey[300]}
               >
                 <Typography fontSize={14} fontWeight="bold">
-                  {x.name}
+                  {x.cusotmer}
                 </Typography>
                 {/* <Typography fontSize={14} fontWeight="bold" color={"green"}>
                   In

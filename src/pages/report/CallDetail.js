@@ -83,7 +83,7 @@ const CallDetail = ({ authUser }) => {
           >
             {/* <TableContainer sx={{ backgroundColor: "white" }}> */}
 
-            <Table sx={{ backgroundColor: "white" }} stickyHeader>
+            <Table sx={{width:75, backgroundColor: "white" }} stickyHeader>
               {/* <TableHead>
                 <TableRow>
                   <TableCell align="center">

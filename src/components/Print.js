@@ -11,72 +11,81 @@ const Print = ({
   totalAmount,
 }) => {
   return (
-    <div ref={componentRef} style={{ width: "100%" }}>
-      <div style={{ width: "70%", margin: "0 auto" }}>
-        <div style={{ padding: "1px" }}>
-          <span style={{ fontWeight: "bold", display: "block" }}>
-            Id : {ID}
-          </span>
-          <span style={{ fontWeight: "bold", display: "block" }}>
-            Name : {name}
-          </span>
-          <span style={{ fontWeight: "bold", display: "block" }}>
-            Time : {time}
-          </span>
-          <span style={{ fontWeight: "bold", display: "block" }}>
-            Numbers : {count}
-          </span>
-        </div>
-        <div style={{ marginTop:'5px',padding: "1px" }}>
-          <table style={{ border: "none", borderCollapse: "collapse" }}>
+    <div ref={componentRef} style={{ fontFamily: "sans-serif", fontSize: 20 }}>
+      <div style={{}}>
+      
+        <div style={{ marginTop: "5px", padding: "1px" }}>
+          <table
+            style={{
+              border: "1px solid black",
+              borderCollapse: "collapse",
+              marginLeft: "auto",
+              marginRight: "auto",
+            }}
+          >
             <thead>
-              <tr style={{ fontWeight: "bold", fontSize: 18 }}>
-                <th style={{ textAlign: "center" }}>No</th>
-                <th style={{ textAlign: "center" }}>Amount</th>
+              <tr style={{ fontSize: 18 }}>
+                <th style={{ fontWeight:'bold',textAlign: "left" }}>id : </th>
+                <th style={{ textAlign: "left" }}>{ID}</th>
+              </tr>
+              <tr style={{ fontSize: 18 }}>
+                <th style={{ fontWeight:'bold',textAlign: "left" }}>name : </th>
+                <th style={{ textAlign: "left" }}>{name}</th>
+              </tr>
+              <tr style={{ fontSize: 18 }}>
+                <th style={{fontWeight:'bold', textAlign: "left" }}>time : </th>
+                <th style={{ textAlign: "left" }}>{time}</th>
+              </tr>
+              <tr style={{ fontSize: 18 }}>
+                <th style={{fontWeight:'bold', textAlign: "left" }}>numbers : </th>
+                <th style={{ textAlign: "left" }}>{count}</th>
               </tr>
             </thead>
+            <thead>
+              <tr style={{ fontSize: 18 }}>
+                <th style={{fontWeight:'bolder', textAlign: "left" }}>No</th>
+                <th style={{ fontWeight:'bolder',textAlign: "left" }}>Amount</th>
+              </tr>
+            </thead>
+
             <tbody>
               {numbers.map((num) => (
-                <tr style={{ textAlign: "center", fontWeight: "bold" }}>
-                  <td style={{ textAlign: "center" }}>{num.number}</td>
-                  <td style={{ textAlign: "center" }}>{num.amount}</td>
+                <tr style={{ fontWeight: "bold" }}>
+                  <td style={{ textAlign: "left" }}>{num.number}</td>
+                  <td style={{ textAlign: "left" }}>{num.amount}</td>
                 </tr>
               ))}
-              {/* <tr>
-                <td style={{ textAlign: "center" }}>
-                  57
-                </td>
-                <td style={{ textAlign: "center" }}>
-                  5000
-                </td>
-              </tr> */}
+              
             </tbody>
             <tfoot>
               <tr
                 style={{
-                  textAlign: "center",
+                  // textAlign: "center",
                   fontSize: 20,
-                  fontWeight: "bold",
+                  // fontWeight: "bolder",
                 }}
               >
                 <td
                   style={{
-                    textAlign: "center",
-                    fontWeight: "bold",
+                    textAlign: "left",
+                    fontWeight: "bolder",
                   }}
                 >
-                  Total -
+                  Total 
                 </td>
-                <td style={{ textAlign: "center" }}>{totalAmount}</td>
+                <td style={{ fontWeight:'bold',textAlign: "left" }}>{totalAmount}</td>
+              </tr>
+
+              <tr style={{ columnSpan: 2 }}>
+                <td>
+                  <h3 style={{ marginTop: "20px", fontWeight: "bolder" }}>
+                    Thanks.
+                  </h3>
+                </td>
               </tr>
             </tfoot>
           </table>
         </div>
-      </div>
-      <div style={{ padding: "20px" }}>
-        <h3 style={{ width: "60%", margin: "0 auto" ,fontWeight:'bold'}}>
-          အားပေးမှုအတွက် Thanks.
-        </h3>
       </div>
     </div>
   );
