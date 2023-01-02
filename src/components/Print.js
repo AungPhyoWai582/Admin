@@ -12,7 +12,7 @@ const Print = ({
 }) => {
   return (
     <div ref={componentRef} style={{ fontFamily: "sans-serif", fontSize: 20 }}>
-      <div style={{}}>
+      <div>
       
         <div style={{ marginTop: "5px", padding: "1px" }}>
           <table
@@ -26,19 +26,19 @@ const Print = ({
             <thead>
               <tr style={{ fontSize: 18 }}>
                 <th style={{ fontWeight:'bold',textAlign: "left" }}>id : </th>
-                <th style={{ textAlign: "left" }}>{ID}</th>
+                <th style={{ textAlign: "left" }}>{ID.toString()}</th>
               </tr>
               <tr style={{ fontSize: 18 }}>
                 <th style={{ fontWeight:'bold',textAlign: "left" }}>name : </th>
-                <th style={{ textAlign: "left" }}>{name}</th>
+                <th style={{ textAlign: "left" }}>{name.toString()}</th>
               </tr>
               <tr style={{ fontSize: 18 }}>
                 <th style={{fontWeight:'bold', textAlign: "left" }}>time : </th>
-                <th style={{ textAlign: "left" }}>{time}</th>
+                <th style={{ textAlign: "left" }}>{time.toString()}</th>
               </tr>
               <tr style={{ fontSize: 18 }}>
                 <th style={{fontWeight:'bold', textAlign: "left" }}>numbers : </th>
-                <th style={{ textAlign: "left" }}>{count}</th>
+                <th style={{ textAlign: "left" }}>{count.toString()}</th>
               </tr>
             </thead>
             <thead>
@@ -51,8 +51,8 @@ const Print = ({
             <tbody>
               {numbers.map((num) => (
                 <tr style={{ fontWeight: "bold" }}>
-                  <td style={{ textAlign: "left" }}>{num.number}</td>
-                  <td style={{ textAlign: "left" }}>{num.amount}</td>
+                  <td style={{ textAlign: "left" }}>{num.number.toString()}</td>
+                  <td style={{ textAlign: "left" }}>{num.amount.toString()}</td>
                 </tr>
               ))}
               
@@ -73,7 +73,7 @@ const Print = ({
                 >
                   Total 
                 </td>
-                <td style={{ fontWeight:'bold',textAlign: "left" }}>{totalAmount}</td>
+                <td style={{ fontWeight:'bold',textAlign: "left" }}>{totalAmount.toString()}</td>
               </tr>
 
               <tr style={{ columnSpan: 2 }}>
