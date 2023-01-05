@@ -78,6 +78,7 @@ const Lottery = () => {
       id: l._id,
       pout_tee: l.pout_tee,
       hot_tee: l.hot_tee,
+      superhot_tee:l.superhot_tee,
       _time: l._time,
       play: l.play,
       Timer:l.Timer
@@ -99,6 +100,7 @@ const Lottery = () => {
         setLotCreate({
           pout_tee: null,
           hot_tee: [],
+          superhot_tee:[],
           time: null,
           play: false,
         });
@@ -128,6 +130,7 @@ const Lottery = () => {
           // ...lotCreate,
           pout_tee: null,
           hot_tee: [],
+          superhot_tee:[],
           _time: null,
           play: false,
         });
@@ -146,6 +149,7 @@ const Lottery = () => {
         setLotCreate({
           pout_tee: null,
           hot_tee: [],
+          superhot_tee:[],
           _time: null,
           play: false,
         });
