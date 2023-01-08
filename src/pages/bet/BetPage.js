@@ -287,6 +287,7 @@ const BetPage = () => {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
+        // alert(res.data)
         setCustomers(res.data);
         setCusval(res.data[0]);
       });
@@ -3571,10 +3572,16 @@ const BetPage = () => {
             <span style={{ color: "red" }}>Time</span> : {callDetail.time}
           </Typography>
         </Stack>
+        <NavLink
+            style={{ textDecoration: "none" }}
+            to={`/print`}
+            state={{ ID:callDetail.ID,count:callDetail.callCount,name:callDetail.name,time:callDetail.time,numbers:callDetail.numbers,totalAmount:callDetail.callTotal}}
+          >
         <Button onClick={handlePrint} variant="outlined" size="small">
           print
         </Button>
-        <div style={{ display: "none" }}>
+        </NavLink>
+        {/* <div style={{ display: "none" }}>
           <Print
             componentRef={componentRef}
             ID={callDetail.ID}
@@ -3584,7 +3591,7 @@ const BetPage = () => {
             numbers={callDetail.numbers}
             totalAmount={callDetail.callTotal}
           />
-        </div>
+        </div> */}
       </Stack>
       {/* <Stack
         alignItems={"end"}

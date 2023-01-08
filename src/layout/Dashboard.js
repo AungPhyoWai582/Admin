@@ -27,6 +27,7 @@ import { grey } from "@mui/material/colors";
 import BetPage from "../pages/bet/BetPage";
 import LagerCut from "../pages/lager/LagerCut";
 import { Stack } from "@mui/system";
+import Print from "../components/Print";
 
 const Dashboard = () => {
   const [authUser, setAuthUser] = useState({
@@ -94,10 +95,12 @@ const Dashboard = () => {
       <Route path="/masters/master_list" element={<MemberList />} />
       <Route path="/masters/detail/:masterId" element={<MemberDetail />} />
       <Route path="/masters/master_create" element={<MemberCreate />} />
+      <Route path="/print" element={<Print />} />
     </Routes>
   );
   return (
     <>
+    
       {!authUser.authorize ? (
         <Routes>
           <Route

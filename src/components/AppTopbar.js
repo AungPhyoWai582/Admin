@@ -15,6 +15,7 @@ import { green } from "@mui/material/colors";
 
 const AppTopbar = ({ name, authUser, setAuthUser }) => {
   console.log(authUser.user_info.username);
+  console.log(window.location.pathname)
 
   const user = localStorage.getItem("user_info");
 
@@ -23,7 +24,7 @@ const AppTopbar = ({ name, authUser, setAuthUser }) => {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1, marginBottom: { xs: 5, sm: 7 } }}>
+      <Box sx={{display:'flex', flexGrow: 1, marginBottom: { xs: 5, sm: 7 } }}>
         <AppBar position="fixed">
           <Toolbar sx={{ bgcolor: green[800] }}>
             <IconButton
