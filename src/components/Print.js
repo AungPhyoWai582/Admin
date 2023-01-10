@@ -52,14 +52,14 @@ const Print = () => {
         {/* <div>&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;</div> */}
         <div style={{ display: "table" }}>
           <div style={{ padding: 20 }}>
-            {numbers.map((num) => (
+            {numbers.map((num, key) => (
               <tr
                 style={{
                   display: "table-row",
                 }}
               >
                 <td style={{ display: "table-cell", padding: 10 }}>
-                  {num.number === "66" ? "66" : num.number.toString()}
+                  {num.length !== key && num.number.toString()}
                 </td>
                 <td style={{ display: "table-cell" }}>{num.amount}</td>
               </tr>
