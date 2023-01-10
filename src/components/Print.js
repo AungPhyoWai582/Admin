@@ -9,19 +9,19 @@ const Print = () => {
   const componentRef = useRef();
   // const printReceipt = () => {
   //   var printContents = document.getElementById('printArea').innerHTML;
-	// 		var originalContents = document.body.innerHTML;
+  // 		var originalContents = document.body.innerHTML;
 
-	// 		document.body.innerHTML = printContents;
+  // 		document.body.innerHTML = printContents;
 
-	// 		window.print();
+  // 		window.print();
 
-	// 		document.body.innerHTML = originalContents;
+  // 		document.body.innerHTML = originalContents;
   // };
 
   // console.log(window.location.pathname)
 
   const handlePrint = useReactToPrint({
-    content: () =>componentRef.current,
+    content: () => componentRef.current,
     documentTitle: "2d slip",
     onAfterPrint: () => alert("Print Success"),
   });
@@ -57,11 +57,12 @@ const Print = () => {
                 width: "100%",
               }}
             >
-              <td style={{ width: "50%" }}> {num.number}</td>
+              <td style={{ width: "50%" }}>
+                <Typography>{num.number}</Typography>{" "}
+              </td>
               <td style={{ width: "50%" }}>{num.amount}</td>
             </tr>
-            
-           ))}
+          ))}
           <div
             style={{
               display: "flex",
