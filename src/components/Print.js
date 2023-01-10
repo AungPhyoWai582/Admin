@@ -29,7 +29,9 @@ const Print = () => {
   return (
     <>
       <div ref={componentRef} id="printArea">
-        <div style={{ padding: "20px" }}>
+        <div
+        // style={{ padding: "20px" }}
+        >
           <div style={{ display: "flex" }}>
             <div>id : </div>
             <div>{ID}</div>
@@ -48,33 +50,30 @@ const Print = () => {
           </div>
         </div>
         {/* <div>&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;</div> */}
-        <div>
-          {numbers.map((num) => (
-            <tr
-              style={{
-                display: "flex",
-                flex: "wrap",
-                flexDirection: "row",
-                justifyContent: "space-around",
-                width: "100%",
-              }}
-            >
-              <td style={{ width: "50%" }}>
-                <p>{num.number === "66" ? "66" : num.number.toString()}</p>
-              </td>
-              <td style={{ width: "50%" }}>{num.amount}</td>
-            </tr>
-          ))}
-          <div
+        <div style={{ display: "table" }}>
+          <div style={{ padding: 20 }}>
+            {numbers.map((num) => (
+              <tr
+                style={{
+                  display: "table-row",
+                }}
+              >
+                <td style={{ display: "table-cell", padding: 10 }}>
+                  {num.number === "66" ? "66" : num.number.toString()}
+                </td>
+                <td style={{ display: "table-cell" }}>{num.amount}</td>
+              </tr>
+            ))}
+          </div>
+          <tr
             style={{
-              display: "flex",
-              justifyContent: "space-around",
-              width: "100%",
+              display: "table-row",
+              margin: 5,
             }}
           >
-            <div style={{ width: "50%" }}> Total</div>
-            <div style={{ width: "50%" }}>{totalAmount}</div>
-          </div>
+            <td style={{ display: "table-cell" }}> Total</td>
+            <td style={{ display: "table-cell" }}>{totalAmount}</td>
+          </tr>
         </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <h3>Thank</h3>
