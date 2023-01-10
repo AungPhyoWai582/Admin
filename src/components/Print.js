@@ -48,17 +48,19 @@ const Print = () => {
           </div>
         </div>
         {/* <div>&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;</div> */}
-        <div style={{ padding: "20px" }}>
+        <div>
           {numbers.map((num) => (
             <tr
               style={{
                 display: "flex",
+                flex: "wrap",
+                flexDirection: "row",
                 justifyContent: "space-around",
                 width: "100%",
               }}
             >
               <td style={{ width: "50%" }}>
-                <Typography>{num.number}</Typography>{" "}
+                <p>{num.number}</p>
               </td>
               <td style={{ width: "50%" }}>{num.amount}</td>
             </tr>
