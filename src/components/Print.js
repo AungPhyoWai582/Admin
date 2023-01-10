@@ -60,7 +60,7 @@ const Print = () => {
               }}
             >
               <td style={{ width: "50%" }}>
-                <p>{num.number}</p>
+                <p>{num.number === "66" ? "66" : num.number.toString()}</p>
               </td>
               <td style={{ width: "50%" }}>{num.amount}</td>
             </tr>
