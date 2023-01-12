@@ -36,6 +36,8 @@ const Dashboard = () => {
     user_info: {},
   });
 
+  const [printCtrl,setPrintCtrl]=useState(false);
+
   useEffect(() => {
     const locs = localStorage.getItem("access-token");
 
@@ -63,11 +65,9 @@ const Dashboard = () => {
       <Route path="/view" element={<View />} />
       {/* <Route path="/view/lager/:lotteryId" element={<LagerReport />} /> */}
       <Route path="/report/master" element={<AgentReport />} />
-
       <Route path="/lottery/bet/:lotteryId" element={<BetPage />} />
       {/* <Route path="/lottery/calls/:lotteryId" element={<CallsList />} /> */}
       <Route path="/lottery/bet/:lotteryId/lager" element={<LagerCut />} />
-
       <Route path="/reports/total" element={<ShortCup />} />
       <Route path="/reports/daily" element={<Daily />} />
       <Route path="/reports/daily/members" element={<DailyMembers />} />
@@ -76,7 +76,6 @@ const Dashboard = () => {
         path="/reports/daily/members/calls/details"
         element={<CallDetail />}
       />
-
       <Route
         path="/reports/agent/:agentId/calls/:lotteryId"
         element={<ReportCalls />}
@@ -85,22 +84,25 @@ const Dashboard = () => {
         path="/reports/agent/:agentId/calls/:lotteryId/:callId"
         element={<CallDetail />}
       />
-      <Route path="/change_password" element={<ChangePassword authUser={authUser} setAuthUser={setAuthUser} />} />
+      <Route
+        path="/change_password"
+        element={
+          <ChangePassword authUser={authUser} setAuthUser={setAuthUser} />
+        }
+      />
       <Route
         path="/account_info"
         element={<AccountInfo authUser={authUser} />}
       />
       <Route path="/customer" element={<Customer />} />
-
       <Route path="/masters/master_list" element={<MemberList />} />
       <Route path="/masters/detail/:masterId" element={<MemberDetail />} />
-      <Route path="/masters/master_create" element={<MemberCreate />} />
-      <Route path="/print" element={<Print />} />
+      <Route path="/print" element={<Print setPrintCtrl={setPrintCtrl} />} />
+      <Route path="/masters/master_create" element={<MemberCreate />} />{" "}
     </Routes>
   );
   return (
     <>
-    
       {!authUser.authorize ? (
         <Routes>
           <Route
@@ -111,8 +113,8 @@ const Dashboard = () => {
         </Routes>
       ) : (
         <Grid container overflow={"hidden"} spacing={1}>
-          <Grid item xs={12}>
-            <Stack>
+          <Grid  item xs={12}>
+            <Stack display={printCtrl?'none':''}>
               <AppTopbar
                 // name={"nnz"}
                 authUser={authUser}

@@ -1800,14 +1800,14 @@ const BetPage = () => {
           onchange.number[1] === "0")
       ) {
         if (onchange.number.endsWith("+")) {
-          const r = r(onchange);
+          const R = r(onchange);
           let hotLimit;
           let hotTotal;
           let superhotLimit;
           let superhotTotal;
           let remainHotNumbers = [];
           let remainSuperHotNumbers=[];
-          r.map((a) => {
+          R.map((a) => {
             if (hot.includes(a.number)) {
               console.log(call.numbers);
               const hotLimitCalculate = catchHotLimit(
@@ -1871,13 +1871,13 @@ const BetPage = () => {
             numbers: [
               ...call.numbers,
               ...(filterNumbers.length
-                ? r.filter(
+                ? R.filter(
                     (a) =>
                       !filterNumbers
                         .map((rhn) => rhn.number.toString())
                         .includes(a.number.toString())
                   )
-                : r),
+                : R),
             ],
           });
           setOnchange({ number: "", amount: onchange.amount });
@@ -1894,14 +1894,14 @@ const BetPage = () => {
           onchange.number.endsWith("9") ||
           onchange.number.endsWith("0")
         ) {
-          const padatha = padatha(onchange);
+          const PDT = padatha(onchange);
           let hotLimit;
           let hotTotal;
           let superhotLimit;
           let superhotTotal;
           let remainHotNumbers = [];
           let remainSuperHotNumbers=[];
-          padatha.map((a) => {
+          PDT.map((a) => {
             if (hot.includes(a.number)) {
               console.log(call.numbers);
               const hotLimitCalculate = catchHotLimit(
@@ -1965,13 +1965,13 @@ const BetPage = () => {
             numbers: [
               ...call.numbers,
               ...(filterNumbers.length
-                ? padatha.filter(
+                ? PDT.filter(
                     (a) =>
                       !filterNumbers
                         .map((rhn) => rhn.number.toString())
                         .includes(a.number.toString())
                   )
-                : padatha),
+                : PDT),
             ],
           });
           setOnchange({ number: "", amount: onchange.amount });
@@ -2014,14 +2014,14 @@ const BetPage = () => {
           onchange.number[2] === "0")
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
-          const padatha = padatha(onchange);
+          const PDT = padatha(onchange);
           let hotLimit;
           let hotTotal;
           let superhotLimit;
           let superhotTotal;
           let remainHotNumbers = [];
           let remainSuperHotNumbers=[];
-          padatha.map((a) => {
+          PDT.map((a) => {
             if (hot.includes(a.number)) {
               console.log(call.numbers);
               const hotLimitCalculate = catchHotLimit(
@@ -2085,13 +2085,13 @@ const BetPage = () => {
             numbers: [
               ...call.numbers,
               ...(filterNumbers.length
-                ? padatha.filter(
+                ? PDT.filter(
                     (a) =>
                       !filterNumbers
                         .map((rhn) => rhn.number.toString())
                         .includes(a.number.toString())
                   )
-                : padatha),
+                : PDT),
             ],
           });
           setOnchange({ number: "", amount: onchange.amount });
@@ -2108,14 +2108,14 @@ const BetPage = () => {
           onchange.number.endsWith("9") ||
           onchange.number.endsWith("0")
         ) {
-          const padatha = padatha(onchange);
+          const PDT = padatha(onchange);
           let hotLimit;
           let hotTotal;
           let superhotLimit;
           let superhotTotal;
           let remainHotNumbers = [];
           let remainSuperHotNumbers=[];
-          padatha.map((a) => {
+          PDT.map((a) => {
             if (hot.includes(a.number)) {
               console.log(call.numbers);
               const hotLimitCalculate = catchHotLimit(
@@ -2179,13 +2179,13 @@ const BetPage = () => {
             numbers: [
               ...call.numbers,
               ...(filterNumbers.length
-                ? padatha.filter(
+                ? PDT.filter(
                     (a) =>
                       !filterNumbers
                         .map((rhn) => rhn.number.toString())
                         .includes(a.number.toString())
                   )
-                : padatha),
+                : PDT),
             ],
           });
           setOnchange({ number: "", amount: onchange.amount });
@@ -2238,14 +2238,14 @@ const BetPage = () => {
           onchange.number[3] === "0")
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
-          const padatha = padatha(onchange);
+          const PDT = padatha(onchange);
           let hotLimit;
           let hotTotal;
           let superhotLimit;
           let superhotTotal;
           let remainHotNumbers = [];
           let remainSuperHotNumbers=[];
-          padatha.map((a) => {
+          PDT.map((a) => {
             if (hot.includes(a.number)) {
               console.log(call.numbers);
               const hotLimitCalculate = catchHotLimit(
@@ -2309,13 +2309,13 @@ const BetPage = () => {
             numbers: [
               ...call.numbers,
               ...(filterNumbers.length
-                ? padatha.filter(
+                ? PDT.filter(
                     (a) =>
                       !filterNumbers
                         .map((rhn) => rhn.number.toString())
                         .includes(a.number.toString())
                   )
-                : padatha),
+                : PDT),
             ],
           });
           setOnchange({ number: "", amount: onchange.amount });
@@ -2332,14 +2332,14 @@ const BetPage = () => {
           onchange.number.endsWith("9") ||
           onchange.number.endsWith("0")
         ) {
-          const padatha = padatha(onchange);
+          const PDT = padatha(onchange);
           let hotLimit;
           let hotTotal;
           let superhotLimit;
           let superhotTotal;
           let remainHotNumbers = [];
           let remainSuperHotNumbers=[];
-          padatha.map((a) => {
+          PDT.map((a) => {
             if (hot.includes(a.number)) {
               console.log(call.numbers);
               const hotLimitCalculate = catchHotLimit(
@@ -2403,13 +2403,13 @@ const BetPage = () => {
             numbers: [
               ...call.numbers,
               ...(filterNumbers.length
-                ? padatha.filter(
+                ? PDT.filter(
                     (a) =>
                       !filterNumbers
                         .map((rhn) => rhn.number.toString())
                         .includes(a.number.toString())
                   )
-                : padatha),
+                : PDT),
             ],
           });
           setOnchange({ number: "", amount: onchange.amount });
@@ -2472,14 +2472,14 @@ const BetPage = () => {
           onchange.number[4] === "0")
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
-          const padatha = padatha(onchange);
+          const PDT = padatha(onchange);
           let hotLimit;
           let hotTotal;
           let superhotLimit;
           let superhotTotal;
           let remainHotNumbers = [];
           let remainSuperHotNumbers=[];
-          padatha.map((a) => {
+          PDT.map((a) => {
             if (hot.includes(a.number)) {
               console.log(call.numbers);
               const hotLimitCalculate = catchHotLimit(
@@ -2543,13 +2543,13 @@ const BetPage = () => {
             numbers: [
               ...call.numbers,
               ...(filterNumbers.length
-                ? padatha.filter(
+                ? PDT.filter(
                     (a) =>
                       !filterNumbers
                         .map((rhn) => rhn.number.toString())
                         .includes(a.number.toString())
                   )
-                : padatha),
+                : PDT),
             ],
           });
           setOnchange({ number: "", amount: onchange.amount });
@@ -2622,14 +2622,14 @@ const BetPage = () => {
           onchange.number[4] === "0")
       ) {
         if (onchange.number.endsWith("*") && onchange.amount.length > 2) {
-          const padatha = padatha(onchange);
+          const PDT = padatha(onchange);
           let hotLimit;
           let hotTotal;
           let superhotLimit;
           let superhotTotal;
           let remainHotNumbers = [];
           let remainSuperHotNumbers=[];
-          padatha.map((a) => {
+          PDT.map((a) => {
             if (hot.includes(a.number)) {
               console.log(call.numbers);
               const hotLimitCalculate = catchHotLimit(
@@ -2693,13 +2693,13 @@ const BetPage = () => {
             numbers: [
               ...call.numbers,
               ...(filterNumbers.length
-                ? padatha.filter(
+                ? PDT.filter(
                     (a) =>
                       !filterNumbers
                         .map((rhn) => rhn.number.toString())
                         .includes(a.number.toString())
                   )
-                : padatha),
+                : PDT),
             ],
           });
           setOnchange({ number: "", amount: onchange.amount });
@@ -2716,14 +2716,14 @@ const BetPage = () => {
           onchange.number.endsWith("9") ||
           onchange.number.endsWith("0")
         ) {
-          const padatha = padatha(onchange);
+          const PDT = padatha(onchange);
           let hotLimit;
           let hotTotal;
           let superhotLimit;
           let superhotTotal;
           let remainHotNumbers = [];
           let remainSuperHotNumbers=[];
-          padatha.map((a) => {
+          PDT.map((a) => {
             if (hot.includes(a.number)) {
               console.log(call.numbers);
               const hotLimitCalculate = catchHotLimit(
@@ -2787,13 +2787,13 @@ const BetPage = () => {
             numbers: [
               ...call.numbers,
               ...(filterNumbers.length
-                ? padatha.filter(
+                ? PDT.filter(
                     (a) =>
                       !filterNumbers
                         .map((rhn) => rhn.number.toString())
                         .includes(a.number.toString())
                   )
-                : padatha),
+                : PDT),
             ],
           });
           setOnchange({ number: "", amount: onchange.amount });
@@ -3577,12 +3577,12 @@ const BetPage = () => {
             to={`/print`}
             state={{ ID:callDetail.ID,count:callDetail.callCount,name:callDetail.name,time:callDetail.time,numbers:callDetail.numbers,totalAmount:callDetail.callTotal}}
           >
-        <Button onClick={handlePrint} variant="outlined" size="small">
+        {/* <Button onClick={handlePrint} variant="outlined" size="small"> */}
           print
-        </Button>
+        {/* </Button> */}
         </NavLink>
-        {/* <div style={{ display: "none" }}>
-          <Print
+        {/* <div style={{ display: "none" }}> */}
+          {/* <Print
             componentRef={componentRef}
             ID={callDetail.ID}
             count={callDetail.callCount}
@@ -3590,8 +3590,8 @@ const BetPage = () => {
             time={callDetail.time}
             numbers={callDetail.numbers}
             totalAmount={callDetail.callTotal}
-          />
-        </div> */}
+          /> */}
+        {/* </div> */}
       </Stack>
       {/* <Stack
         alignItems={"end"}
