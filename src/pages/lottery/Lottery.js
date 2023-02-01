@@ -7,6 +7,7 @@ import {
   Edit,
   List,
   MenuBook,
+  PlayArrow,
   RemoveRedEye,
   Search,
   Settings,
@@ -23,6 +24,12 @@ import {
   ListItemText,
   Stack,
   Switch,
+  Checkbox,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
@@ -35,9 +42,11 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import LotteryCRUD from "./LotteryCRUD";
 import moment from "moment";
+import SelectTime from "../../components/SelectTime";
 
 const Lottery = () => {
   const [lottery, setLottery] = useState([]);
+  const [dates, setDates] = useState([]);
 
   const [lotCreate, setLotCreate] = useState({});
 
@@ -47,7 +56,7 @@ const Lottery = () => {
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("add");
   const [loading, setLoading] = useState(false);
-  const [TimerCtrl,setTimerCtrl] = useState(false);
+  const [TimerCtrl, setTimerCtrl] = useState(false);
 
   useEffect(() => {
     setPlay(true);
@@ -73,15 +82,15 @@ const Lottery = () => {
 
   const editLottery = (e, l) => {
     e.preventDefault();
-    setTimerCtrl(true)
+    setTimerCtrl(true);
     setLotCreate({
       id: l._id,
       pout_tee: l.pout_tee,
       hot_tee: l.hot_tee,
-      superhot_tee:l.superhot_tee,
+      superhot_tee: l.superhot_tee,
       _time: l._time,
       play: l.play,
-      Timer:l.Timer
+      Timer: l.Timer,
     });
     setOpen(true);
     setType("edit");
@@ -100,7 +109,7 @@ const Lottery = () => {
         setLotCreate({
           pout_tee: null,
           hot_tee: [],
-          superhot_tee:[],
+          superhot_tee: [],
           time: null,
           play: false,
         });
@@ -130,13 +139,13 @@ const Lottery = () => {
           // ...lotCreate,
           pout_tee: null,
           hot_tee: [],
-          superhot_tee:[],
+          superhot_tee: [],
           _time: null,
           play: false,
         });
         setEffCtrl(true);
         setOpen(false);
-        setTimerCtrl(false)
+        setTimerCtrl(false);
         setType("add");
         setLoading(false);
       })
@@ -149,7 +158,7 @@ const Lottery = () => {
         setLotCreate({
           pout_tee: null,
           hot_tee: [],
-          superhot_tee:[],
+          superhot_tee: [],
           _time: null,
           play: false,
         });
@@ -160,17 +169,17 @@ const Lottery = () => {
   };
 
   // setTimeout(()=>{
-    
+
   // },timerFunc(lotCreate.Timer))
 
   const timerFunc = (Timer) => {
-    const start = 60*1000*Number(Timer);
+    const start = 60 * 1000 * Number(Timer);
     // const minuteReminder = start.minute() % Number(Timer);
     // console.log(minuteReminder)
     // const end = start.add(Number(Timer), "minutes").seconds()
 
-    console.log(start)
-    return Number(start)
+    console.log(start);
+    return Number(start);
   };
 
   // const showLotterys = lottery.filter(lot=>lot.play === play);
@@ -178,7 +187,7 @@ const Lottery = () => {
   return (
     <>
       <Stack spacing={1} padding={1}>
-        <Stack padding={1} justifyContent="space-around" direction={"row"}>
+        <Stack padding={1} direction={"row"}>
           <IconButton
             size="small"
             color="secondary"
@@ -191,144 +200,179 @@ const Lottery = () => {
             <ListItemText primary={"Lottery Create"} />
             <Add />
           </IconButton>
-
-          <FormControlLabel
-            control={
-              <Switch
-                checked={play}
-                onChange={(e) => setPlay(!play)}
-                color="secondary"
-              />
-            }
-            label="Play"
-            labelPlacement="start"
-          />
-        </Stack>
-        {lottery.length &&
-          lottery
-            .filter((lot) => lot.play === play)
-            .map((l) => {
-              console.log(l._date);
-              const date = new Date(l._date);
-              console.log(l.getDate);
-              // if (l.play === true) {
-              return (
-                <Stack
-                  direction={"row"}
-                  // display="flex"
-                  justifyContent={"space-between"}
-                  sx={{ borderRadius: 2 }}
-                  boxShadow={1}
-                  padding={1}
-                >
-                  {/* { lottery.length && lottery.map(l=>)} */}
-                  <Stack direction={"row"} alignItems={"center"} spacing={1}>
-                    <Avatar
-                      sizes={"small"}
-                      sx={{
-                        border: 3,
-                        borderColor: l.play ? "green" : "red",
-                        backgroundColor: red[100],
-                        color: "black",
-                        fontSize: 15,
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {l.pout_tee !== null ? l.pout_tee : "-"}
-                    </Avatar>
+          {lottery.length &&
+            lottery
+              .filter((lot) => lot.play === true)
+              .map((l) => {
+                console.log(l._date);
+                const date = new Date(l._date);
+                console.log(l.getDate);
+                return (
+                  <Stack
+                    width={"100%"}
+                    direction={"row"}
+                    justifyContent="space-between"
+                    boxShadow={1}
+                    padding={1}
+                    borderRadius={1}
+                    alignItems="center"
+                  >
                     <Typography>
-                      {/* {`${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`} */}{" "}
                       {`${date.getDate()}/${
                         date.getMonth() + 1
                       }/${date.getFullYear()} `}
+                      {l._time}
                     </Typography>
-                    <Typography fontWeight={"bold"}>{l._time}</Typography>
-                  </Stack>
-                  <Stack
-                    direction={"row"}
-                    alignItems={"center"}
-                    padding={1}
-                    spacing={1}
-                  >
-                    {/* <NavLink
-                  to={`/reports/agent/${l._id}`}
-                  state={{ lotteryId: l._id }}
-                >
-                  <IconButton size="small" sx={{ color: "black" }}>
-                    <MenuBook fontSize="small" />
-                  </IconButton>
-                </NavLink> */}
-                    {/* <NavLink
-                      to={`/lottery/lager/${l._id}`}
-                      state={{ _date: date }}
-                    >
-                      <IconButton size="small" sx={{ color: "black" }}>
-                        <Star fontSize="small" />
+                    <Stack direction="row">
+                      <IconButton
+                        size="small"
+                        sx={{ color: "blue" }}
+                        onClick={(e) => editLottery(e, l)}
+                      >
+                        <Edit fontSize="small" />
                       </IconButton>
-                    </NavLink> */}
-                    {/* <NavLink to={`/lottery/calls/${l._id}`}>
-                    <IconButton size="small" sx={{ color: "black" }}>
-                      <List fontSize="small" />
-                    </IconButton>
-                  </NavLink> */}
-
-                    {l.play === true ? (
-                      <>
+                      <NavLink
+                        to={`/lottery/bet/${l._id}`}
+                        state={{
+                          lotteryId: l._id,
+                          hot_tees: l.hot_tee.toString(),
+                        }}
+                      >
                         <IconButton
                           size="small"
-                          sx={{ color: "black" }}
-                          onClick={(e) => editLottery(e, l)}
+                          sx={{ color: "green", ":hover": { color: "red" } }}
+                          // disabled={l.play === true ? true : false}
                         >
-                          <Edit fontSize="small" />
+                          <PlayArrow sx={{ fontSize: 30 }} />
                         </IconButton>
-                        <NavLink
-                          to={`/lottery/bet/${l._id}`}
-                          state={{
-                            lotteryId: l._id,
-                            hot_tees: l.hot_tee.toString(),
-                          }}
-                        >
-                          <IconButton
-                            size="small"
-                            sx={{ color: "black" }}
-                            // disabled={l.play === true ? true : false}
-                          >
-                            <AddSharp fontSize="small" />
-                          </IconButton>
-                        </NavLink>
-                      </>
-                    ) : (
-                      <>
-                        <IconButton
-                          size="small"
-                          sx={{ color: "black" }}
-                          onClick={(e) => deleteLottery(e, l._id)}
-                        >
-                          <Delete fontSize="small" />
-                        </IconButton>
-                        <NavLink
-                          to={`/lottery/bet/${l._id}`}
-                          state={{
-                            lotteryId: l._id,
-                            hot_tees: l.hot_tee.toString(),
-                          }}
-                        >
-                          <IconButton
-                            size="small"
-                            sx={{ color: "black" }}
-                            // disabled={l.play === true ? true : false}
-                          >
-                            <RemoveRedEye fontSize="small" />
-                          </IconButton>
-                        </NavLink>
-                      </>
-                    )}
+                      </NavLink>
+                    </Stack>
                   </Stack>
+                );
+              })}
+        </Stack>
+        <Table
+          // sx={{ minWidth: "max-content" }}
+          size="small"
+          aria-label="a dense table"
+          stickyHeader
+          border={1}
+          borderColor={grey[300]}
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell align="center" width={20}>
+                <Checkbox size="small" />
+              </TableCell>
+              <TableCell colSpan={3}>
+                <Stack direction={'row'} justifyContent='space-between'>
+
+                <Stack direction={"row"} height={"30px"} spacing={1}>
+                  <IconButton
+                    size="small"
+                    sx={{ color: "red" }}
+                    // onClick={(e) => deleteLottery(e, l._id)}
+                  >
+                    <Delete fontSize="small" />
+                  </IconButton>
                 </Stack>
-              );
-              // }
-            })
-            .reverse()}
+                <Stack direction={"row"} height={"30px"} spacing={1}>
+                  <SelectTime setDates={setDates} />
+                  <Button
+                    // sx={{ bgcolor: green[300] }}
+
+                    size="small"
+                    variant="contained"
+                    color={"success"}
+                    // onClick={searchReport}
+                  >
+                    <Search sx={{ fontWeight: "bold" }} color={"white"} />
+                  </Button>
+                </Stack>
+                </Stack>
+              </TableCell>
+              {/* <TableCell align="left">Date</TableCell>
+              <TableCell align="center">PoutTee</TableCell>
+              <TableCell align="center">Action</TableCell> */}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {lottery.length &&
+              lottery
+                .filter((lot) => lot.play === false)
+                .map((l) => {
+                  console.log(l._date);
+                  const date = new Date(l._date);
+                  console.log(l.getDate);
+                  // if (l.play === true) {
+                  return (
+                    <TableRow
+                    // direction={"row"}
+                    // display="flex"
+                    // justifyContent={"space-between"}
+                    // sx={{ borderRadius: 2 }}
+                    // boxShadow={1}
+                    // padding={1}
+                    >
+                      {/* { lottery.length && lottery.map(l=>)} */}
+                      <TableCell width={20} align="center">
+                        <Checkbox size="small" />
+                      </TableCell>
+                      <TableCell align="left">
+                        <Typography>
+                          {`${date.getDate()}/${
+                            date.getMonth() + 1
+                          }/${date.getFullYear()} `}
+                          {l._time}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography>
+                          {l.pout_tee !== null ? l.pout_tee : "-"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell
+                        // direction={"row"}
+                        align={"right"}
+                        // padding={1}
+                        // spacing={1}
+                      >
+                        <Stack
+                          direction={"row"}
+                          justifyContent={"space-around"}
+                        >
+                          <IconButton
+                            size="small"
+                            sx={{ color: "red" }}
+                            onClick={(e) => deleteLottery(e, l._id)}
+                          >
+                            <Delete fontSize="small" />
+                          </IconButton>
+                          <NavLink
+                            to={`/lottery/bet/${l._id}`}
+                            state={{
+                              lotteryId: l._id,
+                              hot_tees: l.hot_tee.toString(),
+                            }}
+                          >
+                            <IconButton
+                              size="small"
+                              sx={{ color: "green" }}
+                              // disabled={l.play === true ? true : false}
+                            >
+                              <RemoveRedEye fontSize="small" />
+                            </IconButton>
+                          </NavLink>
+                        </Stack>
+                        {/* )} */}
+                      </TableCell>
+                    </TableRow>
+                  );
+                  // }
+                })
+                .reverse()}
+          </TableBody>
+        </Table>
       </Stack>
       <LotteryCRUD
         loading={loading}
@@ -337,7 +381,7 @@ const Lottery = () => {
         lotCreate={lotCreate}
         setLotCreate={setLotCreate}
         setOpen={setOpen}
-TimerCtrl={TimerCtrl}
+        TimerCtrl={TimerCtrl}
         createLottery={createLottery}
         switchControll={switchControll}
         editLottery={editLottery}

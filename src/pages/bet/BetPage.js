@@ -488,6 +488,7 @@ const BetPage = () => {
             : K),
         ],
         remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -583,6 +584,7 @@ const BetPage = () => {
             : apu),
         ],
         remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -678,6 +680,7 @@ const BetPage = () => {
             : power),
         ],
         remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -773,6 +776,7 @@ const BetPage = () => {
             : brothers),
         ],
         remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -872,6 +876,7 @@ const BetPage = () => {
             : _Breaks),
         ],
         remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -970,6 +975,7 @@ const BetPage = () => {
             : _aper),
         ],
         remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -1068,6 +1074,7 @@ const BetPage = () => {
             : _forwardPate),
         ],
         remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -1166,6 +1173,7 @@ const BetPage = () => {
             : _backpate),
         ],
         remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -1259,6 +1267,7 @@ const BetPage = () => {
             : _r),
         ],
         remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -1354,6 +1363,7 @@ const BetPage = () => {
             : _masone),
         ],
         remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -1449,6 +1459,7 @@ const BetPage = () => {
             : _sonema),
         ],
         remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -1544,6 +1555,7 @@ const BetPage = () => {
             : _mama),
         ],
         remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -1639,6 +1651,7 @@ const BetPage = () => {
             : _sonesone),
         ],
         remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -1734,6 +1747,7 @@ const BetPage = () => {
             : _sonepu),
         ],
         remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -1829,6 +1843,7 @@ const BetPage = () => {
             : _mapu),
         ],
         remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -1932,7 +1947,7 @@ const BetPage = () => {
               )
             : _padatha),
         ],
-        remark: [
+        remark: [...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
