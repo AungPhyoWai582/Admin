@@ -12,8 +12,8 @@ import { blue, green, grey } from "@mui/material/colors";
 import React from "react";
 
 const BetListCom = ({ call, key, onClick, children, color }) => {
-  console.log(call);
-  console.log(children);
+  // console.log(call);
+  // console.log(children);
 
   return (
     <Stack
@@ -29,7 +29,7 @@ const BetListCom = ({ call, key, onClick, children, color }) => {
       <Typography
         marginX={0.3}
         width={"20%"}
-        textAlign={"right"}
+        textAlign={"left"}
         position={"inherit"}
         fontWeight={900}
         color={color ? `${color}` : "black"}
@@ -37,7 +37,7 @@ const BetListCom = ({ call, key, onClick, children, color }) => {
         {call.number}
       </Typography>
       {"|"}
-      <Typography marginX={0.3} width={"30%"} textAlign={"left"}>
+      <Typography marginX={0.3} width={"30%"} textAlign={"right"}>
         {call.amount}
       </Typography>
 

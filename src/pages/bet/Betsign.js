@@ -154,6 +154,7 @@ export const padatha = (onChange) => {
 };
 
 export const r = (onChange) => {
+  console.log(onChange.number)
   return [
     {
       number: `${onChange.number[0]}${onChange.number[1]}`,
@@ -276,7 +277,7 @@ export const mpu = (onChange) => {
   return result;
 };
 
-export const backpate = (onChange) => {
+export const forwardPate = (onChange) => {
   const result = [];
   const numb = [];
   Array.from(Array(10), (x, _) => x).map((arr, key) => {
@@ -289,7 +290,7 @@ export const backpate = (onChange) => {
   return result;
 };
 
-export const forwardPate = (onChange) => {
+export const backpate = (onChange) => {
   const result = [];
   const numb = [];
   Array.from(Array(10), (x, _) => x).map((arr, key) => {
@@ -300,4 +301,22 @@ export const forwardPate = (onChange) => {
   });
   console.log(result);
   return result;
+};
+
+export const checkPDT = (numbers) => {
+  let check = false;
+  const numberArr = [...numbers];
+  numberArr.map((num) => {
+    if (numberArr.filter((f) => f === num).length >= 2) {
+      check = true;
+    }
+  });
+  // for (let i = 0; i < numbers.length; i++) {
+  //   console.log(numbers[i], numbers[i + 1])
+  //   if(numberArr.filter(f=>f===numbers[i]).length>=2){
+  //     check=true;
+  //   }
+  // }
+  console.log(check);
+  return check;
 };
