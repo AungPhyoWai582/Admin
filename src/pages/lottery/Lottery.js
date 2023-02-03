@@ -37,6 +37,7 @@ import LotteryCRUD from "./LotteryCRUD";
 import moment from "moment";
 
 const Lottery = () => {
+  const [snackAlert, setSnackAlert] = useState(false);
   const [lottery, setLottery] = useState([]);
 
   const [lotCreate, setLotCreate] = useState({});
@@ -47,7 +48,7 @@ const Lottery = () => {
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("add");
   const [loading, setLoading] = useState(false);
-  const [TimerCtrl,setTimerCtrl] = useState(false);
+  const [TimerCtrl, setTimerCtrl] = useState(false);
 
   useEffect(() => {
     setPlay(true);
@@ -73,15 +74,15 @@ const Lottery = () => {
 
   const editLottery = (e, l) => {
     e.preventDefault();
-    setTimerCtrl(true)
+    setTimerCtrl(true);
     setLotCreate({
       id: l._id,
       pout_tee: l.pout_tee,
       hot_tee: l.hot_tee,
-      superhot_tee:l.superhot_tee,
+      superhot_tee: l.superhot_tee,
       _time: l._time,
       play: l.play,
-      Timer:l.Timer
+      Timer: l.Timer,
     });
     setOpen(true);
     setType("edit");
@@ -95,20 +96,23 @@ const Lottery = () => {
     for (const key in lotCreate) {
       console.log(lotCreate[key]);
     }
-    Axios.post(`/lotterys`, lotCreate)
-      .then((res) => {
-        setLotCreate({
-          pout_tee: null,
-          hot_tee: [],
-          superhot_tee:[],
-          time: null,
-          play: false,
-        });
-        setEffCtrl(true);
-        setOpen(false);
-        setLoading(false);
-      })
-      .catch((err) => Alert(err));
+    if (lotCreate._time !== null) {
+      Axios.post(`/lotterys`, lotCreate)
+        .then((res) => {
+          setLotCreate({
+            pout_tee: null,
+            hot_tee: [],
+            superhot_tee: [],
+            time: null,
+            play: false,
+          });
+          setEffCtrl(true);
+          setOpen(false);
+          setLoading(false);
+        })
+        .catch((err) => console.log(err));
+    }
+    setSnackAlert(true);
   };
 
   const updateLottery = () => {
@@ -130,13 +134,13 @@ const Lottery = () => {
           // ...lotCreate,
           pout_tee: null,
           hot_tee: [],
-          superhot_tee:[],
+          superhot_tee: [],
           _time: null,
           play: false,
         });
         setEffCtrl(true);
         setOpen(false);
-        setTimerCtrl(false)
+        setTimerCtrl(false);
         setType("add");
         setLoading(false);
       })
@@ -149,7 +153,7 @@ const Lottery = () => {
         setLotCreate({
           pout_tee: null,
           hot_tee: [],
-          superhot_tee:[],
+          superhot_tee: [],
           _time: null,
           play: false,
         });
@@ -159,18 +163,26 @@ const Lottery = () => {
       .catch((err) => Alert(err));
   };
 
+  const snackhandleOpen = () => {
+    setSnackAlert(true);
+  };
+
+  const snackhandleClose = () => {
+    setSnackAlert(false);
+  };
+
   // setTimeout(()=>{
-    
+
   // },timerFunc(lotCreate.Timer))
 
   const timerFunc = (Timer) => {
-    const start = 60*1000*Number(Timer);
+    const start = 60 * 1000 * Number(Timer);
     // const minuteReminder = start.minute() % Number(Timer);
     // console.log(minuteReminder)
     // const end = start.add(Number(Timer), "minutes").seconds()
 
-    console.log(start)
-    return Number(start)
+    console.log(start);
+    return Number(start);
   };
 
   // const showLotterys = lottery.filter(lot=>lot.play === play);
@@ -331,18 +343,23 @@ const Lottery = () => {
             .reverse()}
       </Stack>
       <LotteryCRUD
+        setLoading={setLoading}
         loading={loading}
         type={type}
         open={open}
         lotCreate={lotCreate}
         setLotCreate={setLotCreate}
         setOpen={setOpen}
-TimerCtrl={TimerCtrl}
+        TimerCtrl={TimerCtrl}
         createLottery={createLottery}
         switchControll={switchControll}
         editLottery={editLottery}
         updateLottery={updateLottery}
         AddLottery={AddLottery}
+        snackAlert={snackAlert}
+        setSnackAlert={setSnackAlert}
+        snackhandleClose={snackhandleClose}
+        snackhandleOpen={snackhandleOpen}
       />
     </>
   );
