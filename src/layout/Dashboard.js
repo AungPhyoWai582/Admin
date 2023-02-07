@@ -44,7 +44,7 @@ const Dashboard = () => {
     if (localStorage.getItem("access-token")) {
       let user = JSON.parse(localStorage.getItem("user-info"));
       console.log(user);
-      if (user.role === "Admin") {
+      if (user) {
         setAuthUser({
           token: localStorage.getItem("access-token"),
           authorize: true,
@@ -95,10 +95,10 @@ const Dashboard = () => {
         element={<AccountInfo authUser={authUser} />}
       />
       <Route path="/customer" element={<Customer />} />
-      <Route path="/masters/master_list" element={<MemberList />} />
-      <Route path="/masters/detail/:masterId" element={<MemberDetail />} />
+      <Route path="/users/users_list" element={<MemberList />} />
+      <Route path="/users/detail/:userId" element={<MemberDetail />} />
       <Route path="/print" element={<Print setPrintCtrl={setPrintCtrl} />} />
-      <Route path="/masters/master_create" element={<MemberCreate />} />{" "}
+      <Route path="/users/users_create" element={<MemberCreate />} />{" "}
     </Routes>
   );
   return (

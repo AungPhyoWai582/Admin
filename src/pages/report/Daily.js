@@ -18,7 +18,6 @@ import {
   TableBody,
   TableRow,
   IconButton,
-  Select,
   MenuItem,
   FormControl,
   InputLabel,
@@ -30,6 +29,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import SelectTime from "../../components/SelectTime";
 import { FormContext } from "antd/lib/form/context";
+import { Select } from "antd";
 
 const Daily = () => {
   const location = useLocation();
@@ -37,8 +37,8 @@ const Daily = () => {
   // console.log(lotteryId);
   const [dates, setDates] = useState([]);
   const [lager, setLager] = useState([]);
-  const [time, setTime] = useState(["AM", "PM"]);
-  const [timeselect, setTimeSelect] = useState();
+  // const [time, setTime] = useState(["AM", "PM"]);
+  const [timeselect, setTimeSelect] = useState("AM");
 
   const [reportOut, setReportOut] = useState({ totalOut: {}, calls: [] });
 
@@ -90,23 +90,13 @@ const Daily = () => {
         flexDirection="row"
         flexWrap="wrap"
         alignItems="center"
-        // direction={"row"}
-        // justifyContent="start"
-        // flexDirection={"row"}
-        // flexWrap="wrap"
-        // spacing={2}
-        // padding={1}
-        // paddingLeft={3}
-        // bgcolor={grey[300]}
-        // borderRadius={1}
-        // alignItems="center"
       >
         <FormControl
           sx={{ minWidth: 120, paddingRight: 2, height: "30px" }}
           size="small"
         >
-          <InputLabel id="demo-select-small">Time</InputLabel>
-          <Select
+          {/* <InputLabel id="demo-select-small">Time</InputLabel> */}
+          {/* <Select
             autoWidth={true}
             sx={{ height: "30px" }}
             // size="small"
@@ -120,7 +110,17 @@ const Daily = () => {
             {time.map((t) => (
               <MenuItem value={t}>{t}</MenuItem>
             ))}
-          </Select>
+          </Select> */}
+          <Select
+            defaultValue={timeselect}
+            style={{ width: 150 }}
+            onChange={(e) => setTimeSelect(e)}
+            options={[
+              // { value: "All", label: "All" },
+              { value: "AM", label: "AM" },
+              { value: "PM", label: "PM" },
+            ]}
+          />
         </FormControl>
         <Stack direction={"row"} height={"30px"} spacing={1}>
           <SelectTime setDates={setDates} />
@@ -164,11 +164,11 @@ const Daily = () => {
         </TableHead>
         <TableBody>
           {lager.length ? (
-            lager.map((lg) => {
+            lager.map((lg,key) => {
               // const date = new Date(lg.date);
               return (
-                <>
-                  <TableRow>
+              
+                  <TableRow key={key}>
                     <TableCell sx={{ overflow: "scroll/" }}>
                       {lg.date}
                     </TableCell>
@@ -190,7 +190,7 @@ const Daily = () => {
                       </NavLink>
                     </TableCell>
                   </TableRow>
-                </>
+              
               );
             })
           ) : (

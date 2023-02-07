@@ -17,12 +17,12 @@ import { green, grey, red, teal } from "@mui/material/colors";
 import React, { useState } from "react";
 import Axios from "../../shared/Axios";
 import Customer from "./Customer";
-import Master from "./Master";
+import User from "./User";
 
 const MemberCreate = ({ userinfo }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
-  const [master, setMaster] = useState({
+  const [user, setUser] = useState({
     username: "",
     name: "",
     password: "",
@@ -54,8 +54,8 @@ const MemberCreate = ({ userinfo }) => {
 
   const handleChange = (event) => {
     // setChecked(event.target.checked);
-    setMaster({
-      ...master,
+    setUser({
+      ...user,
       accLimit: event.target.checked,
     });
   };
@@ -68,8 +68,8 @@ const MemberCreate = ({ userinfo }) => {
     let { name, value } = e.target;
     console.log(name, value);
     // console.log(e.value);
-    setMaster({
-      ...master,
+    setUser({
+      ...user,
       [name]: value,
     });
   };
@@ -90,16 +90,16 @@ const MemberCreate = ({ userinfo }) => {
 
   const onSelectHandler = (e, name, value) => {
     // let { value } = val.label;
-    setMaster({
-      ...master,
+    setUser({
+      ...user,
       [name]: value.label,
     });
   };
 
   const createMaster = () => {
     console.log("Create Master");
-    console.log(master);
-    Axios.post("masters", master, {
+    console.log(user);
+    Axios.post("users", user, {
       headers: {
         authorization: `Bearer ` + localStorage.getItem("access-token"),
       },
@@ -107,7 +107,7 @@ const MemberCreate = ({ userinfo }) => {
       .then((response) => {
         console.log(response.data);
         setSuccess(true);
-        setMaster({
+        setUser({
           username: "",
           name: "",
           password: "",
@@ -183,8 +183,8 @@ const MemberCreate = ({ userinfo }) => {
           </RadioGroup>
         </Stack>
         {in_out === "In" && (
-          <Master
-            master={master}
+          <User
+            user={user}
             success={success}
             setSuccess={setSuccess}
             error={error}

@@ -16,8 +16,8 @@ import {
 import { green, grey, red, teal } from "@mui/material/colors";
 import React, { useState } from "react";
 
-const Master = ({
-  master,
+const User = ({
+  user,
   success,
   setSuccess,
   error,
@@ -28,6 +28,16 @@ const Master = ({
   handleChange,
   createMaster,
 }) => {
+  let name ;
+  if( JSON.parse(localStorage.getItem('user-info')).role==='Admin'){
+    name = 'Master'
+  }
+  if( JSON.parse(localStorage.getItem('user-info')).role==='Master'){
+    name = 'Agent'
+  }
+  if( JSON.parse(localStorage.getItem('user-info')).role==='Agent'){
+    name = 'Customer'
+  }
   return (
     <React.Fragment>
       <Stack
@@ -41,7 +51,7 @@ const Master = ({
         // color="white"
         // bgcolor={teal[500]}
       >
-        Master {`Create`}
+         {`${name} Create`}
       </Stack>
       <Stack>
         {success && (
@@ -65,7 +75,7 @@ const Master = ({
               </IconButton>
             }
           >
-            Master create successfully
+            {name} create successfully
           </Alert>
         )}
         {error && (
@@ -110,7 +120,7 @@ const Master = ({
                   size="small"
                   name="username"
                   sx={{ bgcolor: teal[50] }}
-                  value={master.username}
+                  value={user.username}
                   label="username"
                   // value={userinfo.username}
                   onChange={onChangeHandler}
@@ -128,7 +138,7 @@ const Master = ({
                   name="name"
                   label="name"
                   sx={{ bgcolor: teal[50] }}
-                  value={master.name}
+                  value={user.name}
                   onChange={onChangeHandler}
                 />
              
@@ -144,7 +154,7 @@ const Master = ({
                   name="password"
                   label={"password"}
                   sx={{ bgcolor: teal[50] }}
-                  value={master.password.toString()}
+                  value={user.password.toString()}
                   onChange={onChangeHandler}
                 />
               
@@ -160,7 +170,7 @@ const Master = ({
                   name="phone"
                   label="phone"
                   sx={{ bgcolor: teal[50] }}
-                  value={master.phone}
+                  value={user.phone}
                   onChange={onChangeHandler}
                 />
              
@@ -176,7 +186,7 @@ const Master = ({
                   name="commission"
                   label="commission"
                   sx={{ bgcolor: teal[50] }}
-                  value={master.commission.toString()}
+                  value={user.commission.toString()}
                   onChange={onChangeHandler}
                 />
              
@@ -194,7 +204,7 @@ const Master = ({
                   name="twoDz"
                   label="twoDz"
                   sx={{ bgcolor: teal[50] }}
-                  value={master.twoDz.toString()}
+                  value={user.twoDz.toString()}
                   onChange={onChangeHandler}
                 />
               
@@ -210,7 +220,7 @@ const Master = ({
                   name="lager_break"
                   label="lager_break"
                   sx={{ bgcolor: teal[50] }}
-                  value={master.lager_break.toString()}
+                  value={user.lager_break.toString()}
                   onChange={onChangeHandler}
                 />
              
@@ -227,7 +237,7 @@ const Master = ({
                   name="hot_limit"
                   label="hot_limit"
                   sx={{ bgcolor: teal[50] }}
-                  value={master.hot_limit.toString()}
+                  value={user.hot_limit.toString()}
                   onChange={onChangeHandler}
                 />
              
@@ -244,7 +254,7 @@ const Master = ({
                   name="superhot_limit"
                   label="superhot_limit"
                   sx={{ bgcolor: teal[50] }}
-                  value={master.superhot_limit.toString()}
+                  value={user.superhot_limit.toString()}
                   onChange={onChangeHandler}
                 />
              
@@ -273,7 +283,7 @@ const Master = ({
                     />
                   )}
                   name="divider"
-                  value={master.divider}
+                  value={user.divider}
                   onChange={(e, value) => onSelectHandler(e, "divider", value)}
                 />
               }
@@ -297,16 +307,16 @@ const Master = ({
             <Stack direction={"row"} alignItems={"center"}>
               <Checkbox
                 color="success"
-                checked={master.accLimit}
+                checked={user.accLimit}
                 onChange={handleChange}
                 //  inputProps={{ "aria-label": "controlled" }}
               />
               <TextField
-                disabled={master.accLimit ? false : true}
+                disabled={user.accLimit ? false : true}
                 size="small"
                 variant="outlined"
-                value={master.acc_limit_created}
-                sx={{ bgcolor: master.accLimit ? teal[50] : grey[300] }}
+                value={user.acc_limit_created}
+                sx={{ bgcolor: user.accLimit ? teal[50] : grey[300] }}
                 color={"secondary"}
                 name="acc_limit_created"
                 onChange={onChangeHandler}
@@ -331,7 +341,7 @@ const Master = ({
           >
             Cancle
           </Button>
-          {master !== "" ? (
+          {user !== "" ? (
             <Button
               size="small"
               variant={"contained"}
@@ -357,4 +367,4 @@ const Master = ({
   );
 };
 
-export default Master;
+export default User;

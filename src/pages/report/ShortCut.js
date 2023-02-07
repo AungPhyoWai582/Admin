@@ -47,7 +47,7 @@ const ShortCup = () => {
   const location = useLocation();
 
   const [masters, setMasters] = useState([]);
-  const [autoCompleteValue, setAutoCompleteValue] = useState();
+  const [autoCompleteValue, setAutoCompleteValue] = useState("All");
 
   const [reportIn, setReportIn] = useState({ me: {}, memberReport: [] });
   const [reportOut, setReportOut] = useState({ totalOut: {}, calls: [] });
@@ -69,7 +69,7 @@ const ShortCup = () => {
 
   const [customer, setCustomer] = React.useState([]);
   const [time, setTime] = useState(["All", "AM", "PM"]);
-  const [timeselect, setTimeSelect] = useState();
+  const [timeselect, setTimeSelect] = useState("All");
   const [selectChoice, setSelectChoice] = useState();
   const [dates, setDates] = useState([]);
 
@@ -77,21 +77,21 @@ const ShortCup = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    Axios.get(`/masters`, {
+    Axios.get(`/users`, {
       headers: {
         authorization: `Bearer ` + localStorage.getItem("access-token"),
       },
     }).then((res) => {
-      const masters = res.data.data;
+      const data = res.data.data;
       // console.log(agents);
 
-      if (masters) {
+      if (data) {
         // setMasters([...masters]);
-        const ms = masters.map((ms) => {
+        const d = data.map((ms) => {
           return { name: ms.name, value: ms._id };
         });
 
-        setCustomer([{ name: "All", value: "All" }, ...ms]);
+        setCustomer([{ name: "All", value: "All" }, ...d]);
 
         // setAutoCompleteValue('All');
       }
@@ -208,7 +208,7 @@ const ShortCup = () => {
           {/* <Stack direction={"row"} paddingLeft={{ xs: 0, sm: 0, md: 2, xl: 2 }}> */}
           <SelectTime setDates={setDates} />
           <Select
-            defaultValue="All"
+            defaultValue={timeselect}
             style={{ width: 150 }}
             onChange={(e) => setTimeSelect(e)}
             options={[
@@ -219,7 +219,7 @@ const ShortCup = () => {
           />
         
           <Select
-            defaultValue="All"
+            defaultValue={autoCompleteValue}
             style={{ width: 150}}
             onChange={(e)=>setAutoCompleteValue(e)}
             options={[
@@ -284,9 +284,10 @@ const ShortCup = () => {
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
               value={InOutControl}
+              row
               onChange={(e) => setInOutControl(e.target.value)}
             >
-              <Stack direction={"row"}>
+              {/* <Stack direction={"row"}> */}
                 <FormControlLabel
                   value="In"
                   control={<Radio size="small" color="success" />}
@@ -305,7 +306,7 @@ const ShortCup = () => {
                   label="Main"
                   labelPlacement="start"
                 />
-              </Stack>
+              {/* </Stack> */}
             </RadioGroup>
           </FormControl>
           <Button

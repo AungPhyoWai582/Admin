@@ -101,6 +101,16 @@ import Print from "../../components/Print";
 
 const BetPage = () => {
   // For input refs
+  let member;
+  if (JSON.parse(localStorage.getItem("user-info")).role === "Admin") {
+    member = "master";
+  }
+  if (JSON.parse(localStorage.getItem("user-info")).role === "Master") {
+    member = "agent";
+  }
+  if (JSON.parse(localStorage.getItem("user-info")).role === "Agent") {
+    member = "customer";
+  }
   const textFieldForNumber = useRef(null);
   const textFieldForAmount = useRef(null);
 
@@ -160,7 +170,7 @@ const BetPage = () => {
   });
   // const [callList, setCallList] = useState([]);
 
-  const [masters, setMasters] = useState([]);
+  const [users, setUsers] = useState([]);
 
   // const showCalls = [];
 
@@ -215,7 +225,7 @@ const BetPage = () => {
   // in outt
   const [in_out, set_in_out] = useState("In");
   const [customers, setCustomers] = useState([]);
-  const [cusval, setCusval] = useState();
+  const [cusval, setCusval] = useState(null);
   const [Timer, setTimer] = useState("");
   const [singleCusCall, setSingleCusCall] = useState({
     Lagnumbers: "",
@@ -263,23 +273,23 @@ const BetPage = () => {
     // setBreak();
 
     if (in_out === "In") {
-      Axios.get(`/masters`, {
+      Axios.get(`/users`, {
         headers: {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       })
 
         .then((res) => {
-          if (masters) {
-            const masters = res.data.data;
-            setMasters([...masters]);
-            console.log(masters);
-            // setCalllistctrl(false);
-            if (masters) {
-              setAutoCompleteValue(masters[0]);
-            }
-            console.log(autoCompleteValue);
+          // if (masters) {
+          const data = res.data.data;
+          setUsers([...data]);
+          console.log(data);
+          // setCalllistctrl(false);
+          if (data) {
+            setAutoCompleteValue(data[0]);
           }
+          console.log(autoCompleteValue);
+          // }
         })
         .catch((err) => console.log(err));
     }
@@ -289,6 +299,7 @@ const BetPage = () => {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
+        console.log(res.data)
         // alert(res.data)
         setCustomers(res.data);
         setCusval(res.data[0]);
@@ -359,8 +370,6 @@ const BetPage = () => {
   console.log(Timer);
 
   console.log(autoCompleteValue);
-
-  console.log(moment(localStorage.getItem("")));
 
   // out Customer select
   const OnSelect = (e) => {
@@ -1859,8 +1868,7 @@ const BetPage = () => {
     if (
       (onchange.number.length >= 3 &&
         onchange.number.length <= 6 &&
-        !isNaN(Number(onchange.number))) // isNan(x) is return notnumber
-        ||
+        !isNaN(Number(onchange.number))) || // isNan(x) is return notnumber
       (onchange.number.length >= 3 &&
         onchange.number.length <= 5 &&
         onchange.number.endsWith("*"))
@@ -1947,7 +1955,8 @@ const BetPage = () => {
               )
             : _padatha),
         ],
-        remark: [...call.remark,
+        remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -1960,7 +1969,7 @@ const BetPage = () => {
     }
 
     // talone chin
-    if(onchange.number.length === 2 && !isNaN(Number(onchange.number))){
+    if (onchange.number.length === 2 && !isNaN(Number(onchange.number))) {
       if (hot.includes(onchange.number)) {
         console.log(call.numbers);
         const hotLimitCalculate = catchHotLimit(
@@ -2005,7 +2014,6 @@ const BetPage = () => {
       setEditCtlBtn(false);
       setCallandBetlistctleff(false);
       setAutoCompleteCtrl(false);
-  
     }
   };
   // console.log(mastercallcrud);
@@ -2053,24 +2061,34 @@ const BetPage = () => {
     }
 
     if (in_out === "In") {
-      console.log({
-        master: autoCompleteValue._id,
-        numbers: call.numbers,
-        remark: call.remark,
-      });
-      Axios.post(
-        `/call/${lotteryId}`,
-        {
+      let obj;
+      if (JSON.parse(localStorage.getItem("user-info")).role === "Admin") {
+        obj = {
           master: autoCompleteValue._id,
           numbers: call.numbers,
           remark: call.remark,
+        };
+      }
+      if (JSON.parse(localStorage.getItem("user-info")).role === "Master") {
+        obj = {
+          agent: autoCompleteValue._id,
+          numbers: call.numbers,
+          remark: call.remark,
+        };
+      }
+      if (JSON.parse(localStorage.getItem("user-info")).role === "Agent") {
+        obj = {
+          customer: autoCompleteValue._id,
+          numbers: call.numbers,
+          remark: call.remark,
+        };
+      }
+
+      Axios.post(`/call/${lotteryId}`, obj, {
+        headers: {
+          authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
-        {
-          headers: {
-            authorization: `Bearer ` + localStorage.getItem("access-token"),
-          },
-        }
-      )
+      })
         .then((res) => {
           console.log(res.data.data);
           setCall({
@@ -2315,7 +2333,7 @@ const BetPage = () => {
 
   // console.log(cusval);
 
-  const [value, setValue] = React.useState(masters);
+  const [value, setValue] = React.useState(users);
   const [inputValue, setInputValue] = React.useState("");
   //DoubleClick
   const doubleClick = (e, cal, key) => {
@@ -2488,7 +2506,7 @@ const BetPage = () => {
           {(in_out === "In" && (
             <Autocomplete
               size="small"
-              options={masters}
+              options={users}
               sx={{ width: 150 }}
               getOptionLabel={(cus) => `${cus.username}`}
               onChange={(e, value) => {
@@ -2503,9 +2521,10 @@ const BetPage = () => {
                 <TextField
                   {...params}
                   sx={{ fontSize: 8 }}
-                  label={`${
-                    autoCompleteValue ? autoCompleteValue.username : "Agent"
-                  }`}
+                  label="Members"
+                  // label={`${
+                  //   autoCompleteValue ? autoCompleteValue.username : "Agent"
+                  // }`}
                   size="small"
                   color={"success"}
                   // defaultValue={autoCompleteValue}
@@ -3026,7 +3045,7 @@ const BetPage = () => {
                   mastercalls
                     .filter(
                       (ms, key) =>
-                        ms.master._id.toString() ==
+                        ms[member]._id.toString() ==
                         autoCompleteValue._id.toString()
                     )
                     .map((cal, key) => {
@@ -3103,7 +3122,7 @@ const BetPage = () => {
               : masterOutCalls
                   .filter(
                     (mso, key) =>
-                      mso.customer._id.toString() === cusval._id.toString()
+                     cusval!==null&& mso.customer._id.toString() === cusval._id.toString()
                   )
                   .map((cal, key) => {
                     return (
