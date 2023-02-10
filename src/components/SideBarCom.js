@@ -37,7 +37,7 @@ import BuildCircleIcon from "@mui/icons-material/BuildCircle";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { green, grey, teal } from "@mui/material/colors";
 
-const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
+const SideBarCom = ({ setHandleOpen, handdleopen, name,role, setAuthUser }) => {
   // console.log(name);
   const logout = () => {
     console.log("LOGOUT");
@@ -118,14 +118,14 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
               <ListItemIcon>
                 <PeopleAltIcon />
               </ListItemIcon>
-              <ListItemText primary="Masters" />
+              <ListItemText primary={"Members"} />
               {subopen ? <KeyboardArrowDown /> : <KeyboardArrowUp />}
             </ListItemButton>
             <Collapse in={!subopen} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <NavLink
                   style={{ textDecoration: "none", color: "inherit" }}
-                  to="/masters/master_create"
+                  to="/users/users_create"
                   onClick={() => setHandleOpen(false)}
                 >
                   <ListItemButton sx={{ pl: 4 }}>
@@ -138,7 +138,7 @@ const SideBarCom = ({ setHandleOpen, handdleopen, name, setAuthUser }) => {
                 </NavLink>
                 <NavLink
                   style={{ textDecoration: "none", color: "inherit" }}
-                  to="/masters/master_list"
+                  to="/users/users_list"
                   onClick={() => setHandleOpen(false)}
                 >
                   <ListItemButton sx={{ pl: 4 }}>

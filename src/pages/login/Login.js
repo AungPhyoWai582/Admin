@@ -48,7 +48,7 @@ const Login = ({ authUser, setAuthUser }) => {
     Axios.post("/auth/login", user)
       .then((response) => {
         console.log(response.data.data.role);
-        if (response.data.data.role === "Admin") {
+        // if (response.data.data.role === "Admin") {
           setAuthUser({
             token: response.data.token,
             authorize: true,
@@ -57,9 +57,9 @@ const Login = ({ authUser, setAuthUser }) => {
           localStorage.setItem("access-token", response.data.token);
           //   localStorage.setItem("auth", true);
           localStorage.setItem("user-info", JSON.stringify(response.data.data));
-        } else {
-          setAuthUser({ token: null, authorize: false, user_info: {} });
-        }
+        // } else {
+        //   setAuthUser({ token: null, authorize: false, user_info: {} });
+        // }
       })
       .catch((err) => {
         console.log(err.response);

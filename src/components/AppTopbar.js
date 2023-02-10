@@ -38,7 +38,7 @@ const AppTopbar = ({ name, authUser, setAuthUser }) => {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              {authUser.user_info.username}
+              {authUser.user_info.username} | {authUser.user_info.role}
             </Typography>
             <Clocks />
           </Toolbar>
@@ -46,6 +46,7 @@ const AppTopbar = ({ name, authUser, setAuthUser }) => {
       </Box>
       <SideBarCom
         name={authUser.user_info.username}
+        role={authUser.user_info.role}
         setHandleOpen={setHandleOpen}
         handdleopen={handdleopen}
         setAuthUser={setAuthUser}

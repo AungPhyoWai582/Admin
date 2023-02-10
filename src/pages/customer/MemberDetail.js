@@ -43,7 +43,7 @@ import Tabbar from "../../components/Tabbar";
 import moment from "moment";
 
 const MemberDetail = () => {
-  const { masterId } = useParams();
+  const { userId } = useParams();
   const [user, setUser] = useState({});
   const [memberView, setmemberView] = useState({
     inTotal: 0,
@@ -69,7 +69,7 @@ const MemberDetail = () => {
   const [errorAlt, setErrorAlt] = useState({ status: false, msg: "" });
 
   useEffect(() => {
-    Axios.get(`/masters/${masterId}`, {
+    Axios.get(`/users/${userId}`, {
       headers: {
         authorization: `Bearer ` + localStorage.getItem("access-token"),
       },
@@ -90,7 +90,7 @@ const MemberDetail = () => {
     //   // setCusval(res.data[0]);
     // });
 
-    Axios.get(`/admin/member-view/${masterId}`, {
+    Axios.get(`/admin/member-view/${userId}`, {
       headers: {
         authorization: `Bearer ` + localStorage.getItem("access-token"),
       },
@@ -158,7 +158,7 @@ const MemberDetail = () => {
 
   const saveUpdate = () => {
     console.log(updateInfo);
-    Axios.put(`/masters/${user._id}`, updateInfo, {
+    Axios.put(`/users/${user._id}`, updateInfo, {
       headers: {
         authorization: `Bearer ` + localStorage.getItem("access-token"),
       },
@@ -179,7 +179,7 @@ const MemberDetail = () => {
       obj.suspendAt=moment(Date.now()).format('YYYY-MM-DD')
     }
     console.log(obj);
-    Axios.put(`/masters/${user._id}`, obj, {
+    Axios.put(`/users/${user._id}`, obj, {
       headers: {
         authorization: `Bearer ` + localStorage.getItem("access-token"),
       },

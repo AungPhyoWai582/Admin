@@ -10,18 +10,23 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
   TableRow,
   TextField,
   Typography,
 } from "@mui/material";
-import { teal } from "@mui/material/colors";
+import { Select } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import Axios from "../../shared/Axios";
+import PaginateComponent from "../../components/PaginateComponent";
 
 const MemberList = () => {
   // const UserContent = useContext(Context);
+  // in/out state and useEff control state
+  const [in_out, set_in_out] = useState("In");
+  const [ctrlEffect, setCtrlEffect] = useState(true);
 
   const [users, setUsers] = useState({
     count: null,
@@ -33,15 +38,16 @@ const MemberList = () => {
     data: null,
   });
 
-  // const [page, setPage] = useState(1);
-  // const [rowperpage, setRowPerPage] = useState(5);
-  const [in_out, set_in_out] = useState("In");
-  const [ctrlEffect, setCtrlEffect] = useState(true);
+  // For pagination
+  const [inPage, setInPage] = useState(1);
+  const [inLimit, setInLimit] = useState(5);
+  const [outPage, setOutPage] = useState(1);
+  const [outLimit, setOutLimit] = useState(5);
 
   useEffect(() => {
     console.log("Start");
     if (in_out === "In") {
-      Axios.get(`masters`, {
+      Axios.get(`users?page=${inPage}&limit=${inLimit}`, {
         headers: {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
@@ -57,32 +63,68 @@ const MemberList = () => {
     }
 
     if (in_out === "Out") {
-      Axios.get(`customers`, {
+      Axios.get(`customers?page=${outPage}&limit=${outLimit}`, {
         headers: {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
         console.log(res.data);
         setCustomers({
-          count: res.data.length,
-          data: res.data,
+          count: res.data.data.length,
+          data: res.data.data,
         });
 
         setCtrlEffect(false);
       });
     }
   }, [ctrlEffect]);
-  console.log(users);
-  const getUser = (e) => {
-    e.preventDefault();
-    console.log("API REQUEST");
-  };
-  // console.log(page);
+
   // console.log(rowperpage);
   const [inputsearch, setInputsearch] = useState("");
+
+  // In users pagination
+  const handleInChangePage = (event, value) => {
+    console.log(value);
+    setInPage(value);
+    setCtrlEffect(true);
+  };
+
+  const handleInChangeRowsPerPage = (event) => {
+    setInLimit(parseInt(event));
+    setInPage(1);
+    setCtrlEffect(true);
+  };
+
+  /****************************************************************** */
+  // Out customers pagination
+  const handleOutChangePage = (event, value) => {
+    console.log(value);
+    setOutPage(value);
+    setCtrlEffect(true);
+  };
+
+  const handleOutChangeRowsPerPage = (event) => {
+    setOutLimit(parseInt(event));
+    setOutPage(1);
+    setCtrlEffect(true);
+  };
+
+  console.log(customers);
+
+  /************************************************** */
+
   return (
     <Paper sx={{ padding: "1", height: "100%" }}>
-      <Stack direction={"row"} padding={1}>
+      <Stack direction={"row"} justifyContent='space-between' alignItems={'center'} padding={1}>
+        <TextField
+          size={"small"}
+          variant="standard"
+          label={"Search"}
+          color={"success"}
+          sx={{ width: "40%" }}
+          onChange={(e) => setInputsearch(e.target.value)}
+        />
+
         <RadioGroup
           row
           aria-labelledby="demo-row-radio-buttons-group-label"
@@ -106,13 +148,7 @@ const MemberList = () => {
         </RadioGroup>
       </Stack>
       {/* <Stack direction={"row"} padding={1}>
-        <TextField
-          size={"small"}
-          label={"Search"}
-          color={"success"}
-          sx={{ width: "40%" }}
-          onChange={(e) => setInputsearch(e.target.value)}
-        />
+        
       </Stack> */}
       {in_out === "In" && (
         <Stack padding={1}>
@@ -141,10 +177,8 @@ const MemberList = () => {
                         user.name
                           .toLowerCase()
                           .includes(inputsearch.toLowerCase())
-                        // user.divider.includes(inputsearch)
                       );
                     })
-                    // .slice(page * rowperpage, page * rowperpage + rowperpage)
                     .map((user, key) => (
                       <TableRow sx={{ height: "5px" }}>
                         <TableCell>
@@ -157,7 +191,7 @@ const MemberList = () => {
                         <TableCell align="right">{user.twoDZ}</TableCell>
                         <TableCell align="right">
                           <NavLink
-                            to={`/masters/detail/${user._id}`}
+                            to={`/users/detail/${user._id}`}
                             state={{ user: user }}
                           >
                             <IconButton
@@ -172,8 +206,17 @@ const MemberList = () => {
                       </TableRow>
                     ))}
               </TableBody>
+              <TableFooter></TableFooter>
             </Table>
           </TableContainer>
+          <PaginateComponent
+            color="success"
+            page={inPage}
+            count={users.count}
+            handleChangePage={handleInChangePage}
+            handleChangeRowsPerPage={handleInChangeRowsPerPage}
+            rowsPerPage={inLimit}
+          />
         </Stack>
       )}
 
@@ -227,6 +270,14 @@ const MemberList = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <PaginateComponent
+            color="success"
+            page={outPage}
+            count={customers.count}
+            handleChangePage={handleOutChangePage}
+            handleChangeRowsPerPage={handleOutChangeRowsPerPage}
+            rowsPerPage={outLimit}
+          />
         </Stack>
       )}
       {/* <Stack direction={"row"} justifyContent={"end"} padding={1}>

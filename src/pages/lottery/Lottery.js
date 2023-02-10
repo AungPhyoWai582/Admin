@@ -58,9 +58,33 @@ const Lottery = () => {
   const [type, setType] = useState("add");
   const [loading, setLoading] = useState(false);
   const [TimerCtrl, setTimerCtrl] = useState(false);
+  const [lotPermission, setLotPermission] = useState({
+    create: false,
+    checked: false,
+    edit: false,
+    delete: false,
+  });
 
   useEffect(() => {
     setPlay(true);
+    if (JSON.parse(localStorage.getItem("user-info")).role === "Admin") {
+      setLotPermission({
+        ...lotPermission,
+        create: true,
+        checked: true,
+        edit: true,
+        delete: true,
+      });
+    } else {
+      setLotPermission({
+        ...lotPermission,
+        create: false,
+        checked: false,
+        edit: false,
+        delete: false,
+      });
+    }
+
     Axios.get("/lotterys")
       .then((res) => {
         console.log(res.data.lotteries);
@@ -88,90 +112,98 @@ const Lottery = () => {
 
   const editLottery = (e, l) => {
     e.preventDefault();
-    setTimerCtrl(true);
-    setLotCreate({
-      id: l._id,
-      pout_tee: l.pout_tee,
-      hot_tee: l.hot_tee,
-      superhot_tee: l.superhot_tee,
-      _time: l._time,
-      play: l.play,
-      Timer: l.Timer,
-    });
-    setOpen(true);
-    setType("edit");
+    if (lotPermission.edit === true) {
+      setTimerCtrl(true);
+      setLotCreate({
+        id: l._id,
+        pout_tee: l.pout_tee,
+        hot_tee: l.hot_tee,
+        superhot_tee: l.superhot_tee,
+        _time: l._time,
+        play: l.play,
+        Timer: l.Timer,
+      });
+      setOpen(true);
+      setType("edit");
+    }
   };
 
   const AddLottery = () => {
-    setLoading(true);
-    console.log(lotCreate);
-    let obj = {};
+    if (lotPermission.create === true) {
+      setLoading(true);
+      console.log(lotCreate);
+      let obj = {};
 
-    for (const key in lotCreate) {
-      console.log(lotCreate[key]);
+      for (const key in lotCreate) {
+        console.log(lotCreate[key]);
+      }
+      Axios.post(`/lotterys`, lotCreate)
+        .then((res) => {
+          setLotCreate({
+            pout_tee: null,
+            hot_tee: [],
+            superhot_tee: [],
+            time: null,
+            play: false,
+          });
+          setEffCtrl(true);
+          setOpen(false);
+          setLoading(false);
+        })
+        .catch((err) => Alert(err));
     }
-    Axios.post(`/lotterys`, lotCreate)
-      .then((res) => {
-        setLotCreate({
-          pout_tee: null,
-          hot_tee: [],
-          superhot_tee: [],
-          time: null,
-          play: false,
-        });
-        setEffCtrl(true);
-        setOpen(false);
-        setLoading(false);
-      })
-      .catch((err) => Alert(err));
   };
 
   const updateLottery = () => {
-    setLoading(true);
+    if (lotPermission.edit === true) {
+      setLoading(true);
 
-    // if(lotCreate.Timer != 0){
-    //   console.log('Timer')
-    //   const endTime = timerFunc(lotCreate.Timer);
-    //   localStorage.setItem('Timer',endTime);
-    // }
-    // if(lotCreate.pout_tee){
-    //   setLotCreate({...lotCreate,play:false})
-    // }
-    // console.log(lotCreate);
+      // if(lotCreate.Timer != 0){
+      //   console.log('Timer')
+      //   const endTime = timerFunc(lotCreate.Timer);
+      //   localStorage.setItem('Timer',endTime);
+      // }
+      // if(lotCreate.pout_tee){
+      //   setLotCreate({...lotCreate,play:false})
+      // }
+      // console.log(lotCreate);
 
-    Axios.put(`/lotterys/${lotCreate.id}`, lotCreate)
-      .then((res) => {
-        setLotCreate({
-          // ...lotCreate,
-          pout_tee: null,
-          hot_tee: [],
-          superhot_tee: [],
-          _time: null,
-          play: false,
-        });
-        setEffCtrl(true);
-        setOpen(false);
-        setTimerCtrl(false);
-        setType("add");
-        setLoading(false);
-      })
-      .catch((err) => Alert(err));
+      Axios.put(`/lotterys/${lotCreate.id}`, lotCreate)
+        .then((res) => {
+          setLotCreate({
+            // ...lotCreate,
+            pout_tee: null,
+            hot_tee: [],
+            superhot_tee: [],
+            _time: null,
+            play: false,
+          });
+          setEffCtrl(true);
+          setOpen(false);
+          setTimerCtrl(false);
+          setType("add");
+          setLoading(false);
+        })
+        .catch((err) => Alert(err));
+    }
   };
 
   const deleteLottery = (e, id) => {
-    Axios.delete(`/lotterys/${id}`)
-      .then((res) => {
-        setLotCreate({
-          pout_tee: null,
-          hot_tee: [],
-          superhot_tee: [],
-          _time: null,
-          play: false,
-        });
-        console.log(res.data);
-        setEffCtrl(true);
-      })
-      .catch((err) => Alert(err));
+    if (lotPermission.delete === true) {
+      Axios.delete(`/lotterys/${id}`)
+        .then((res) => {
+          setLotCreate({
+            pout_tee: null,
+            hot_tee: [],
+            superhot_tee: [],
+            _time: null,
+            play: false,
+          });
+          console.log(res.data);
+          setEffCtrl(true);
+        })
+        .catch((err) => Alert(err));
+    }
   };
 
   const snackhandleOpen = () => {
@@ -202,6 +234,7 @@ const Lottery = () => {
     <>
       <Stack spacing={1} padding={1}>
         <Stack padding={1} direction={"row"}>
+<<<<<<< HEAD
           <IconButton
             size="small"
             color="secondary"
@@ -258,6 +291,71 @@ const Lottery = () => {
                         <PlayArrow sx={{ fontSize: 30 }} />
                       </IconButton>
                     </NavLink>
+=======
+          {lotPermission.create === true && (
+            <IconButton
+              size="small"
+              color="secondary"
+              sx={{ fontWeight: "bold" }}
+              onClick={() => {
+                setType("add");
+                setOpen(true);
+              }}
+            >
+              <ListItemText primary={"Lottery Create"} />
+              <Add />
+            </IconButton>
+          )}
+          {lottery.length &&
+            lottery
+              .filter((lot) => lot.play === true)
+              .map((l) => {
+                console.log(l._date);
+                const date = new Date(l._date);
+                console.log(l.getDate);
+                return (
+                  <Stack
+                    width={"100%"}
+                    direction={"row"}
+                    justifyContent="space-between"
+                    boxShadow={1}
+                    padding={1}
+                    borderRadius={1}
+                    alignItems="center"
+                  >
+                    <Typography>
+                      {`${date.getDate()}/${
+                        date.getMonth() + 1
+                      }/${date.getFullYear()} `}
+                      {l._time}
+                    </Typography>
+                    <Stack direction="row">
+                      {lotPermission.edit === true && (
+                        <IconButton
+                          size="small"
+                          sx={{ color: "blue" }}
+                          onClick={(e) => editLottery(e, l)}
+                        >
+                          <Edit fontSize="small" />
+                        </IconButton>
+                      )}
+                      <NavLink
+                        to={`/lottery/bet/${l._id}`}
+                        state={{
+                          lotteryId: l._id,
+                          hot_tees: l.hot_tee.toString(),
+                        }}
+                      >
+                        <IconButton
+                          size="small"
+                          sx={{ color: "green", ":hover": { color: "red" } }}
+                          // disabled={l.play === true ? true : false}
+                        >
+                          <PlayArrow sx={{ fontSize: 30 }} />
+                        </IconButton>
+                      </NavLink>
+                    </Stack>
+>>>>>>> 20c517cbbfd6ba6896fa4af0e6e2ac427c6c94f2
                   </Stack>
                 </Stack>
               );
@@ -274,11 +372,12 @@ const Lottery = () => {
           <TableHead>
             <TableRow>
               <TableCell align="center" width={20}>
-                <Checkbox size="small" />
+                {lotPermission.checked === true && <Checkbox size="small" />}
               </TableCell>
               <TableCell colSpan={3}>
                 <Stack direction={"row"} justifyContent="space-between">
                   <Stack direction={"row"} height={"30px"} spacing={1}>
+<<<<<<< HEAD
                     <IconButton
                       size="small"
                       sx={{ color: "red" }}
@@ -286,6 +385,17 @@ const Lottery = () => {
                     >
                       <Delete fontSize="small" />
                     </IconButton>
+=======
+                    {lotPermission.delete === true && (
+                      <IconButton
+                        size="small"
+                        sx={{ color: "red" }}
+                        // onClick={(e) => deleteLottery(e, l._id)}
+                      >
+                        <Delete fontSize="small" />
+                      </IconButton>
+                    )}
+>>>>>>> 20c517cbbfd6ba6896fa4af0e6e2ac427c6c94f2
                   </Stack>
                   <Stack direction={"row"} height={"30px"} spacing={1}>
                     <SelectTime setDates={setDates} />
@@ -326,7 +436,9 @@ const Lottery = () => {
                     >
                       {/* { lottery.length && lottery.map(l=>)} */}
                       <TableCell width={20} align="center">
-                        <Checkbox size="small" />
+                        {lotPermission.checked === true && (
+                          <Checkbox size="small" />
+                        )}
                       </TableCell>
                       <TableCell align="left">
                         <Typography>
@@ -351,13 +463,15 @@ const Lottery = () => {
                           direction={"row"}
                           justifyContent={"space-around"}
                         >
-                          <IconButton
-                            size="small"
-                            sx={{ color: "red" }}
-                            onClick={(e) => deleteLottery(e, l._id)}
-                          >
-                            <Delete fontSize="small" />
-                          </IconButton>
+                          {lotPermission.delete === true && (
+                            <IconButton
+                              size="small"
+                              sx={{ color: "red" }}
+                              onClick={(e) => deleteLottery(e, l._id)}
+                            >
+                              <Delete fontSize="small" />
+                            </IconButton>
+                          )}
                           <NavLink
                             to={`/lottery/bet/${l._id}`}
                             state={{
