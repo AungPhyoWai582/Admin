@@ -46,7 +46,7 @@ import SelectTime from "../../components/SelectTime";
 
 const Lottery = () => {
   const [snackAlert, setSnackAlert] = useState(false);
-  const [lottery, setLottery] = useState([]);
+  const [lottery, setLottery] = useState({ on: [], off: [] });
   const [dates, setDates] = useState([]);
 
   const [lotCreate, setLotCreate] = useState({});
@@ -64,12 +64,17 @@ const Lottery = () => {
     Axios.get("/lotterys")
       .then((res) => {
         console.log(res.data.lotteries);
-        setLottery(res.data.lotteries);
+        setLottery({
+          ...lottery,
+          on: [...res.data.lotteries].filter((lot, key) => lot.play == true),
+          off: [...res.data.lotteries].filter((lot, key) => lot.play == false),
+        });
+
         setEffCtrl(false);
       })
       .catch((err) => console.log(err));
   }, [effCtrl]);
-
+  console.log(lottery);
   const createLottery = (e) => {
     const { name, value } = e.target;
     console.log(name, value);
@@ -105,25 +110,6 @@ const Lottery = () => {
     for (const key in lotCreate) {
       console.log(lotCreate[key]);
     }
-<<<<<<< HEAD
-    if (lotCreate._time !== null) {
-      Axios.post(`/lotterys`, lotCreate)
-        .then((res) => {
-          setLotCreate({
-            pout_tee: null,
-            hot_tee: [],
-            superhot_tee: [],
-            time: null,
-            play: false,
-          });
-          setEffCtrl(true);
-          setOpen(false);
-          setLoading(false);
-        })
-        .catch((err) => console.log(err));
-    }
-    setSnackAlert(true);
-=======
     Axios.post(`/lotterys`, lotCreate)
       .then((res) => {
         setLotCreate({
@@ -138,7 +124,6 @@ const Lottery = () => {
         setLoading(false);
       })
       .catch((err) => Alert(err));
->>>>>>> f8eaee6403eb8fac98754b4204cc823ed28807b5
   };
 
   const updateLottery = () => {
@@ -229,56 +214,54 @@ const Lottery = () => {
             <ListItemText primary={"Lottery Create"} />
             <Add />
           </IconButton>
-          {lottery.length &&
-            lottery
-              .filter((lot) => lot.play === true)
-              .map((l) => {
-                console.log(l._date);
-                const date = new Date(l._date);
-                console.log(l.getDate);
-                return (
-                  <Stack
-                    width={"100%"}
-                    direction={"row"}
-                    justifyContent="space-between"
-                    boxShadow={1}
-                    padding={1}
-                    borderRadius={1}
-                    alignItems="center"
-                  >
-                    <Typography>
-                      {`${date.getDate()}/${
-                        date.getMonth() + 1
-                      }/${date.getFullYear()} `}
-                      {l._time}
-                    </Typography>
-                    <Stack direction="row">
+          {lottery.on.length &&
+            lottery.on.map((l) => {
+              console.log(l._date);
+              const date = new Date(l._date);
+              console.log(l.getDate);
+              return (
+                <Stack
+                  width={"100%"}
+                  direction={"row"}
+                  justifyContent="space-between"
+                  boxShadow={1}
+                  padding={1}
+                  borderRadius={1}
+                  alignItems="center"
+                >
+                  <Typography>
+                    {`${date.getDate()}/${
+                      date.getMonth() + 1
+                    }/${date.getFullYear()} `}
+                    {l._time}
+                  </Typography>
+                  <Stack direction="row">
+                    <IconButton
+                      size="small"
+                      sx={{ color: "blue" }}
+                      onClick={(e) => editLottery(e, l)}
+                    >
+                      <Edit fontSize="small" />
+                    </IconButton>
+                    <NavLink
+                      to={`/lottery/bet/${l._id}`}
+                      state={{
+                        lotteryId: l._id,
+                        hot_tees: l.hot_tee.toString(),
+                      }}
+                    >
                       <IconButton
                         size="small"
-                        sx={{ color: "blue" }}
-                        onClick={(e) => editLottery(e, l)}
+                        sx={{ color: "green", ":hover": { color: "red" } }}
+                        // disabled={l.play === true ? true : false}
                       >
-                        <Edit fontSize="small" />
+                        <PlayArrow sx={{ fontSize: 30 }} />
                       </IconButton>
-                      <NavLink
-                        to={`/lottery/bet/${l._id}`}
-                        state={{
-                          lotteryId: l._id,
-                          hot_tees: l.hot_tee.toString(),
-                        }}
-                      >
-                        <IconButton
-                          size="small"
-                          sx={{ color: "green", ":hover": { color: "red" } }}
-                          // disabled={l.play === true ? true : false}
-                        >
-                          <PlayArrow sx={{ fontSize: 30 }} />
-                        </IconButton>
-                      </NavLink>
-                    </Stack>
+                    </NavLink>
                   </Stack>
-                );
-              })}
+                </Stack>
+              );
+            })}
         </Stack>
         <Table
           // sx={{ minWidth: "max-content" }}
@@ -294,30 +277,29 @@ const Lottery = () => {
                 <Checkbox size="small" />
               </TableCell>
               <TableCell colSpan={3}>
-                <Stack direction={'row'} justifyContent='space-between'>
+                <Stack direction={"row"} justifyContent="space-between">
+                  <Stack direction={"row"} height={"30px"} spacing={1}>
+                    <IconButton
+                      size="small"
+                      sx={{ color: "red" }}
+                      // onClick={(e) => deleteLottery(e, l._id)}
+                    >
+                      <Delete fontSize="small" />
+                    </IconButton>
+                  </Stack>
+                  <Stack direction={"row"} height={"30px"} spacing={1}>
+                    <SelectTime setDates={setDates} />
+                    <Button
+                      // sx={{ bgcolor: green[300] }}
 
-                <Stack direction={"row"} height={"30px"} spacing={1}>
-                  <IconButton
-                    size="small"
-                    sx={{ color: "red" }}
-                    // onClick={(e) => deleteLottery(e, l._id)}
-                  >
-                    <Delete fontSize="small" />
-                  </IconButton>
-                </Stack>
-                <Stack direction={"row"} height={"30px"} spacing={1}>
-                  <SelectTime setDates={setDates} />
-                  <Button
-                    // sx={{ bgcolor: green[300] }}
-
-                    size="small"
-                    variant="contained"
-                    color={"success"}
-                    // onClick={searchReport}
-                  >
-                    <Search sx={{ fontWeight: "bold" }} color={"white"} />
-                  </Button>
-                </Stack>
+                      size="small"
+                      variant="contained"
+                      color={"success"}
+                      // onClick={searchReport}
+                    >
+                      <Search sx={{ fontWeight: "bold" }} color={"white"} />
+                    </Button>
+                  </Stack>
                 </Stack>
               </TableCell>
               {/* <TableCell align="left">Date</TableCell>
@@ -326,9 +308,8 @@ const Lottery = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {lottery.length &&
-              lottery
-                .filter((lot) => lot.play === false)
+            {lottery.off.length &&
+              lottery.off
                 .map((l) => {
                   console.log(l._date);
                   const date = new Date(l._date);

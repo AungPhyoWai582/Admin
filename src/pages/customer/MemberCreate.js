@@ -35,7 +35,7 @@ const MemberCreate = ({ userinfo }) => {
     superhot_limit: "",
     accLimit: false,
     acc_limit_created: "",
-    userRelation:{},
+    userRelation: {},
   });
   const [customer, setCustomer] = useState({
     name: "",
@@ -147,7 +147,8 @@ const MemberCreate = ({ userinfo }) => {
   return (
     <Stack
       // component={"form"}
-      width={{ xs: "70%", md: "90%" }}
+      overflow={{ xs: "scroll" }}
+      width={{ xs: "70%", sm: "80%" }}
       sx={{
         // width: "90%",
         padding: "1",

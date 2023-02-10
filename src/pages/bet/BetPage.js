@@ -362,6 +362,11 @@ const BetPage = () => {
 
   console.log(moment(localStorage.getItem("")));
 
+  //MaxAdd
+  const handleMaxAdd = () => {
+    console.log("Return");
+  };
+
   // out Customer select
   const OnSelect = (e) => {
     const { value } = e.target;
@@ -1859,8 +1864,7 @@ const BetPage = () => {
     if (
       (onchange.number.length >= 3 &&
         onchange.number.length <= 6 &&
-        !isNaN(Number(onchange.number))) // isNan(x) is return notnumber
-        ||
+        !isNaN(Number(onchange.number))) || // isNan(x) is return notnumber
       (onchange.number.length >= 3 &&
         onchange.number.length <= 5 &&
         onchange.number.endsWith("*"))
@@ -1947,7 +1951,8 @@ const BetPage = () => {
               )
             : _padatha),
         ],
-        remark: [...call.remark,
+        remark: [
+          ...call.remark,
           {
             type: onchange.number,
             number: onchange.number,
@@ -1960,7 +1965,7 @@ const BetPage = () => {
     }
 
     // talone chin
-    if(onchange.number.length === 2 && !isNaN(Number(onchange.number))){
+    if (onchange.number.length === 2 && !isNaN(Number(onchange.number))) {
       if (hot.includes(onchange.number)) {
         console.log(call.numbers);
         const hotLimitCalculate = catchHotLimit(
@@ -2005,7 +2010,6 @@ const BetPage = () => {
       setEditCtlBtn(false);
       setCallandBetlistctleff(false);
       setAutoCompleteCtrl(false);
-  
     }
   };
   // console.log(mastercallcrud);
@@ -3159,6 +3163,38 @@ const BetPage = () => {
             // justifyContent={"space-between"}
           >
             <Stack
+              direction={"row"}
+              justifyContent="center"
+              bottom={0}
+              // color={"red"}
+              margin={0.5}
+              fontSize={16}
+              fontWeight={700}
+              alignItems={"center"}
+              spacing={1}
+              // border={0.5}
+            >
+              <span style={{ color: "red", paddingLeft: 0.4 }}>
+                {demoLager.extraNumb.length}
+                {" / "}
+                {demoLager.extraNumb
+                  .map((n) => n.amount)
+                  .reduce((n, p) => n + p, 0)}
+              </span>
+              <IconButton
+                onClick={() => handleMaxAdd}
+                sx={{
+                  borderRadius: 1,
+                  fontWeight: "bold",
+                  fontSize: 12,
+                  color: "white",
+                  bgcolor: "red",
+                }}
+              >
+                MaxAdd
+              </IconButton>
+            </Stack>
+            <Stack
               alignItems={"center"}
               // width={"30%"}
               maxHeight={400}
@@ -3185,24 +3221,6 @@ const BetPage = () => {
                       </Stack>
                     );
                   })}
-            </Stack>
-            <Stack
-              direction={"row"}
-              justifyContent="center"
-              bottom={0}
-              // color={"red"}
-              margin={0.5}
-              fontSize={16}
-              fontWeight={700}
-              // border={0.5}
-            >
-              <span style={{ color: "red", paddingLeft: 0.4 }}>
-                {demoLager.extraNumb.length}
-                {" / "}
-                {demoLager.extraNumb
-                  .map((n) => n.amount)
-                  .reduce((n, p) => n + p, 0)}
-              </span>{" "}
             </Stack>
           </Stack>
         </Stack>
