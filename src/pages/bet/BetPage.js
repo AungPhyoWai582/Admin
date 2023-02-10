@@ -294,22 +294,28 @@ const BetPage = () => {
         .catch((err) => console.log(err));
     }
     if (in_out === "Out") {
+      console.log("Out Customers");
       Axios.get(`customers`, {
         headers: {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
-        console.log(res.data);
+        console.log(res);
+        console.log(res.data.data);
+        // const customers = JSON.parse(...res.data.data)
+        // console.log(customers)
         // alert(res.data)
-        setCustomers(res.data);
-        setCusval(res.data[0]);
+        // if (res.data) {
+        setCustomers([...res.data.data]);
+        setCusval(res.data.data[0]);
+        // }
       });
 
       setInOutCtl(false);
     }
     // setHotNumbers( calculateHotTee(JSON.parse(localStorage.getItem('user-info')),hot_tees,lager.in.numbers,lager.in.totalAmount))
   }, [inOutCtl === true]);
-  console.log(demoLager.extraNumb);
+  // console.log(demoLager.extraNumb);
   useEffect(() => {
     if (in_out === "In") {
       Axios.get(`/call/${lotteryId}`, {
@@ -367,9 +373,9 @@ const BetPage = () => {
     setCalllistctrl(false);
   }, [inOutCtl, autocompleteCtrl, mastercallAPIctl]);
 
-  console.log(Timer);
+  // console.log(Timer);
 
-  console.log(autoCompleteValue);
+  // console.log(autoCompleteValue);
 
   // out Customer select
   const OnSelect = (e) => {
@@ -2379,6 +2385,7 @@ const BetPage = () => {
   // const timerFunc = Timer => {
   //   const start
   // }
+  console.log(customers);
 
   const action = (
     <React.Fragment>
@@ -2532,23 +2539,32 @@ const BetPage = () => {
               )}
             />
           )) ||
-            (in_out === "Out" && (
+            (in_out === "Out" && customers.length && (
               <FormControl sx={{ minWidth: 120 }} size="small">
                 <InputLabel id="demo-select-small">Customers</InputLabel>
                 <Select
                   labelId="demo-select-small"
                   id="demo-select-small"
-                  // value={cusval}
+                  value={cusval}
                   label={"Customers"}
                   onChange={(e) => OnSelect(e)}
                 >
-                  {customers.map((c) => (
+                  {[...customers].map((c) => (
                     <MenuItem sx={{ width: 200 }} value={c}>
                       {c.name}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
+              // <Select
+              //   defaultValue={"U Aung"}
+              //   style={{ width: 150 }}
+              //   onChange={(e) => setCusval(e)}
+              //   options={[
+              //     {value:'U Aung',name:'U Aung'}
+              //   ]}
+
+              // />
             ))}
           {in_out === "In" && play && (
             <Button

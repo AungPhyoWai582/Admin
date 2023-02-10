@@ -47,7 +47,7 @@ const MemberList = () => {
   useEffect(() => {
     console.log("Start");
     if (in_out === "In") {
-      Axios.get(`users?page=${inPage}&limit=${inLimit}`, {
+      Axios.get(`users?page=${inPage}&limit=${inLimit}&search=${inputsearch}`, {
         headers: {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
@@ -112,17 +112,51 @@ const MemberList = () => {
   console.log(customers);
 
   /************************************************** */
+  const searchUser = (e) => {
+    // set_in_out(e.target.value);
+    setInPage(1);
+    setInLimit(5);
+    if(e.target.value){
+      Axios.get(`users?search=${e.target.value}`, {
+        headers: {
+          authorization: `Bearer ` + localStorage.getItem("access-token"),
+        },
+      })
+        .then((res) => {
+          let resData = res.data;
+          console.log(resData);
+          setUsers({
+            count: resData.counts,
+            data: resData.data,
+          });
+        })
+        .catch((err) => console.log(err));
+    }else{
+      setCtrlEffect(true)
+    }
+    
+  };
 
   return (
     <Paper sx={{ padding: "1", height: "100%" }}>
-      <Stack direction={"row"} justifyContent='space-between' alignItems={'center'} padding={1}>
+      <Stack
+        direction={"row"}
+        justifyContent="space-between"
+        alignItems={"center"}
+        padding={1}
+      >
         <TextField
           size={"small"}
           variant="standard"
           label={"Search"}
           color={"success"}
           sx={{ width: "40%" }}
-          onChange={(e) => setInputsearch(e.target.value)}
+          onChange={searchUser}
+          // onChange={(e) => {
+          //   setInPage(1)
+          //   setInputsearch(e.target.value);
+          //   setCtrlEffect(true);
+          // }}
         />
 
         <RadioGroup
@@ -165,46 +199,32 @@ const MemberList = () => {
               </TableHead>
               <TableBody>
                 {users.data &&
-                  users.data
-                    .filter((user, keey) => {
-                      if (inputsearch === "") {
-                        return user;
-                      }
-                      return (
-                        user.username
-                          .toLowerCase()
-                          .includes(inputsearch.toLowerCase()) ||
-                        user.name
-                          .toLowerCase()
-                          .includes(inputsearch.toLowerCase())
-                      );
-                    })
-                    .map((user, key) => (
-                      <TableRow sx={{ height: "5px" }}>
-                        <TableCell>
-                          <span>{key + 1}</span>
-                        </TableCell>
-                        <TableCell>{user.name}</TableCell>
-                        <TableCell align="center">{user.username}</TableCell>
-                        <TableCell>{user.phone}</TableCell>
-                        <TableCell align="center">{user.divider}</TableCell>
-                        <TableCell align="right">{user.twoDZ}</TableCell>
-                        <TableCell align="right">
-                          <NavLink
-                            to={`/users/detail/${user._id}`}
-                            state={{ user: user }}
+                  users.data.map((user, key) => (
+                    <TableRow sx={{ height: "5px" }}>
+                      <TableCell>
+                        <span>{key + 1}</span>
+                      </TableCell>
+                      <TableCell>{user.name}</TableCell>
+                      <TableCell align="center">{user.username}</TableCell>
+                      <TableCell>{user.phone}</TableCell>
+                      <TableCell align="center">{user.divider}</TableCell>
+                      <TableCell align="right">{user.twoDZ}</TableCell>
+                      <TableCell align="right">
+                        <NavLink
+                          to={`/users/detail/${user._id}`}
+                          state={{ user: user }}
+                        >
+                          <IconButton
+                            size="small"
+                            color="success"
+                            // onClick={() => UserContent.setDetailUser(user._id)}
                           >
-                            <IconButton
-                              size="small"
-                              color="success"
-                              // onClick={() => UserContent.setDetailUser(user._id)}
-                            >
-                              <VisibilityOutlined fontSize="sm" />
-                            </IconButton>
-                          </NavLink>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                            <VisibilityOutlined fontSize="sm" />
+                          </IconButton>
+                        </NavLink>
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
               <TableFooter></TableFooter>
             </Table>
