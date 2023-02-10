@@ -299,7 +299,7 @@ const BetPage = () => {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
-        console.log(res.data)
+        console.log(res.data);
         // alert(res.data)
         setCustomers(res.data);
         setCusval(res.data[0]);
@@ -371,16 +371,6 @@ const BetPage = () => {
 
   console.log(autoCompleteValue);
 
-<<<<<<< HEAD
-  console.log(moment(localStorage.getItem("")));
-
-  //MaxAdd
-  const handleMaxAdd = () => {
-    console.log("Return");
-  };
-
-=======
->>>>>>> 20c517cbbfd6ba6896fa4af0e6e2ac427c6c94f2
   // out Customer select
   const OnSelect = (e) => {
     const { value } = e.target;
@@ -3132,7 +3122,8 @@ const BetPage = () => {
               : masterOutCalls
                   .filter(
                     (mso, key) =>
-                     cusval!==null&& mso.customer._id.toString() === cusval._id.toString()
+                      cusval !== null &&
+                      mso.customer._id.toString() === cusval._id.toString()
                   )
                   .map((cal, key) => {
                     return (
@@ -3207,7 +3198,7 @@ const BetPage = () => {
                   .reduce((n, p) => n + p, 0)}
               </span>
               <IconButton
-                onClick={() => handleMaxAdd}
+                onClick={() => console.log("Ok")}
                 sx={{
                   borderRadius: 1,
                   fontWeight: "bold",
