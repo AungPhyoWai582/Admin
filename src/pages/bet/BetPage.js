@@ -20,6 +20,8 @@ import {
   Chip,
   CircularProgress,
   Dialog,
+  DialogActions,
+  DialogContent,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -98,6 +100,7 @@ import ModalBox from "../../components/modal/ModalBox";
 import { useReactToPrint } from "react-to-print";
 import moment from "moment";
 import Print from "../../components/Print";
+import MaxAdd from "../../components/modal/MaxAdd";
 
 const BetPage = () => {
   // For input refs
@@ -168,6 +171,8 @@ const BetPage = () => {
     superHotLimit: 0,
     numbers: [],
   });
+
+  const [maxAddhandle, setMaxAddhandle] = useState(false);
   // const [callList, setCallList] = useState([]);
 
   const [users, setUsers] = useState([]);
@@ -294,20 +299,20 @@ const BetPage = () => {
         .catch((err) => console.log(err));
     }
     if (in_out === "Out") {
-      console.log('Out Customers')
+      console.log("Out Customers");
       Axios.get(`customers`, {
         headers: {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
-        console.log(res)
-        console.log(res.data.data)
+        console.log(res);
+        console.log(res.data.data);
         // const customers = JSON.parse(...res.data.data)
         // console.log(customers)
         // alert(res.data)
         // if (res.data) {
-          setCustomers([...res.data.data]);
-          setCusval(res.data.data[0]);
+        setCustomers([...res.data.data]);
+        setCusval(res.data.data[0]);
         // }
       });
 
@@ -2386,7 +2391,24 @@ const BetPage = () => {
   //   const start
   // }
   console.log(customers);
-
+  const handleMaxAdd = () => {
+    if (customers && demoLager.extraNumb.length) {
+      setMaxAddhandle(true);
+    }
+  };
+  const sentMaxAdd = () => {
+    Axios.post(
+      `/outcall/${lotteryId}`,
+      { customer: cusval._id, numbers: demoLager.extraNumb },
+      {
+        headers: {
+          authorization: `Bearer ` + localStorage.getItem("access-token"),
+        },
+      }
+    ).then((res) => {
+      setMaxAddhandle(false);
+    });
+  };
   const action = (
     <React.Fragment>
       <IconButton
@@ -3116,75 +3138,76 @@ const BetPage = () => {
                     })
                     .reverse())}
 
-            {in_out === "Out" && call.numbers.length
-              ? call.numbers
-                  .sort((a, b) => (b.amount > a.amount ? 1 : -1))
-                  .map((cuscall, key) => {
-                    return (
-                      <Stack
-                        direction={"row"}
-                        // width={{ sx: 180 }}
-                        marginY={0.3}
-                        justifyContent={{
-                          sx: "space-between",
-                          sm: "space-around",
-                          md: "space-around",
-                        }}
-                      >
-                        <BetListCom call={cuscall} key={key}></BetListCom>
-                      </Stack>
-                    );
-                  })
-              : masterOutCalls
-                  .filter(
-                    (mso, key) =>
-                      cusval !== null &&
-                      mso.customer._id.toString() === cusval._id.toString()
-                  )
-                  .map((cal, key) => {
-                    return (
-                      <Stack
-                        bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
-                        borderLeft={0.5}
-                        borderRight={0.5}
-                        justifyContent={"space-around"}
-                        // component={"button"}
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => {
-                          setMasterOutCallCrud({
-                            id: cal._id,
-                            numbers: cal.numbers,
-                          });
-                          setCallDetail({
-                            ...callDetail,
-                            callTotal: cal.totalAmount,
-                          });
-                          setAutoCompleteCtrl(true);
-                          setCrudOutOpen(true);
-                        }}
-                      >
-                        {cal.numbers
-                          .sort((a, b) => (b.amount > a.amount ? 1 : -1))
-                          .map((ca, key) => {
-                            return (
-                              <Stack
-                                direction={"row"}
-                                // width={{ sx: 180 }}
-                                marginY={0.3}
-                                justifyContent={{
-                                  sx: "space-between",
-                                  sm: "space-around",
-                                  md: "space-around",
-                                }}
-                              >
-                                <BetListCom call={ca} key={key}></BetListCom>
-                              </Stack>
-                            );
-                          })
-                          .sort()}
-                      </Stack>
-                    );
-                  })}
+            {in_out === "Out" &&
+              (call.numbers.length
+                ? call.numbers
+                    .sort((a, b) => (b.amount > a.amount ? 1 : -1))
+                    .map((cuscall, key) => {
+                      return (
+                        <Stack
+                          direction={"row"}
+                          // width={{ sx: 180 }}
+                          marginY={0.3}
+                          justifyContent={{
+                            sx: "space-between",
+                            sm: "space-around",
+                            md: "space-around",
+                          }}
+                        >
+                          <BetListCom call={cuscall} key={key}></BetListCom>
+                        </Stack>
+                      );
+                    })
+                : masterOutCalls
+                    .filter(
+                      (mso, key) =>
+                        cusval !== null &&
+                        mso.customer._id.toString() === cusval._id.toString()
+                    )
+                    .map((cal, key) => {
+                      return (
+                        <Stack
+                          bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
+                          borderLeft={0.5}
+                          borderRight={0.5}
+                          justifyContent={"space-around"}
+                          // component={"button"}
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => {
+                            setMasterOutCallCrud({
+                              id: cal._id,
+                              numbers: cal.numbers,
+                            });
+                            setCallDetail({
+                              ...callDetail,
+                              callTotal: cal.totalAmount,
+                            });
+                            setAutoCompleteCtrl(true);
+                            setCrudOutOpen(true);
+                          }}
+                        >
+                          {cal.numbers
+                            .sort((a, b) => (b.amount > a.amount ? 1 : -1))
+                            .map((ca, key) => {
+                              return (
+                                <Stack
+                                  direction={"row"}
+                                  // width={{ sx: 180 }}
+                                  marginY={0.3}
+                                  justifyContent={{
+                                    sx: "space-between",
+                                    sm: "space-around",
+                                    md: "space-around",
+                                  }}
+                                >
+                                  <BetListCom call={ca} key={key}></BetListCom>
+                                </Stack>
+                              );
+                            })
+                            .sort()}
+                        </Stack>
+                      );
+                    }))}
           </Stack>
           <Stack
             direction="column"
@@ -3194,6 +3217,40 @@ const BetPage = () => {
             // padding={1}
             // justifyContent={"space-between"}
           >
+            <Stack
+              direction={"row"}
+              justifyContent="center"
+              bottom={0}
+              // color={"red"}
+              margin={0.5}
+              fontSize={16}
+              fontWeight={700}
+              alignItems={"center"}
+              spacing={1}
+              // border={0.5}
+            >
+              <span style={{ color: "red", paddingLeft: 0.4 }}>
+                {demoLager.extraNumb.length}
+                {" / "}
+                {demoLager.extraNumb
+                  .map((n) => n.amount)
+                  .reduce((n, p) => n + p, 0)}
+              </span>
+              {in_out == "Out" && customers.length && (
+                <IconButton
+                  onClick={handleMaxAdd}
+                  sx={{
+                    borderRadius: 1,
+                    fontWeight: "bold",
+                    fontSize: 12,
+                    color: "white",
+                    bgcolor: "red",
+                  }}
+                >
+                  MaxAdd
+                </IconButton>
+              )}
+            </Stack>
             <Stack
               alignItems={"center"}
               // width={"30%"}
@@ -3221,24 +3278,6 @@ const BetPage = () => {
                       </Stack>
                     );
                   })}
-            </Stack>
-            <Stack
-              direction={"row"}
-              justifyContent="center"
-              bottom={0}
-              // color={"red"}
-              margin={0.5}
-              fontSize={16}
-              fontWeight={700}
-              // border={0.5}
-            >
-              <span style={{ color: "red", paddingLeft: 0.4 }}>
-                {demoLager.extraNumb.length}
-                {" / "}
-                {demoLager.extraNumb
-                  .map((n) => n.amount)
-                  .reduce((n, p) => n + p, 0)}
-              </span>{" "}
             </Stack>
           </Stack>
         </Stack>
@@ -3667,6 +3706,23 @@ const BetPage = () => {
           </Button>
         </Stack>
       </ModalBox>
+      <Dialog open={maxAddhandle}>
+        <DialogContent>
+          Do you want to sent {cusval && cusval.name.toString()}?
+        </DialogContent>
+        <DialogActions>
+          <Button
+            size="small"
+            color={"error"}
+            onClick={() => setMaxAddhandle(false)}
+          >
+            Cancel
+          </Button>
+          <Button size="small" onClick={sentMaxAdd}>
+            Sent
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Stack>
   );
 };
