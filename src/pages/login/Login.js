@@ -65,7 +65,7 @@ const Login = ({ authUser, setAuthUser }) => {
         console.log(err.response);
         setAlertCtl({
           status: true,
-          msg: `${err.response.statusText.toString()}`,
+          msg: `${err.response.status.toString()}`,
         });
         console.log(alertCtl);
       });
@@ -77,7 +77,6 @@ const Login = ({ authUser, setAuthUser }) => {
         <Grid align="center" sx={{ paddingBottom: 5 }}>
           {alertCtl.status && (
             <Snackbar
-              color="success"
               open={alertCtl.status}
               anchorOrigin={{ vertical: "top", horizontal: "center" }}
               autoHideDuration={4000}

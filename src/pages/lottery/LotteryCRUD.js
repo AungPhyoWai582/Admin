@@ -28,16 +28,10 @@ const LotteryCRUD = ({
   updateLottery,
   AddLottery,
   loading,
-  setLoading,
-  snackAlert,
-  setSnackAlert,
-  snackhandleClose,
-  snackhandleOpen,
 }) => {
   console.log(lotCreate);
 
   const [Timer, setTimer] = useState("");
-  // const [snackAlert, setSnackAlert] = useState(false);
 
   return (
     <Drawer anchor="top" open={open} onClose={() => setOpen(false)}>
@@ -123,7 +117,7 @@ const LotteryCRUD = ({
               {/* <Button onClick={()=>console.log(lotCreate)}>set</Button> */}
             </Stack>
           )}
-          <Stack direction={"row"} justifyContent={"space-between"}>
+          <Stack  direction={'row'} justifyContent={'space-between'}>
             <Stack spacing={1.5} padding={1}>
               <Typography variant="caption" fontSize={16}>
                 hot_tee
@@ -193,11 +187,10 @@ const LotteryCRUD = ({
             <Button
               onClick={() => {
                 setOpen(false);
-                setLoading(false);
                 setLotCreate({
                   pout_tee: null,
                   hot_tee: [],
-                  superhot_tee: [],
+                  superhot_tee:[],
                   time: null,
                   play: false,
                 });

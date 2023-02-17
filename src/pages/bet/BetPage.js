@@ -20,8 +20,6 @@ import {
   Chip,
   CircularProgress,
   Dialog,
-  DialogActions,
-  DialogContent,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -52,7 +50,6 @@ import {
   green,
   grey,
   lightBlue,
-  lightGreen,
   orange,
   red,
   teal,
@@ -101,8 +98,6 @@ import ModalBox from "../../components/modal/ModalBox";
 import { useReactToPrint } from "react-to-print";
 import moment from "moment";
 import Print from "../../components/Print";
-import MaxAdd from "../../components/modal/MaxAdd";
-import { exportTextFile } from "../../shared/ExportTxt";
 
 const BetPage = () => {
   // For input refs
@@ -173,8 +168,6 @@ const BetPage = () => {
     superHotLimit: 0,
     numbers: [],
   });
-
-  const [maxAddhandle, setMaxAddhandle] = useState(false);
   // const [callList, setCallList] = useState([]);
 
   const [users, setUsers] = useState([]);
@@ -301,28 +294,22 @@ const BetPage = () => {
         .catch((err) => console.log(err));
     }
     if (in_out === "Out") {
-      console.log("Out Customers");
       Axios.get(`customers`, {
         headers: {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
         },
       }).then((res) => {
-        console.log(res);
-        console.log(res.data.data);
-        // const customers = JSON.parse(...res.data.data)
-        // console.log(customers)
+        console.log(res.data)
         // alert(res.data)
-        // if (res.data) {
-        setCustomers([...res.data.data]);
-        setCusval(res.data.data[0]);
-        // }
+        setCustomers(res.data);
+        setCusval(res.data[0]);
       });
 
       setInOutCtl(false);
     }
     // setHotNumbers( calculateHotTee(JSON.parse(localStorage.getItem('user-info')),hot_tees,lager.in.numbers,lager.in.totalAmount))
   }, [inOutCtl === true]);
-  // console.log(demoLager.extraNumb);
+  console.log(demoLager.extraNumb);
   useEffect(() => {
     if (in_out === "In") {
       Axios.get(`/call/${lotteryId}`, {
@@ -380,9 +367,9 @@ const BetPage = () => {
     setCalllistctrl(false);
   }, [inOutCtl, autocompleteCtrl, mastercallAPIctl]);
 
-  // console.log(Timer);
+  console.log(Timer);
 
-  // console.log(autoCompleteValue);
+  console.log(autoCompleteValue);
 
   // out Customer select
   const OnSelect = (e) => {
@@ -2392,28 +2379,7 @@ const BetPage = () => {
   // const timerFunc = Timer => {
   //   const start
   // }
-  console.log(customers);
-  const handleMaxAdd = () => {
-    if (customers && demoLager.extraNumb.length) {
-      setMaxAddhandle(true);
-    }
-  };
-  const sentMaxAdd = () => {
-    Axios.post(
-      `/outcall/${lotteryId}`,
-      { customer: cusval._id, numbers: demoLager.extraNumb },
-      {
-        headers: {
-          authorization: `Bearer ` + localStorage.getItem("access-token"),
-        },
-      }
-    ).then((res) => {
-      setMaxAddhandle(false);
-      exportTextFile({ demoLager });
-      setMastercallAPI(true);
-      setDemolager({ ...demoLager, extraNumb: [] });
-    });
-  };
+
   const action = (
     <React.Fragment>
       <IconButton
@@ -2539,16 +2505,10 @@ const BetPage = () => {
         <Stack direction={"row"} spacing={1} alignItems={"center"}>
           {(in_out === "In" && (
             <Autocomplete
-              // multiple={true}
               size="small"
-              // value={users[0]}
               options={users}
               sx={{ width: 150 }}
               getOptionLabel={(cus) => `${cus.username}`}
-              // isOptionEqualToValue={(option) =>
-              //   option.username === users.username
-              // }
-              defaultValue={users[0]}
               onChange={(e, value) => {
                 console.log(value);
                 setAutoCompleteValue(value);
@@ -2568,37 +2528,27 @@ const BetPage = () => {
                   size="small"
                   color={"success"}
                   // defaultValue={autoCompleteValue}
-                  defaultValue={users && users[0]}
                 />
               )}
             />
           )) ||
-            (in_out === "Out" && customers.length && (
+            (in_out === "Out" && (
               <FormControl sx={{ minWidth: 120 }} size="small">
                 <InputLabel id="demo-select-small">Customers</InputLabel>
                 <Select
                   labelId="demo-select-small"
                   id="demo-select-small"
-                  value={cusval}
+                  // value={cusval}
                   label={"Customers"}
                   onChange={(e) => OnSelect(e)}
                 >
-                  {[...customers].map((c) => (
+                  {customers.map((c) => (
                     <MenuItem sx={{ width: 200 }} value={c}>
                       {c.name}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
-              // <Select
-              //   defaultValue={"U Aung"}
-              //   style={{ width: 150 }}
-              //   onChange={(e) => setCusval(e)}
-              //   options={[
-              //     {value:'U Aung',name:'U Aung'}
-              //   ]}
-
-              // />
             ))}
           {in_out === "In" && play && (
             <Button
@@ -3150,76 +3100,74 @@ const BetPage = () => {
                     })
                     .reverse())}
 
-            {in_out === "Out" &&
-              (call.numbers.length
-                ? call.numbers
-                    .sort((a, b) => (b.amount > a.amount ? 1 : -1))
-                    .map((cuscall, key) => {
-                      return (
-                        <Stack
-                          direction={"row"}
-                          // width={{ sx: 180 }}
-                          marginY={0.3}
-                          justifyContent={{
-                            sx: "space-between",
-                            sm: "space-around",
-                            md: "space-around",
-                          }}
-                        >
-                          <BetListCom call={cuscall} key={key}></BetListCom>
-                        </Stack>
-                      );
-                    })
-                : masterOutCalls
-                    .filter(
-                      (mso, key) =>
-                        cusval !== null &&
-                        mso.customer._id.toString() === cusval._id.toString()
-                    )
-                    .map((cal, key) => {
-                      return (
-                        <Stack
-                          bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
-                          borderLeft={0.5}
-                          borderRight={0.5}
-                          justifyContent={"space-around"}
-                          // component={"button"}
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => {
-                            setMasterOutCallCrud({
-                              id: cal._id,
-                              numbers: cal.numbers,
-                            });
-                            setCallDetail({
-                              ...callDetail,
-                              callTotal: cal.totalAmount,
-                            });
-                            setAutoCompleteCtrl(true);
-                            setCrudOutOpen(true);
-                          }}
-                        >
-                          {cal.numbers
-                            .sort((a, b) => (b.amount > a.amount ? 1 : -1))
-                            .map((ca, key) => {
-                              return (
-                                <Stack
-                                  direction={"row"}
-                                  // width={{ sx: 180 }}
-                                  marginY={0.3}
-                                  justifyContent={{
-                                    sx: "space-between",
-                                    sm: "space-around",
-                                    md: "space-around",
-                                  }}
-                                >
-                                  <BetListCom call={ca} key={key}></BetListCom>
-                                </Stack>
-                              );
-                            })
-                            .sort()}
-                        </Stack>
-                      );
-                    }))}
+            {in_out === "Out" && call.numbers.length
+              ? call.numbers
+                  .sort((a, b) => (b.amount > a.amount ? 1 : -1))
+                  .map((cuscall, key) => {
+                    return (
+                      <Stack
+                        direction={"row"}
+                        // width={{ sx: 180 }}
+                        marginY={0.3}
+                        justifyContent={{
+                          sx: "space-between",
+                          sm: "space-around",
+                          md: "space-around",
+                        }}
+                      >
+                        <BetListCom call={cuscall} key={key}></BetListCom>
+                      </Stack>
+                    );
+                  })
+              : masterOutCalls
+                  .filter(
+                    (mso, key) =>
+                     cusval!==null&& mso.customer._id.toString() === cusval._id.toString()
+                  )
+                  .map((cal, key) => {
+                    return (
+                      <Stack
+                        bgcolor={`${key % 2 == 0 ? green[200] : ""}`}
+                        borderLeft={0.5}
+                        borderRight={0.5}
+                        justifyContent={"space-around"}
+                        // component={"button"}
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setMasterOutCallCrud({
+                            id: cal._id,
+                            numbers: cal.numbers,
+                          });
+                          setCallDetail({
+                            ...callDetail,
+                            callTotal: cal.totalAmount,
+                          });
+                          setAutoCompleteCtrl(true);
+                          setCrudOutOpen(true);
+                        }}
+                      >
+                        {cal.numbers
+                          .sort((a, b) => (b.amount > a.amount ? 1 : -1))
+                          .map((ca, key) => {
+                            return (
+                              <Stack
+                                direction={"row"}
+                                // width={{ sx: 180 }}
+                                marginY={0.3}
+                                justifyContent={{
+                                  sx: "space-between",
+                                  sm: "space-around",
+                                  md: "space-around",
+                                }}
+                              >
+                                <BetListCom call={ca} key={key}></BetListCom>
+                              </Stack>
+                            );
+                          })
+                          .sort()}
+                      </Stack>
+                    );
+                  })}
           </Stack>
           <Stack
             direction="column"
@@ -3229,43 +3177,6 @@ const BetPage = () => {
             // padding={1}
             // justifyContent={"space-between"}
           >
-            <Stack
-              direction={"row"}
-              justifyContent="center"
-              bottom={0}
-              // color={"red"}
-              margin={0.5}
-              fontSize={16}
-              fontWeight={700}
-              alignItems={"center"}
-              spacing={1}
-              // border={0.5}
-            >
-              <span style={{ color: "red", paddingLeft: 0.4 }}>
-                {demoLager.extraNumb.length}
-                {" / "}
-                {demoLager.extraNumb
-                  .map((n) => n.amount)
-                  .reduce((n, p) => n + p, 0)}
-              </span>
-              {in_out == "Out" && customers.length && (
-                <IconButton
-                  onClick={handleMaxAdd}
-                  onMouseOver={false}
-                  sx={{
-                    borderRadius: 1,
-                    fontWeight: "bold",
-                    fontSize: 12,
-                    color: "white",
-                    bgcolor: "red",
-                    backgroundColor: "red",
-                    "&:hover": { backgroundColor: "black" },
-                  }}
-                >
-                  MaxAdd
-                </IconButton>
-              )}
-            </Stack>
             <Stack
               alignItems={"center"}
               // width={"30%"}
@@ -3293,6 +3204,24 @@ const BetPage = () => {
                       </Stack>
                     );
                   })}
+            </Stack>
+            <Stack
+              direction={"row"}
+              justifyContent="center"
+              bottom={0}
+              // color={"red"}
+              margin={0.5}
+              fontSize={16}
+              fontWeight={700}
+              // border={0.5}
+            >
+              <span style={{ color: "red", paddingLeft: 0.4 }}>
+                {demoLager.extraNumb.length}
+                {" / "}
+                {demoLager.extraNumb
+                  .map((n) => n.amount)
+                  .reduce((n, p) => n + p, 0)}
+              </span>{" "}
             </Stack>
           </Stack>
         </Stack>
@@ -3721,59 +3650,6 @@ const BetPage = () => {
           </Button>
         </Stack>
       </ModalBox>
-      <Dialog open={maxAddhandle}>
-        <DialogContent>
-          <Stack spacing={1}>
-            <Typography color={"Red"}>
-              Do you want to sent {cusval && cusval.name.toString()}? Export
-              Text File
-            </Typography>
-            <FormControl sx={{ minWidth: 120, maxWidth: 140 }} size="small">
-              <InputLabel id="demo-select-small">Customers</InputLabel>
-              <Select
-                labelId="demo-select-small"
-                id="demo-select-small"
-                value={cusval}
-                label={"Customers"}
-                onChange={(e) => OnSelect(e)}
-              >
-                {[...customers].map((c) => (
-                  <MenuItem sx={{ width: 200 }} value={c}>
-                    {c.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Stack>
-        </DialogContent>
-
-        <DialogActions>
-          <Button
-            size="small"
-            sx={{
-              bgcolor: "red",
-              "&:hover": { backgroundColor: red[200] },
-              fontWeight: "bold",
-            }}
-            onClick={() => setMaxAddhandle(false)}
-          >
-            <span style={{ color: "white", textTransform: "none" }}>
-              Cancel
-            </span>
-          </Button>
-          <Button
-            size="small"
-            onClick={sentMaxAdd}
-            sx={{
-              bgcolor: lightGreen["900"],
-              "&:hover": { backgroundColor: lightGreen[300] },
-              fontWeight: "bold",
-            }}
-          >
-            <span style={{ color: "white", textTransform: "none" }}>Send</span>
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Stack>
   );
 };
