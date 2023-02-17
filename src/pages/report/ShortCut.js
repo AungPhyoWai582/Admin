@@ -36,6 +36,7 @@ import Axios from "../../shared/Axios";
 import { useEffect } from "react";
 import SelectTime from "../../components/SelectTime";
 import { Select, Space } from "antd";
+import moment from "moment";
 // import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 // import { Box, fontWeight } from "@mui/system";
 // import { DateRangePicker, StaticDateRangePicker } from "@mui/lab";
@@ -171,7 +172,7 @@ const ShortCup = () => {
   };
 
   console.log(customer);
-  console.log(reportIn, reportOut);
+  console.log(reportIn, reportOut, reportMain);
 
   return (
     <Stack padding={2} spacing={1}>
@@ -217,11 +218,11 @@ const ShortCup = () => {
               { value: "PM", label: "PM" },
             ]}
           />
-        
+
           <Select
             defaultValue={autoCompleteValue}
-            style={{ width: 150}}
-            onChange={(e)=>setAutoCompleteValue(e)}
+            style={{ width: 150 }}
+            onChange={(e) => setAutoCompleteValue(e)}
             options={[
               ...customer.map((cus) => {
                 return { value: cus.value, label: cus.name };
@@ -229,7 +230,6 @@ const ShortCup = () => {
             ]}
           />
         </Space>
-        
 
         {/* </Stack> */}
       </Stack>
@@ -288,36 +288,36 @@ const ShortCup = () => {
               onChange={(e) => setInOutControl(e.target.value)}
             >
               {/* <Stack direction={"row"}> */}
-                <FormControlLabel
-                  value="In"
-                  control={<Radio size="small" color="success" />}
-                  label="In"
-                  labelPlacement="start"
-                />
-                <FormControlLabel
-                  value="Out"
-                  control={<Radio size="small" color="success" />}
-                  label="Out"
-                  labelPlacement="start"
-                />
-                <FormControlLabel
-                  value="Main"
-                  control={<Radio size="small" color="success" />}
-                  label="Main"
-                  labelPlacement="start"
-                />
+              <FormControlLabel
+                value="In"
+                control={<Radio size="small" color="success" />}
+                label="In"
+                labelPlacement="start"
+              />
+              <FormControlLabel
+                value="Out"
+                control={<Radio size="small" color="success" />}
+                label="Out"
+                labelPlacement="start"
+              />
+              <FormControlLabel
+                value="Main"
+                control={<Radio size="small" color="success" />}
+                label="Main"
+                labelPlacement="start"
+              />
               {/* </Stack> */}
             </RadioGroup>
           </FormControl>
           <Button
-          size="small"
-          sx={{marginRight:5}}
-          variant="contained"
-          color={"success"}
-          onClick={searchReport}
-        >
-          <Search sx={{ fontWeight: "bold" }} color={"white"} />
-        </Button>
+            size="small"
+            sx={{ marginRight: 5 }}
+            variant="contained"
+            color={"success"}
+            onClick={searchReport}
+          >
+            <Search sx={{ fontWeight: "bold" }} color={"white"} />
+          </Button>
         </Stack>
       </Stack>
       <TableContainer sx={{ padding: "1px" }}>
@@ -326,26 +326,61 @@ const ShortCup = () => {
           // sx={{ minWidth: "max-content" }}
           size="small"
           aria-label="a dense table"
+          // sx={{border:1,borderColor:grey[300]}}
           stickyHeader
         >
-          <TableHead sx={{ bgcolor: green[300], fontSize: 12 }}>
+          <TableHead sx={{ fontSize: 12 }}>
             <TableRow>
-              {/* <TableCell sx={{ fontWeight: "bold", fontSize: 12 }} align="left">
-                Date
-              </TableCell> */}
-              <TableCell sx={{ fontWeight: "bold", fontSize: 12 }} align="left">
-                {/* {InOutControl === 'In'?'Name':'ID'} */}
-                Name
-              </TableCell>
+              {InOutControl !== "In" && (
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: 12,
+                    border: 1,
+                    borderColor: grey[300],
+                    borderCollapse: "collapse",
+                  }}
+                  align="left"
+                >
+                  Date
+                </TableCell>
+              )}
+              {InOutControl !== "Main" && (
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: 12,
+                    border: 1,
+                    borderColor: grey[300],
+                    borderCollapse: "collapse",
+                  }}
+                  align="left"
+                >
+                  {/* {InOutControl === 'In'?'Name':'ID'} */}
+                  Name
+                </TableCell>
+              )}
               <TableCell
-                sx={{ fontWeight: "bold", fontSize: 12 }}
-                align="center"
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: 12,
+                  border: 1,
+                  borderColor: grey[300],
+                  borderCollapse: "collapse",
+                }}
+                align="right"
               >
                 Bet
               </TableCell>
               <TableCell
-                sx={{ fontWeight: "bold", fontSize: 12 }}
-                align="center"
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: 12,
+                  border: 1,
+                  borderColor: grey[300],
+                  borderCollapse: "collapse",
+                }}
+                align="right"
               >
                 GameX
               </TableCell>
@@ -356,25 +391,37 @@ const ShortCup = () => {
                 {InOutControl === "Main" ? "OriginalBreak" : "Commission"}
               </TableCell> */}
               <TableCell
-                sx={{ fontWeight: "bold", fontSize: 12 }}
-                align="center"
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: 12,
+                  border: 1,
+                  borderColor: grey[300],
+                  borderCollapse: "collapse",
+                }}
+                align="right"
               >
                 {(InOutControl === "Main" && "OriginalBreak") ||
                   (InOutControl === "Out" && "Commission") ||
                   (InOutControl === "In" && "Rel-Commission")}
               </TableCell>
               <TableCell
-                sx={{ fontWeight: "bold", fontSize: 12 }}
-                align="center"
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: 12,
+                  border: 1,
+                  borderColor: grey[300],
+                  borderCollapse: "collapse",
+                }}
+                align="right"
               >
                 Win/Lose
               </TableCell>
-              <TableCell
+              {/* <TableCell
                 sx={{ fontWeight: "bold", fontSize: 12 }}
                 align="right"
               >
                 more
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           </TableHead>
           {loading && (
@@ -393,249 +440,545 @@ const ShortCup = () => {
               </TableCell>
             </TableRow>
           )}
+
           {InOutControl === "In" && (
             <>
               <TableBody>
-                {reportIn &&
-                  [...reportIn.memberReport].map((rp) => {
-                    // const start = new Date(startDate);
-                    // const end = new Date(endDate);
+                {reportIn.me && reportIn.memberReport.length ? (
+                  <>
+                    {[...reportIn.memberReport].map((cal) => {
+                      const _date = moment(cal._date).format("DD-MM-YYYY");
+                      return (
+                        <TableRow>
+                          {/* <TableCell
+                            sx={{
+                              overflow: "scroll/",
+                              border: 1,
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                            }}
+                            align="left"
+                          >
+                            {_date.toString()} {cal._time.toString()}
+                          </TableCell> */}
+                          <TableCell
+                            sx={{
+                              overflow: "scroll/",
+                              border: 1,
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                            }}
+                            align="left"
+                          >
+                            {cal.name.toString()}
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              border: 1,
+                              color: "blue",
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                            }}
+                          >
+                            {cal.totalAmount.toString()}
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              border: 1,
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                              color: "red",
+                            }}
+                          >
+                            {cal.pout_tee_amount
+                              ? cal.pout_tee_amount.toString()
+                              : "0"}
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              color: "blue",
+                              border: 1,
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                            }}
+                          >
+                            {cal.totalCommission.toString()}
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              color:
+                                cal.totalWin.toString()[0] === "-"
+                                  ? "red"
+                                  : "blue",
+                              border: 1,
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                            }}
+                          >
+                            {cal.totalWin.toString()}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+
+                    <TableRow>
+                      <TableCell
+                        // colSpan={2}
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          color: "black",
+                          border: 1,
+                          borderColor: grey[300],
+                          borderCollapse: "collapse",
+                        }}
+                      >
+                        Total
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          color: "blue",
+                          border: 1,
+                          borderColor: grey[300],
+                          borderCollapse: "collapse",
+                        }}
+                      >
+                        {reportIn.me.totalAmount}
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          color: "red",
+                          border: 1,
+                          borderColor: grey[300],
+                          borderCollapse: "collapse",
+                        }}
+                      >
+                        {reportIn.me.pout_tee_amount === null
+                          ? 0
+                          : reportIn.me.pout_tee_amount}
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          color: "blue",
+                          border: 1,
+                          borderColor: grey[300],
+                          borderCollapse: "collapse",
+                        }}
+                      >
+                        {reportIn.me.totalCommission}
+                      </TableCell>
+
+                      <TableCell
+                        align="right"
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          color:
+                            reportIn.me.totalWin.toString()[0] === "-"
+                              ? "red"
+                              : "blue",
+                          border: 1,
+                          borderColor: grey[300],
+                          borderCollapse: "collapse",
+                        }}
+                      >
+                        {reportIn.me.totalWin.toString()}
+                        {/* 0 */}
+                      </TableCell>
+                    </TableRow>
+                  </>
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={7}>
+                      <Typography
+                        padding={1}
+                        fontSize={18}
+                        fontWeight={500}
+                        color={"red"}
+                        textAlign="center"
+                        gridColumn={3}
+                      >
+                        Reports Not Found !!!
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </>
+          )}
+
+          {InOutControl === "Out" && (
+            <>
+              <TableBody>
+                {reportOut.totalOut && reportOut.calls.length ? (
+                  <>{[...reportOut.calls].map((cal) => {
+                    const _date = moment(cal._date).format("DD-MM-YYYY");
                     return (
                       <>
                         <TableRow>
-                          {/* <TableCell align="left">{`${start.getDate()}/${start.getMonth()}/${start.getFullYear()} - ${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`}</TableCell> */}
-                          <TableCell align="left">
-                            {rp.name.toString()}
-                          </TableCell>
-                          <TableCell align="center">
-                            {rp.totalAmount.toString()}
-                          </TableCell>
-                          <TableCell align="center">
-                            {rp.pout_tee_amount
-                              ? rp.pout_tee_amount.toString()
-                              : "0"}
-                          </TableCell>
-                          {/* <TableCell align="center" sx={{ color: "red" }}>
-                          {rp.totalCommission.toString()}
-                        </TableCell> */}
-                          <TableCell align="center" sx={{ color: "red" }}>
-                            {0}
+                          <TableCell
+                            sx={{
+                              overflow: "scroll/",
+                              border: 1,
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                            }}
+                            align="left"
+                          >
+                            {_date.toString()} {cal._time.toString()}
                           </TableCell>
                           <TableCell
-                            align="center"
                             sx={{
-                              color:
-                                rp.totalWin.toString()[0] === "-"
-                                  ? "red"
-                                  : "blue",
+                              overflow: "scroll/",
+                              border: 1,
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                            }}
+                            align="left"
+                          >
+                            {cal.customer.name.toString()}
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              border: 1,
+                              color: "blue",
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
                             }}
                           >
-                            {rp.totalWin.toString()}
+                            {cal.totalAmount.toString()}
                           </TableCell>
                           <TableCell
-                            sx={{ fontSize: 16, fontWeight: 500 }}
                             align="right"
+                            sx={{
+                              border: 1,
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                              color: "red",
+                            }}
                           >
-                            {/* {reportIn.me.totalWin} */}
-                            <IconButton size="small" color="success">
-                              <RemoveRedEye fontSize="12" />
-                            </IconButton>
+                            {cal.pout_tee_amount
+                              ? cal.pout_tee_amount.toString()
+                              : "0"}
                           </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              color: "blue",
+                              border: 1,
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                            }}
+                          >
+                            {cal.commission.toString()}
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              color:
+                                cal.win.toString()[0] === "-" ? "red" : "blue",
+                              border: 1,
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                            }}
+                          >
+                            {cal.win.toString()}
+                          </TableCell>
+                          {/* <TableCell
+                          sx={{ fontSize: 16, fontWeight: 500 }}
+                          align="right"
+                        >
+                          <IconButton size="small" color="success">
+                            <RemoveRedEye fontSize="12" />
+                          </IconButton>
+                        </TableCell> */}
                         </TableRow>
                       </>
                     );
                   })}
-              </TableBody>
-              <TableFooter>
-                <TableRow sx={{ bgcolor: grey[300] }}>
+                  <TableRow>
                   <TableCell
-                    align="left"
+                    colSpan={2}
                     sx={{
-                      fontSize: "14px",
+                      fontSize: 14,
                       fontWeight: "bold",
                       color: "black",
+                      border: 1,
+                      borderColor: grey[300],
+                      borderCollapse: "collapse",
                     }}
                   >
                     Total
                   </TableCell>
                   <TableCell
-                    align="center"
+                    align="right"
                     sx={{
-                      fontSize: "14px",
+                      fontSize: 14,
                       fontWeight: "bold",
-                      color: "black",
+                      color: "blue",
+                      border: 1,
+                      borderColor: grey[300],
+                      borderCollapse: "collapse",
                     }}
                   >
-                    {reportIn.me.totalAmount
-                      ? reportIn.me.totalAmount.toString()
-                      : "0"}
+                    {reportOut.totalOut.totalAmount}
                   </TableCell>
                   <TableCell
-                    align="center"
+                    align="right"
                     sx={{
-                      fontSize: "14px",
+                      fontSize: 14,
                       fontWeight: "bold",
-                      color: "black",
+                      color: "red",
+                      border: 1,
+                      borderColor: grey[300],
+                      borderCollapse: "collapse",
                     }}
                   >
-                    {reportIn.me.pout_tee_amount
-                      ? reportIn.me.pout_tee_amount.toString()
-                      : "0"}
+                    {reportOut.totalOut.pout_tee_amount === null
+                      ? 0
+                      : reportOut.totalOut.pout_tee_amount}
                   </TableCell>
                   <TableCell
-                    align="center"
-                    sx={{ fontSize: "14px", fontWeight: "bold", color: "red" }}
-                  >
-                    0
-                  </TableCell>
-                  <TableCell
-                    align="center"
+                    align="right"
                     sx={{
-                      fontSize: "14px",
+                      fontSize: 14,
                       fontWeight: "bold",
-                      color: "black",
+                      color: "blue",
+                      border: 1,
+                      borderColor: grey[300],
+                      borderCollapse: "collapse",
                     }}
                   >
-                    {reportIn.me.totalWin
-                      ? reportIn.me.totalWin.toString()
-                      : "0"}
+                    {reportOut.totalOut.totalCommission}
                   </TableCell>
-                  <TableCell align="right"></TableCell>
+
+                  <TableCell
+                    align="right"
+                    sx={{
+                      fontSize: 14,
+                      fontWeight: "bold",
+                      // color:
+                      //   reportOut.totalOut.totalWin.toString()[0] === "-"
+                      //     ? "red"
+                      //     : "blue",
+                      border: 1,
+                      borderColor: grey[300],
+                      borderCollapse: "collapse",
+                    }}
+                  >
+                    {reportOut.totalOut.totalWin}
+                  </TableCell>
                 </TableRow>
-              </TableFooter>
+                  </>
+                  
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={7}>
+                      <Typography
+                        padding={1}
+                        fontSize={18}
+                        fontWeight={500}
+                        color={"red"}
+                        textAlign="center"
+                        gridColumn={3}
+                      >
+                        Reports Not Found !!!
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
             </>
           )}
 
-          {InOutControl === "Out" && (
-            <TableBody>
-              {reportOut.calls && reportOut.calls.length ? (
-                [...reportOut.calls].map((cal) => {
-                  // const start = new Date(startDate);
-                  // const end = new Date(endDate);
-                  return (
-                    <>
-                      <TableRow>
-                        {/* <TableCell align="left">{`${start.getDate()}/${start.getMonth()}/${start.getFullYear()} - ${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`}</TableCell> */}
-                        <TableCell sx={{ overflow: "scroll/" }} align="left">
-                          {cal.customer.name.toString()}
-                        </TableCell>
-                        <TableCell align="center">
-                          {cal.totalAmount.toString()}
-                        </TableCell>
-                        <TableCell align="center">
-                          {cal.pout_tee_amount
-                            ? cal.pout_tee_amount.toString()
-                            : "0"}
-                        </TableCell>
-                        <TableCell align="center" sx={{ color: "blue" }}>
-                          {cal.commission.toString()}
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          sx={{
-                            color:
-                              cal.win.toString()[0] === "-" ? "red" : "blue",
-                          }}
-                        >
-                          {cal.win.toString()}
-                        </TableCell>
-                        <TableCell
-                          sx={{ fontSize: 16, fontWeight: 500 }}
-                          align="right"
-                        >
-                          {/* {reportIn.me.totalWin} */}
-                          <IconButton size="small" color="success">
-                            <RemoveRedEye fontSize="12" />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    </>
-                  );
-                })
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={7}>
-                    <Typography
-                      padding={1}
-                      fontSize={18}
-                      fontWeight={500}
-                      color={"red"}
-                      textAlign="center"
-                      gridColumn={3}
-                    >
-                      Reports Not Found !!!
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          )}
-
           {InOutControl === "Main" && (
-            <TableBody>
-              {reportMain.main && reportMain.main.length ? (
-                [...reportMain.main].map((cal) => {
-                  const start = new Date(startDate);
-                  const end = new Date(endDate);
-                  return (
-                    <>
-                      <TableRow>
-                        {/* <TableCell align="left">{`${start.getDate()}/${start.getMonth()}/${start.getFullYear()} - ${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`}</TableCell> */}
-                        <TableCell sx={{ overflow: "scroll/" }} align="left">
-                          {cal.user.username.toString()}
-                        </TableCell>
-                        <TableCell align="center">
-                          {cal.totalAmount.toString()}
-                        </TableCell>
-                        <TableCell align="center">
-                          {cal.pout_tee_amount
-                            ? cal.pout_tee_amount.toString()
-                            : "0"}
-                        </TableCell>
-                        <TableCell align="center" sx={{ color: "blue" }}>
-                          {cal.originalBreak === null
-                            ? 0
-                            : cal.originalBreak.toString()}
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          sx={{
-                            color:
-                              cal.win.toString()[0] === "-" ? "red" : "blue",
-                          }}
-                        >
-                          {cal.win.toString()}
-                        </TableCell>
-                        <TableCell
+            <>
+              <TableBody>
+                {reportMain.totalMain && reportMain.main.length ? (
+                  <>{[...reportMain.main].map((cal) => {
+                    const _date = moment(cal._date).format("DD-MM-YYYY");
+                    return (
+                      <>
+                        <TableRow>
+                          {/* <TableCell align="left">{`${start.getDate()}/${start.getMonth()}/${start.getFullYear()} - ${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`}</TableCell> */}
+                          <TableCell
+                            sx={{
+                              overflow: "scroll/",
+                              border: 1,
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                            }}
+                            align="left"
+                          >
+                            {/* {cal.user.username.toString()} */}
+                            {_date.toString()} {cal._time.toString()}
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              border: 1,
+                              color: "blue",
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                            }}
+                          >
+                            {cal.totalAmount.toString()}
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              border: 1,
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                              color: "red",
+                            }}
+                          >
+                            {cal.pout_tee_amount
+                              ? cal.pout_tee_amount.toString()
+                              : "0"}
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              color: "blue",
+                              border: 1,
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                            }}
+                          >
+                            {cal.originalBreak === null
+                              ? 0
+                              : cal.originalBreak.toString()}
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{
+                              color:
+                                cal.win.toString()[0] === "-" ? "red" : "blue",
+                              border: 1,
+                              borderColor: grey[300],
+                              borderCollapse: "collapse",
+                            }}
+                          >
+                            {cal.win.toString()}
+                          </TableCell>
+                          {/* <TableCell
                           sx={{ fontSize: 16, fontWeight: 500 }}
                           align="right"
                         >
-                          {/* {reportIn.me.totalWin} */}
                           <IconButton size="small" color="success">
                             <RemoveRedEye fontSize="12" />
                           </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    </>
-                  );
-                })
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={7}>
-                    <Typography
-                      padding={1}
-                      fontSize={18}
-                      fontWeight={500}
-                      color={"red"}
-                      textAlign="center"
-                      gridColumn={3}
-                    >
-                      Reports Not Found !!!
-                    </Typography>
+                        </TableCell> */}
+                        </TableRow>
+                      </>
+                    );
+                  })}
+                  <TableRow>
+                  <TableCell
+                    sx={{
+                      fontSize: 14,
+                      fontWeight: "bold",
+                      color: "black",
+                      border: 1,
+                      borderColor: grey[300],
+                      borderCollapse: "collapse",
+                    }}
+                  >
+                    Total
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    sx={{
+                      fontSize: 14,
+                      fontWeight: "bold",
+                      color: "blue",
+                      border: 1,
+                      borderColor: grey[300],
+                      borderCollapse: "collapse",
+                    }}
+                  >
+                    {reportMain.totalMain.totalAmount}
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    sx={{
+                      fontSize: 14,
+                      fontWeight: "bold",
+                      color: "red",
+                      border: 1,
+                      borderColor: grey[300],
+                      borderCollapse: "collapse",
+                    }}
+                  >
+                    {reportMain.totalMain.pout_tee_amount === null
+                      ? 0
+                      : reportMain.totalMain.pout_tee_amount}
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    sx={{
+                      fontSize: 14,
+                      fontWeight: "bold",
+                      color: "blue",
+                      border: 1,
+                      borderColor: grey[300],
+                      borderCollapse: "collapse",
+                    }}
+                  >
+                    {reportMain.totalMain.totalOriginalBreak}
+                  </TableCell>
+
+                  <TableCell
+                    align="right"
+                    sx={{
+                      fontSize: 14,
+                      fontWeight: "bold",
+                      color:
+                        reportMain.totalMain.totalWin.toString()[0] === "-"
+                          ? "red"
+                          : "blue",
+                      border: 1,
+                      borderColor: grey[300],
+                      borderCollapse: "collapse",
+                    }}
+                  >
+                    {reportMain.totalMain.totalWin}
                   </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
+                  </>
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={7}>
+                      <Typography
+                        padding={1}
+                        fontSize={18}
+                        fontWeight={500}
+                        color={"red"}
+                        textAlign="center"
+                        gridColumn={3}
+                      >
+                        Reports Not Found !!!
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </>
           )}
         </Table>
       </TableContainer>
