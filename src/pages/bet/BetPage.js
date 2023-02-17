@@ -52,6 +52,7 @@ import {
   green,
   grey,
   lightBlue,
+  lightGreen,
   orange,
   red,
   teal,
@@ -101,6 +102,7 @@ import { useReactToPrint } from "react-to-print";
 import moment from "moment";
 import Print from "../../components/Print";
 import MaxAdd from "../../components/modal/MaxAdd";
+import { exportTextFile } from "../../shared/ExportTxt";
 
 const BetPage = () => {
   // For input refs
@@ -2407,6 +2409,9 @@ const BetPage = () => {
       }
     ).then((res) => {
       setMaxAddhandle(false);
+      exportTextFile({ demoLager });
+      setMastercallAPI(true);
+      setDemolager({ ...demoLager, extraNumb: [] });
     });
   };
   const action = (
@@ -2534,10 +2539,16 @@ const BetPage = () => {
         <Stack direction={"row"} spacing={1} alignItems={"center"}>
           {(in_out === "In" && (
             <Autocomplete
+              // multiple={true}
               size="small"
+              // value={users[0]}
               options={users}
               sx={{ width: 150 }}
               getOptionLabel={(cus) => `${cus.username}`}
+              // isOptionEqualToValue={(option) =>
+              //   option.username === users.username
+              // }
+              defaultValue={users[0]}
               onChange={(e, value) => {
                 console.log(value);
                 setAutoCompleteValue(value);
@@ -2557,6 +2568,7 @@ const BetPage = () => {
                   size="small"
                   color={"success"}
                   // defaultValue={autoCompleteValue}
+                  defaultValue={users && users[0]}
                 />
               )}
             />
@@ -3239,12 +3251,15 @@ const BetPage = () => {
               {in_out == "Out" && customers.length && (
                 <IconButton
                   onClick={handleMaxAdd}
+                  onMouseOver={false}
                   sx={{
                     borderRadius: 1,
                     fontWeight: "bold",
                     fontSize: 12,
                     color: "white",
                     bgcolor: "red",
+                    backgroundColor: "red",
+                    "&:hover": { backgroundColor: "black" },
                   }}
                 >
                   MaxAdd
@@ -3708,18 +3723,54 @@ const BetPage = () => {
       </ModalBox>
       <Dialog open={maxAddhandle}>
         <DialogContent>
-          Do you want to sent {cusval && cusval.name.toString()}?
+          <Stack spacing={1}>
+            <Typography color={"Red"}>
+              Do you want to sent {cusval && cusval.name.toString()}? Export
+              Text File
+            </Typography>
+            <FormControl sx={{ minWidth: 120, maxWidth: 140 }} size="small">
+              <InputLabel id="demo-select-small">Customers</InputLabel>
+              <Select
+                labelId="demo-select-small"
+                id="demo-select-small"
+                value={cusval}
+                label={"Customers"}
+                onChange={(e) => OnSelect(e)}
+              >
+                {[...customers].map((c) => (
+                  <MenuItem sx={{ width: 200 }} value={c}>
+                    {c.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Stack>
         </DialogContent>
+
         <DialogActions>
           <Button
             size="small"
-            color={"error"}
+            sx={{
+              bgcolor: "red",
+              "&:hover": { backgroundColor: red[200] },
+              fontWeight: "bold",
+            }}
             onClick={() => setMaxAddhandle(false)}
           >
-            Cancel
+            <span style={{ color: "white", textTransform: "none" }}>
+              Cancel
+            </span>
           </Button>
-          <Button size="small" onClick={sentMaxAdd}>
-            Sent
+          <Button
+            size="small"
+            onClick={sentMaxAdd}
+            sx={{
+              bgcolor: lightGreen["900"],
+              "&:hover": { backgroundColor: lightGreen[300] },
+              fontWeight: "bold",
+            }}
+          >
+            <span style={{ color: "white", textTransform: "none" }}>Send</span>
           </Button>
         </DialogActions>
       </Dialog>
