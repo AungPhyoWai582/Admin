@@ -117,7 +117,7 @@ const LotteryCRUD = ({
               {/* <Button onClick={()=>console.log(lotCreate)}>set</Button> */}
             </Stack>
           )}
-          <Stack  direction={'row'} justifyContent={'space-between'}>
+          <Stack direction={"row"} justifyContent={"space-between"}>
             <Stack spacing={1.5} padding={1}>
               <Typography variant="caption" fontSize={16}>
                 hot_tee
@@ -190,7 +190,7 @@ const LotteryCRUD = ({
                 setLotCreate({
                   pout_tee: null,
                   hot_tee: [],
-                  superhot_tee:[],
+                  superhot_tee: [],
                   time: null,
                   play: false,
                 });
