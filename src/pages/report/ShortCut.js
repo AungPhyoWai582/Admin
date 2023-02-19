@@ -219,16 +219,18 @@ const ShortCup = () => {
             ]}
           />
 
-          <Select
-            defaultValue={autoCompleteValue}
-            style={{ width: 150 }}
-            onChange={(e) => setAutoCompleteValue(e)}
-            options={[
-              ...customer.map((cus) => {
-                return { value: cus.value, label: cus.name };
-              }),
-            ]}
-          />
+          {InOutControl === "In" && (
+            <Select
+              defaultValue={autoCompleteValue}
+              style={{ width: 150 }}
+              onChange={(e) => setAutoCompleteValue(e)}
+              options={[
+                ...customer.map((cus) => {
+                  return { value: cus.value, label: cus.name };
+                }),
+              ]}
+            />
+          )}
         </Space>
 
         {/* </Stack> */}
@@ -624,81 +626,84 @@ const ShortCup = () => {
             <>
               <TableBody>
                 {reportOut.totalOut && reportOut.calls.length ? (
-                  <>{[...reportOut.calls].map((cal) => {
-                    const _date = moment(cal._date).format("DD-MM-YYYY");
-                    return (
-                      <>
-                        <TableRow>
-                          <TableCell
-                            sx={{
-                              overflow: "scroll/",
-                              border: 1,
-                              borderColor: grey[300],
-                              borderCollapse: "collapse",
-                            }}
-                            align="left"
-                          >
-                            {_date.toString()} {cal._time.toString()}
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              overflow: "scroll/",
-                              border: 1,
-                              borderColor: grey[300],
-                              borderCollapse: "collapse",
-                            }}
-                            align="left"
-                          >
-                            {cal.customer.name.toString()}
-                          </TableCell>
-                          <TableCell
-                            align="right"
-                            sx={{
-                              border: 1,
-                              color: "blue",
-                              borderColor: grey[300],
-                              borderCollapse: "collapse",
-                            }}
-                          >
-                            {cal.totalAmount.toString()}
-                          </TableCell>
-                          <TableCell
-                            align="right"
-                            sx={{
-                              border: 1,
-                              borderColor: grey[300],
-                              borderCollapse: "collapse",
-                              color: "red",
-                            }}
-                          >
-                            {cal.pout_tee_amount
-                              ? cal.pout_tee_amount.toString()
-                              : "0"}
-                          </TableCell>
-                          <TableCell
-                            align="right"
-                            sx={{
-                              color: "blue",
-                              border: 1,
-                              borderColor: grey[300],
-                              borderCollapse: "collapse",
-                            }}
-                          >
-                            {cal.commission.toString()}
-                          </TableCell>
-                          <TableCell
-                            align="right"
-                            sx={{
-                              color:
-                                cal.win.toString()[0] === "-" ? "red" : "blue",
-                              border: 1,
-                              borderColor: grey[300],
-                              borderCollapse: "collapse",
-                            }}
-                          >
-                            {cal.win.toString()}
-                          </TableCell>
-                          {/* <TableCell
+                  <>
+                    {[...reportOut.calls].map((cal) => {
+                      const _date = moment(cal._date).format("DD-MM-YYYY");
+                      return (
+                        <>
+                          <TableRow>
+                            <TableCell
+                              sx={{
+                                overflow: "scroll/",
+                                border: 1,
+                                borderColor: grey[300],
+                                borderCollapse: "collapse",
+                              }}
+                              align="left"
+                            >
+                              {_date.toString()} {cal._time.toString()}
+                            </TableCell>
+                            <TableCell
+                              sx={{
+                                overflow: "scroll/",
+                                border: 1,
+                                borderColor: grey[300],
+                                borderCollapse: "collapse",
+                              }}
+                              align="left"
+                            >
+                              {cal.customer.name.toString()}
+                            </TableCell>
+                            <TableCell
+                              align="right"
+                              sx={{
+                                border: 1,
+                                color: "blue",
+                                borderColor: grey[300],
+                                borderCollapse: "collapse",
+                              }}
+                            >
+                              {cal.totalAmount.toString()}
+                            </TableCell>
+                            <TableCell
+                              align="right"
+                              sx={{
+                                border: 1,
+                                borderColor: grey[300],
+                                borderCollapse: "collapse",
+                                color: "red",
+                              }}
+                            >
+                              {cal.pout_tee_amount
+                                ? cal.pout_tee_amount.toString()
+                                : "0"}
+                            </TableCell>
+                            <TableCell
+                              align="right"
+                              sx={{
+                                color: "blue",
+                                border: 1,
+                                borderColor: grey[300],
+                                borderCollapse: "collapse",
+                              }}
+                            >
+                              {cal.commission.toString()}
+                            </TableCell>
+                            <TableCell
+                              align="right"
+                              sx={{
+                                color:
+                                  cal.win.toString()[0] === "-"
+                                    ? "red"
+                                    : "blue",
+                                border: 1,
+                                borderColor: grey[300],
+                                borderCollapse: "collapse",
+                              }}
+                            >
+                              {cal.win.toString()}
+                            </TableCell>
+                            {/* <TableCell
                           sx={{ fontSize: 16, fontWeight: 500 }}
                           align="right"
                         >
@@ -706,85 +711,84 @@ const ShortCup = () => {
                             <RemoveRedEye fontSize="12" />
                           </IconButton>
                         </TableCell> */}
-                        </TableRow>
-                      </>
-                    );
-                  })}
-                  <TableRow>
-                  <TableCell
-                    colSpan={2}
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: "bold",
-                      color: "black",
-                      border: 1,
-                      borderColor: grey[300],
-                      borderCollapse: "collapse",
-                    }}
-                  >
-                    Total
-                  </TableCell>
-                  <TableCell
-                    align="right"
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: "bold",
-                      color: "blue",
-                      border: 1,
-                      borderColor: grey[300],
-                      borderCollapse: "collapse",
-                    }}
-                  >
-                    {reportOut.totalOut.totalAmount}
-                  </TableCell>
-                  <TableCell
-                    align="right"
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: "bold",
-                      color: "red",
-                      border: 1,
-                      borderColor: grey[300],
-                      borderCollapse: "collapse",
-                    }}
-                  >
-                    {reportOut.totalOut.pout_tee_amount === null
-                      ? 0
-                      : reportOut.totalOut.pout_tee_amount}
-                  </TableCell>
-                  <TableCell
-                    align="right"
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: "bold",
-                      color: "blue",
-                      border: 1,
-                      borderColor: grey[300],
-                      borderCollapse: "collapse",
-                    }}
-                  >
-                    {reportOut.totalOut.totalCommission}
-                  </TableCell>
+                          </TableRow>
+                        </>
+                      );
+                    })}
+                    <TableRow>
+                      <TableCell
+                        colSpan={2}
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          color: "black",
+                          border: 1,
+                          borderColor: grey[300],
+                          borderCollapse: "collapse",
+                        }}
+                      >
+                        Total
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          color: "blue",
+                          border: 1,
+                          borderColor: grey[300],
+                          borderCollapse: "collapse",
+                        }}
+                      >
+                        {reportOut.totalOut.totalAmount}
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          color: "red",
+                          border: 1,
+                          borderColor: grey[300],
+                          borderCollapse: "collapse",
+                        }}
+                      >
+                        {reportOut.totalOut.pout_tee_amount === null
+                          ? 0
+                          : reportOut.totalOut.pout_tee_amount}
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          color: "blue",
+                          border: 1,
+                          borderColor: grey[300],
+                          borderCollapse: "collapse",
+                        }}
+                      >
+                        {reportOut.totalOut.totalCommission}
+                      </TableCell>
 
-                  <TableCell
-                    align="right"
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: "bold",
-                      // color:
-                      //   reportOut.totalOut.totalWin.toString()[0] === "-"
-                      //     ? "red"
-                      //     : "blue",
-                      border: 1,
-                      borderColor: grey[300],
-                      borderCollapse: "collapse",
-                    }}
-                  >
-                    {reportOut.totalOut.totalWin}
-                  </TableCell>
-                </TableRow>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          color:
+                            reportOut.totalOut.totalWin.toString()[0] === "-"
+                              ? "red"
+                              : "blue",
+                          border: 1,
+                          borderColor: grey[300],
+                          borderCollapse: "collapse",
+                        }}
+                      >
+                        {reportOut.totalOut.totalWin}
+                      </TableCell>
+                    </TableRow>
                   </>
-                  
                 ) : (
                   <TableRow>
                     <TableCell colSpan={7}>
@@ -809,74 +813,77 @@ const ShortCup = () => {
             <>
               <TableBody>
                 {reportMain.totalMain && reportMain.main.length ? (
-                  <>{[...reportMain.main].map((cal) => {
-                    const _date = moment(cal._date).format("DD-MM-YYYY");
-                    return (
-                      <>
-                        <TableRow>
-                          {/* <TableCell align="left">{`${start.getDate()}/${start.getMonth()}/${start.getFullYear()} - ${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`}</TableCell> */}
-                          <TableCell
-                            sx={{
-                              overflow: "scroll/",
-                              border: 1,
-                              borderColor: grey[300],
-                              borderCollapse: "collapse",
-                            }}
-                            align="left"
-                          >
-                            {/* {cal.user.username.toString()} */}
-                            {_date.toString()} {cal._time.toString()}
-                          </TableCell>
-                          <TableCell
-                            align="right"
-                            sx={{
-                              border: 1,
-                              color: "blue",
-                              borderColor: grey[300],
-                              borderCollapse: "collapse",
-                            }}
-                          >
-                            {cal.totalAmount.toString()}
-                          </TableCell>
-                          <TableCell
-                            align="right"
-                            sx={{
-                              border: 1,
-                              borderColor: grey[300],
-                              borderCollapse: "collapse",
-                              color: "red",
-                            }}
-                          >
-                            {cal.pout_tee_amount
-                              ? cal.pout_tee_amount.toString()
-                              : "0"}
-                          </TableCell>
-                          <TableCell
-                            align="right"
-                            sx={{
-                              color: "blue",
-                              border: 1,
-                              borderColor: grey[300],
-                              borderCollapse: "collapse",
-                            }}
-                          >
-                            {cal.originalBreak === null
-                              ? 0
-                              : cal.originalBreak.toString()}
-                          </TableCell>
-                          <TableCell
-                            align="right"
-                            sx={{
-                              color:
-                                cal.win.toString()[0] === "-" ? "red" : "blue",
-                              border: 1,
-                              borderColor: grey[300],
-                              borderCollapse: "collapse",
-                            }}
-                          >
-                            {cal.win.toString()}
-                          </TableCell>
-                          {/* <TableCell
+                  <>
+                    {[...reportMain.main].map((cal) => {
+                      const _date = moment(cal._date).format("DD-MM-YYYY");
+                      return (
+                        <>
+                          <TableRow>
+                            {/* <TableCell align="left">{`${start.getDate()}/${start.getMonth()}/${start.getFullYear()} - ${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`}</TableCell> */}
+                            <TableCell
+                              sx={{
+                                overflow: "scroll/",
+                                border: 1,
+                                borderColor: grey[300],
+                                borderCollapse: "collapse",
+                              }}
+                              align="left"
+                            >
+                              {/* {cal.user.username.toString()} */}
+                              {_date.toString()} {cal._time.toString()}
+                            </TableCell>
+                            <TableCell
+                              align="right"
+                              sx={{
+                                border: 1,
+                                color: "blue",
+                                borderColor: grey[300],
+                                borderCollapse: "collapse",
+                              }}
+                            >
+                              {cal.totalAmount.toString()}
+                            </TableCell>
+                            <TableCell
+                              align="right"
+                              sx={{
+                                border: 1,
+                                borderColor: grey[300],
+                                borderCollapse: "collapse",
+                                color: "red",
+                              }}
+                            >
+                              {cal.pout_tee_amount
+                                ? cal.pout_tee_amount.toString()
+                                : "0"}
+                            </TableCell>
+                            <TableCell
+                              align="right"
+                              sx={{
+                                color: "blue",
+                                border: 1,
+                                borderColor: grey[300],
+                                borderCollapse: "collapse",
+                              }}
+                            >
+                              {cal.originalBreak === null
+                                ? 0
+                                : cal.originalBreak.toString()}
+                            </TableCell>
+                            <TableCell
+                              align="right"
+                              sx={{
+                                color:
+                                  cal.win.toString()[0] === "-"
+                                    ? "red"
+                                    : "blue",
+                                border: 1,
+                                borderColor: grey[300],
+                                borderCollapse: "collapse",
+                              }}
+                            >
+                              {cal.win.toString()}
+                            </TableCell>
+                            {/* <TableCell
                           sx={{ fontSize: 16, fontWeight: 500 }}
                           align="right"
                         >
@@ -884,82 +891,82 @@ const ShortCup = () => {
                             <RemoveRedEye fontSize="12" />
                           </IconButton>
                         </TableCell> */}
-                        </TableRow>
-                      </>
-                    );
-                  })}
-                  <TableRow>
-                  <TableCell
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: "bold",
-                      color: "black",
-                      border: 1,
-                      borderColor: grey[300],
-                      borderCollapse: "collapse",
-                    }}
-                  >
-                    Total
-                  </TableCell>
-                  <TableCell
-                    align="right"
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: "bold",
-                      color: "blue",
-                      border: 1,
-                      borderColor: grey[300],
-                      borderCollapse: "collapse",
-                    }}
-                  >
-                    {reportMain.totalMain.totalAmount}
-                  </TableCell>
-                  <TableCell
-                    align="right"
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: "bold",
-                      color: "red",
-                      border: 1,
-                      borderColor: grey[300],
-                      borderCollapse: "collapse",
-                    }}
-                  >
-                    {reportMain.totalMain.pout_tee_amount === null
-                      ? 0
-                      : reportMain.totalMain.pout_tee_amount}
-                  </TableCell>
-                  <TableCell
-                    align="right"
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: "bold",
-                      color: "blue",
-                      border: 1,
-                      borderColor: grey[300],
-                      borderCollapse: "collapse",
-                    }}
-                  >
-                    {reportMain.totalMain.totalOriginalBreak}
-                  </TableCell>
+                          </TableRow>
+                        </>
+                      );
+                    })}
+                    <TableRow>
+                      <TableCell
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          color: "black",
+                          border: 1,
+                          borderColor: grey[300],
+                          borderCollapse: "collapse",
+                        }}
+                      >
+                        Total
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          color: "blue",
+                          border: 1,
+                          borderColor: grey[300],
+                          borderCollapse: "collapse",
+                        }}
+                      >
+                        {reportMain.totalMain.totalAmount}
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          color: "red",
+                          border: 1,
+                          borderColor: grey[300],
+                          borderCollapse: "collapse",
+                        }}
+                      >
+                        {reportMain.totalMain.pout_tee_amount === null
+                          ? 0
+                          : reportMain.totalMain.pout_tee_amount}
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          color: "blue",
+                          border: 1,
+                          borderColor: grey[300],
+                          borderCollapse: "collapse",
+                        }}
+                      >
+                        {reportMain.totalMain.totalOriginalBreak}
+                      </TableCell>
 
-                  <TableCell
-                    align="right"
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: "bold",
-                      color:
-                        reportMain.totalMain.totalWin.toString()[0] === "-"
-                          ? "red"
-                          : "blue",
-                      border: 1,
-                      borderColor: grey[300],
-                      borderCollapse: "collapse",
-                    }}
-                  >
-                    {reportMain.totalMain.totalWin}
-                  </TableCell>
-                </TableRow>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          color:
+                            reportMain.totalMain.totalWin.toString()[0] === "-"
+                              ? "red"
+                              : "blue",
+                          border: 1,
+                          borderColor: grey[300],
+                          borderCollapse: "collapse",
+                        }}
+                      >
+                        {reportMain.totalMain.totalWin}
+                      </TableCell>
+                    </TableRow>
                   </>
                 ) : (
                   <TableRow>
