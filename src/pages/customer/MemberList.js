@@ -261,9 +261,18 @@ const MemberList = () => {
                           {cus.betLimit ? cus.betLimit : "--"}
                         </TableCell>
                         <TableCell>
-                          <IconButton size="small" color="success">
-                            <Edit fontSize="sm" />
-                          </IconButton>
+                        <NavLink
+                            to={`/customers/detail/${cus._id}`}
+                            state={{ customer: cus }}
+                          >
+                            <IconButton
+                              size="small"
+                              color="success"
+                              // onClick={() => UserContent.setDetailUser(user._id)}
+                            >
+                              <VisibilityOutlined fontSize="sm" />
+                            </IconButton>
+                          </NavLink>
                         </TableCell>
                       </TableRow>
                     ))}
