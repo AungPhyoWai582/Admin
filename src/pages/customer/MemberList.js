@@ -1,4 +1,11 @@
-import { Edit, VisibilityOutlined } from "@mui/icons-material";
+import {
+  Close,
+  Edit,
+  EditRoad,
+  Update,
+  Upgrade,
+  VisibilityOutlined,
+} from "@mui/icons-material";
 import {
   FormControlLabel,
   IconButton,
@@ -28,6 +35,8 @@ const MemberList = () => {
   const [in_out, set_in_out] = useState("In");
   const [ctrlEffect, setCtrlEffect] = useState(true);
 
+  const [editing, setEditing] = useState(false);
+
   const [users, setUsers] = useState({
     count: null,
     data: null,
@@ -37,6 +46,9 @@ const MemberList = () => {
     count: null,
     data: null,
   });
+
+  const [editedRow, setEditedRow] = useState(null);
+  const [editedIndex, setEditIndex] = useState(null);
 
   // For pagination
   const [inPage, setInPage] = useState(1);
@@ -82,6 +94,13 @@ const MemberList = () => {
   // console.log(rowperpage);
   const [inputsearch, setInputsearch] = useState("");
 
+  // Editable
+  const handleInputChange = (event) => {
+    console.log(event.target.name, event.target.value);
+    const { name, value } = event.target;
+    setEditedRow((prevRow) => ({ ...prevRow, [name]: value }));
+  };
+
   // In users pagination
   const handleInChangePage = (event, value) => {
     console.log(value);
@@ -96,6 +115,32 @@ const MemberList = () => {
   };
 
   /****************************************************************** */
+
+  // Customer update
+  const customerUpate = () => {
+    let obj = {
+      name: editedRow.name,
+      phone: editedRow.phone,
+      commission: editedRow.commission,
+      divider: editedRow.divider,
+      za: editedRow.twoDZ,
+      betLimit: editedRow.betLimit,
+    };
+    console.log(editedRow._id, obj);
+
+    Axios.put(`/customers/${editedRow._id}`, obj, {
+      headers: {
+        authorization: `Bearer ` + localStorage.getItem("access-token"),
+      },
+    }).then((res) => {
+      console.log(res.data);
+      setCtrlEffect(true);
+      setEditing(false);
+      setEditIndex(null);
+      setEditedRow(null);
+    });
+  };
+
   // Out customers pagination
   const handleOutChangePage = (event, value) => {
     console.log(value);
@@ -109,13 +154,20 @@ const MemberList = () => {
     setCtrlEffect(true);
   };
 
+
   console.log(customers);
+  console.log(editing);
 
   /************************************************** */
 
   return (
     <Paper sx={{ padding: "1", height: "100%" }}>
-      <Stack direction={"row"} justifyContent='space-between' alignItems={'center'} padding={1}>
+      <Stack
+        direction={"row"}
+        justifyContent="space-between"
+        alignItems={"center"}
+        padding={1}
+      >
         <TextField
           size={"small"}
           variant="standard"
@@ -252,27 +304,112 @@ const MemberList = () => {
                         <TableCell>
                           <span>{key + 1}</span>
                         </TableCell>
-                        <TableCell>{cus.name}</TableCell>
-                        <TableCell>{cus.phone}</TableCell>
-                        <TableCell>{cus.commission}</TableCell>
+                        <TableCell>
+                          {editing && editedIndex === key ? (
+                            <TextField
+                              label="name"
+                              // sx={{":focus":{width:'100%'}}}
+                              name="name"
+                              value={editedRow !== null ? editedRow.name : ""}
+                              onChange={handleInputChange}
+                              size="small"
+                              onFocus
+                            />
+                          ) : (
+                            cus.name
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editing && editedIndex === key ? (
+                            <TextField
+                              label="phone"
+                              name="phone"
+                              value={editedRow !== null ? editedRow.phone : ""}
+                              onChange={handleInputChange}
+                              size="small"
+                              onFocus
+                            />
+                          ) : (
+                            cus.phone
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editing && editedIndex === key ? (
+                            <TextField
+                              label="commission"
+                              name="commission"
+                              value={
+                                editedRow !== null ? editedRow.commission : ""
+                              }
+                              onChange={handleInputChange}
+                              size="small"
+                              onFocus
+                            />
+                          ) : (
+                            cus.commission
+                          )}
+                        </TableCell>
+
                         <TableCell>{cus.divider}</TableCell>
-                        <TableCell>{cus.twoDZ}</TableCell>
+                        <TableCell>
+                          {editing && editedIndex === key ? (
+                            <TextField
+                              label="twoDz"
+                              name="twoDz"
+                              value={
+                                editedRow !== null ? editedRow.divider : ""
+                              }
+                              onChange={handleInputChange}
+                              size="small"
+                              onFocus
+                            />
+                          ) : (
+                            cus.twoDz
+                          )}
+                        </TableCell>
                         <TableCell>
                           {cus.betLimit ? cus.betLimit : "--"}
                         </TableCell>
                         <TableCell>
-                        <NavLink
+                          {/* <NavLink
                             to={`/customers/detail/${cus._id}`}
                             state={{ customer: cus }}
-                          >
+                          > */}
+                          {editing && editedIndex === key ? (
+                            <>
                             <IconButton
                               size="small"
                               color="success"
-                              // onClick={() => UserContent.setDetailUser(user._id)}
+                              onClick={()=>{
+                                setEditing(false);
+                                setEditIndex(null);
+                                setEditedRow(null);
+                              }}
                             >
-                              <VisibilityOutlined fontSize="sm" />
+                              <Close fontSize="sm" />
                             </IconButton>
-                          </NavLink>
+                            <IconButton
+                              size="small"
+                              color="success"
+                              onClick={customerUpate}
+                            >
+                              <Upgrade fontSize="sm" />
+                            </IconButton>
+                            </>
+                          ) : (
+                            <IconButton
+                              size="small"
+                              color="success"
+                              onClick={() => {
+                                setEditing(true);
+                                setEditIndex(key);
+                                setEditedRow(cus);
+                              }}
+                            >
+                              <Edit fontSize="sm" />
+                            </IconButton>
+                          )}
+                          {/* </NavLink> */}
                         </TableCell>
                       </TableRow>
                     ))}
