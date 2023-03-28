@@ -38,10 +38,10 @@ import { FileUpload, Star } from "@mui/icons-material";
 
 const LagerCut = () => {
   //
-  const location = useLocation();
-  const extraTotal = location.state.extraArray
-    .map((am, key) => Number(am.amount))
-    .reduce((n, p) => n + p, 0);
+  // const location = useLocation();
+  // const extraTotal = location.state.extraArray
+  //   .map((am, key) => Number(am.amount))
+  //   .reduce((n, p) => n + p, 0);
 
   // % and cash control
   const [perandcashCtl, setPerandcashCtl] = useState(false);
@@ -109,7 +109,7 @@ const LagerCut = () => {
     }).then((res) => {
       console.log(res.data);
       setCustomers(res.data);
-      setCustomer(res.data[0]._id);
+      // setCustomer(res.data[0]._id);
     });
     Axios.get(`/lagers/${lotteryId}`, {
       headers: {
@@ -379,10 +379,8 @@ const LagerCut = () => {
                 textAlign={"center"}
               >
                 AVG{" "}
-                {lager.originalBreak && extraTotal
-                  ? Math.round(
-                      (lager.totalAmount - extraTotal) / lager.originalBreak
-                    ) + "%"
+                {lager.originalBreak
+                  ? Math.round(lager.totalAmount / lager.originalBreak) + "%"
                   : "0"}
               </Typography>
               <Typography
