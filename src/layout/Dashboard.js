@@ -28,6 +28,7 @@ import BetPage from "../pages/bet/BetPage";
 import LagerCut from "../pages/lager/LagerCut";
 import { Stack } from "@mui/system";
 import Print from "../components/Print";
+import CustomerDetail from "../pages/customer/CustomerDetail";
 
 const Dashboard = () => {
   const [authUser, setAuthUser] = useState({
@@ -97,6 +98,7 @@ const Dashboard = () => {
       <Route path="/customer" element={<Customer />} />
       <Route path="/users/users_list" element={<MemberList />} />
       <Route path="/users/detail/:userId" element={<MemberDetail />} />
+      <Route path="/customers/detail/:customerId" element={<CustomerDetail />} />
       <Route path="/print" element={<Print setPrintCtrl={setPrintCtrl} />} />
       <Route path="/users/users_create" element={<MemberCreate />} />{" "}
     </Routes>
