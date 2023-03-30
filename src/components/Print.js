@@ -47,8 +47,12 @@ const Print = ({ setPrintCtrl }) => {
   return (
     <>
       {/* <div ref={componentRef} id="printArea"> */}
-      <div ref={componentRef} className="print-container" style={{ margin: "0", padding: "0" }}>
-        <div>
+      <div
+        ref={componentRef}
+        className="print-container"
+        style={{ margin: "0", padding: "0" }}
+      >
+        {/* <div>
           <div style={{ display: "flex" }}>
             <div>id : </div>
             <div>{ID}</div>
@@ -65,10 +69,10 @@ const Print = ({ setPrintCtrl }) => {
             <div>time : </div>
             <div>{time}</div>
           </div>
-        </div>
-        <div className="page-break" />
+        </div> */}
+        {/* <div className="page-break" /> */}
         {/* <div>&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;</div> */}
-        <table style={{width:'100%'}}
+        {/* <table style={{width:'100%'}}
         >
           {data.map((num) => (
           <tr
@@ -86,7 +90,8 @@ const Print = ({ setPrintCtrl }) => {
         </table>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <h3>Thank</h3>
-        </div>
+        </div> */}
+        <div>12345678890 အောင် aung</div>
       </div>
       <button onClick={handlePrint}>Print</button>
     </>

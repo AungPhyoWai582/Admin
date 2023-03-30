@@ -107,15 +107,9 @@ const LagerCut = () => {
         authorization: "Bearer " + localStorage.getItem("access-token"),
       },
     }).then((res) => {
-<<<<<<< HEAD
-      console.log(res.data);
-      setCustomers(res.data);
-      // setCustomer(res.data[0]._id);
-=======
       console.log(res.data.data);
       setCustomers(res.data.data);
       setCustomer(res.data.data[0]._id);
->>>>>>> 5200017bcce21273b2ded309b86a2bcdeed2ba84
     });
     Axios.get(`/lagers/${lotteryId}`, {
       headers: {
