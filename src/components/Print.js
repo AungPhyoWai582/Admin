@@ -1,5 +1,7 @@
 // import { Typography } from "@mui/material";
 import useEnhancedEffect from "@mui/material/utils/useEnhancedEffect";
+import { Box } from "@mui/system";
+import { Typography } from "antd";
 import React, { useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
@@ -47,12 +49,12 @@ const Print = ({ setPrintCtrl }) => {
   return (
     <>
       {/* <div ref={componentRef} id="printArea"> */}
-      <div
+      {/* <div
         ref={componentRef}
         className="print-container"
-        style={{ margin: "0", padding: "0" }}
+        style={{ margin: "0 auto", padding: "5px",width:'300px',backgroundColor:'green' }}
       >
-        {/* <div>
+        <div>
           <div style={{ display: "flex" }}>
             <div>id : </div>
             <div>{ID}</div>
@@ -69,10 +71,9 @@ const Print = ({ setPrintCtrl }) => {
             <div>time : </div>
             <div>{time}</div>
           </div>
-        </div> */}
-        {/* <div className="page-break" /> */}
-        {/* <div>&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;&diams;</div> */}
-        {/* <table style={{width:'100%'}}
+        </div>
+       <div  style={{backgroundColor:'red'}} /> */}
+        {/* <table style={{width:'100%',backgroundColor:'red'}}
         >
           {data.map((num) => (
           <tr
@@ -84,15 +85,29 @@ const Print = ({ setPrintCtrl }) => {
             
             }}
           >
-            <td  style={{width:'30% !important',textAlign:'left !mportant'}}>{num.number.toString()}</td>
-            <td style={{width:'70% !important',textAlign:'left !important'}}>{num.amount.toString()}</td>
+            <td  style={{width:'50% !important',textAlign:'right !mportant'}}>{num.number.toString()}</td>
+            <td style={{width:'50% !important',textAlign:'left !important'}}>{num.amount.toString()}</td>
           </tr>))}
-        </table>
+        </table> */}
+        {/* <div style={{border:'1px solid gray'}}>
+          {data.map(num=>{
+            return (<div >
+              <td style={{width:'500px',paddingLeft:'5px',textAlign:'center'}}>{num.number.toString()}</td>
+              <td style={{width:'500px',paddingLeft:'5px',textAlign:'center'}}>{num.amount.toString()}</td>
+            </div>)
+          })}
+          <div >
+              <td style={{width:'500px',paddingLeft:'5px',textAlign:'center'}}>Total</td>
+              <td style={{width:'500px',paddingLeft:'5px',textAlign:'center'}}>{data.reduce((acc,cur)=>acc+Number(cur.amount),0)}</td>
+            </div>
+        </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <h3>Thank</h3>
-        </div> */}
-        <div>12345678890 အောင် aung</div>
-      </div>
+        </div>
+      </div> */}
+      <Box ref={componentRef} sx={{display: 'none', displayPrint: 'block'}}>
+        <Typography>1234567890</Typography>
+      </Box>
       <button onClick={handlePrint}>Print</button>
     </>
   );
