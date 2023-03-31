@@ -206,6 +206,8 @@ const BetPage = () => {
     amount: "",
   });
 
+  const [onChangeHistory, setOnchangeHistory] = useState("");
+
   //lager open
   const [lagerOpen, setLagerOpen] = useState(false);
 
@@ -322,7 +324,7 @@ const BetPage = () => {
     }
     // setHotNumbers( calculateHotTee(JSON.parse(localStorage.getItem('user-info')),hot_tees,lager.in.numbers,lager.in.totalAmount))
   }, [inOutCtl === true]);
-  // console.log(demoLager.extraNumb);
+  console.log(onChangeHistory);
   useEffect(() => {
     if (in_out === "In") {
       Axios.get(`/call/${lotteryId}`, {
@@ -2020,6 +2022,62 @@ const BetPage = () => {
       setCall({
         ...call,
         numbers: [...call.numbers, onchange],
+      });
+
+      setOnchangeHistory(onchange.number);
+
+      setOnchange({ number: "", amount: onchange.amount });
+      setBeterrorcontrol(false);
+      setEditCtlBtn(false);
+      setCallandBetlistctleff(false);
+      setAutoCompleteCtrl(false);
+    }
+
+    if (onchange.number.length === 1 && onchange.number === "+") {
+      if (hot.includes(onchange.number)) {
+        console.log(call.numbers);
+        const hotLimitCalculate = catchHotLimit(
+          onchange,
+          hot,
+          masterTotalData,
+          call.numbers,
+          masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+        );
+        if (hotLimitCalculate.remainBet < onchange.amount) {
+          alert(
+            ` LIMIT OVER! \n hot limit : ${hotLimitCalculate.hotLimit}\n hot total : ${hotLimitCalculate.hotTotal} \n remain bet : ${hotLimitCalculate.remainBet}`
+          );
+          return;
+        }
+      }
+
+      if (superhot.includes(onchange.number)) {
+        console.log(call.numbers);
+        const hotLimitCalculate = catchHotLimit(
+          onchange,
+          superhot,
+          masterTotalData,
+          call.numbers,
+          masterTotalData.Total * (autoCompleteValue.hot_limit / 100)
+        );
+        if (hotLimitCalculate.remainBet < onchange.amount) {
+          alert(
+            ` LIMIT OVER! \n superhot limit : ${hotLimitCalculate.hotLimit}\n superhot total : ${hotLimitCalculate.hotTotal} \n remain bet : ${hotLimitCalculate.remainBet}`
+          );
+          return;
+        }
+      }
+
+      // FOR REVERSE
+      let obj = {
+        number: onChangeHistory.split("").reverse().join(""),
+        amount: onchange.amount,
+      };
+      console.log(obj);
+
+      setCall({
+        ...call,
+        numbers: [...call.numbers, obj],
       });
 
       setOnchange({ number: "", amount: onchange.amount });
