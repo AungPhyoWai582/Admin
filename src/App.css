@@ -7,6 +7,31 @@
   pointer-events: none;
 }
 
+h1, p {
+  font-family: Lato;
+}
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: '100%';
+}
+
+td {
+  /* border: 1px solid #dddddd; */
+  text-align: left;
+  padding: 8px;
+}
+
+/* tr:nth-child(even) {
+  background-color: #dddddd;
+} */
+
+@media print{
+	.hide-on-print{
+		display: none;
+	}
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -35,37 +60,4 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-
-@media print {
-  @page { size: landscape; }
-}
-
-
-@media all {
-  .page-break {
-    display: none;
-  }
-}
-
-@media print {
-  html, body {
-    height: initial !important;
-    overflow: initial !important;
-    -webkit-print-color-adjust: exact !important;
-  }
-}
-
-@media print {
-  .page-break {
-    margin-top: 1rem;
-    display: block;
-    page-break-before: auto;
-  }
-}
-
-@page {
-  size: auto;
-  margin: 20mm;
 }

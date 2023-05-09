@@ -1,3 +1,4 @@
+import "antd/dist/antd.css";
 import { DatePicker } from "antd";
 // import { useState } from "react";
 import moment from "moment";

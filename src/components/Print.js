@@ -1,116 +1,165 @@
-// import { Typography } from "@mui/material";
-import useEnhancedEffect from "@mui/material/utils/useEnhancedEffect";
-import { Box } from "@mui/system";
-import { Typography } from "antd";
-import React, { useRef, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import "../App.css";
 import { useReactToPrint } from "react-to-print";
+import { useRef } from "react";
+import { useLocation } from "react-router-dom";
 
-const Print = ({ setPrintCtrl }) => {
+function App() {
   const location = useLocation();
   const { ID, count, name, time, numbers, totalAmount } = location.state;
-  const componentRef = useRef();
+  const data = {
+    id: 1234556,
+    name: "yya",
+    numbers: 25,
+    time: "18:00pm 12/12/2022",
+    betList: [
+      { number: "56", amount: "1500" },
+      { number: "65", amount: "1500" },
+      { number: "66", amount: "2000" },
+      { number: "56", amount: "1500" },
+      { number: "65", amount: "1500" },
+      { number: "66", amount: "2000" },
+      { number: "56", amount: "1500" },
+      { number: "65", amount: "1500" },
+      { number: "66", amount: "2000" },
+      { number: "56", amount: "1500" },
+      { number: "65", amount: "1500" },
+      { number: "66", amount: "2000" },
+      { number: "56", amount: "1500" },
+      { number: "65", amount: "1500" },
+      { number: "66", amount: "2000" },
+      { number: "56", amount: "1500" },
+      { number: "65", amount: "1500" },
+      { number: "66", amount: "2000" },
+      { number: "56", amount: "1500" },
+      { number: "65", amount: "1500" },
+      { number: "66", amount: "2000" },
+      { number: "56", amount: "1500" },
+      { number: "65", amount: "1500" },
+      { number: "66", amount: "2000" },
+    ],
+  };
+
+  const calls = [
+    { number: "65", amount: "1500" },
+    { number: "56", amount: "1500" },
+    { number: "68", amount: "3000" },
+    { number: "86", amount: "3000" },
+    { number: "65", amount: "2000" },
+    { number: "90", amount: "1500" },
+    { number: "80", amount: "1500" },
+  ];
+  const remark = [
+    { number: "65", amount: "1500" },
+    { number: "56", amount: "1500" },
+    { number: "68", amount: "3000" },
+    { number: "86", amount: "3000" },
+  ];
   // const printReceipt = () => {
-  // var printContents = document.getElementById('printArea').innerHTML;
-  // var originalContents = document.body.innerHTML;
-
-  // document.body.innerHTML = printContents;
-
-  // window.print();
-
-  // document.body.innerHTML = originalContents;
+  //   window.print();
   // };
 
-  // console.log(window.location.pathname)
+  const componentRef = useRef();
 
-  useEffect(() => {
-    if (window.location.pathname.toString() === "/print") {
-      setPrintCtrl(true);
-    }
-  }, []);
-
-  const handlePrint = useReactToPrint({
+  const printReceipt = useReactToPrint({
     content: () => componentRef.current,
     // documentTitle: "2d slip",
     // onAfterPrint: () => alert("Print Success"),
   });
 
-  const data = [
-    { number: "56", amount: "5000" },
-    { number: "87", amount: "5000" },
-    { number: "42", amount: "5000" },
-    { number: "12", amount: "5000" },
-    { number: "53", amount: "5000" },
-    { number: "55", amount: "5000" },
-    { number: "88", amount: "5000" },
-    { number: "66", amount: "5000" },
-  ];
-
+  console.log(name, ID, time,numbers,totalAmount);
+  const r = () => {};
   return (
-    <>
-      {/* <div ref={componentRef} id="printArea"> */}
-      {/* <div
-        ref={componentRef}
-        className="print-container"
-        style={{ margin: "0 auto", padding: "5px",width:'300px',backgroundColor:'green' }}
-      >
-        <div>
-          <div style={{ display: "flex" }}>
-            <div>id : </div>
-            <div>{ID}</div>
-          </div>
-          <div style={{ display: "flex" }}>
-            <div>name : </div>
-            <div>{name}</div>
-          </div>
-          <div style={{ display: "flex" }}>
-            <div>numbers : </div>
-            <div>{count}</div>
-          </div>
-          <div style={{ display: "flex" }}>
-            <div>time : </div>
-            <div>{time}</div>
-          </div>
-        </div>
-       <div  style={{backgroundColor:'red'}} /> */}
-        {/* <table style={{width:'100%',backgroundColor:'red'}}
-        >
-          {data.map((num) => (
-          <tr
-            style={{  
-              backgroundColor:"grey !important",
-              display: "flex !important",
-              justifyContent: "space-around !important",
-              width: "100% !important",
-            
-            }}
-          >
-            <td  style={{width:'50% !important',textAlign:'right !mportant'}}>{num.number.toString()}</td>
-            <td style={{width:'50% !important',textAlign:'left !important'}}>{num.amount.toString()}</td>
-          </tr>))}
-        </table> */}
-        {/* <div style={{border:'1px solid gray'}}>
-          {data.map(num=>{
-            return (<div >
-              <td style={{width:'500px',paddingLeft:'5px',textAlign:'center'}}>{num.number.toString()}</td>
-              <td style={{width:'500px',paddingLeft:'5px',textAlign:'center'}}>{num.amount.toString()}</td>
-            </div>)
-          })}
-          <div >
-              <td style={{width:'500px',paddingLeft:'5px',textAlign:'center'}}>Total</td>
-              <td style={{width:'500px',paddingLeft:'5px',textAlign:'center'}}>{data.reduce((acc,cur)=>acc+Number(cur.amount),0)}</td>
-            </div>
-        </div>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <h3>Thank</h3>
-        </div>
-      </div> */}
-      <Box ref={componentRef} sx={{display: 'none', displayPrint: 'block'}}>
-        <Typography>1234567890</Typography>
-      </Box>
-      <button onClick={handlePrint}>Print</button>
-    </>
-  );
-};
+    <div className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root">
+      <div className="App" ref={componentRef} style={{ width: "219px" }}>
+        <div style={{ padding: "20px", width: "100%", justifyItems: "center" }}>
+          <table>
+            <thead>
+              <tr>
+                <td style={{ fontWeight: "bold" }}>id : </td>
+                {/* <td>{data.id}</td> */}
+                <td>{ID}</td>
+              </tr>
+              <tr>
+                <td style={{ fontWeight: "bold" }}>name : </td>
+                {/* <td>{data.name}</td> */}
+                <td>{name}</td>
+              </tr>
+              <tr>
+                <td style={{ fontWeight: "bold" }}>numbers : </td>
+                <td>{count}</td>
+              </tr>
+              <tr>
+                <td style={{ fontWeight: "bold" }}>time : </td>
+                {/* <td>{data.time}</td> */}
+                <td>{time}</td>
+              </tr>
+            </thead>
 
-export default Print;
+            <tbody>
+              {numbers.map((num) => (
+                <tr>
+                  <td
+                    style={{
+                      width: "50%",
+                      border: "1px solid black",
+                      textAlign: "left",
+                      paddingLeft: "20px",
+                      border: "1px solid black",
+                    }}
+                  >
+                    {num.number}
+                  </td>
+                  <td
+                    style={{
+                      textAlign: "left",
+                      paddingRight: "20px",
+                      border: "1px solid black",
+                    }}
+                  >
+                    {num.amount}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+
+            {/* <tfoot>
+              <tr>
+                <td
+                  style={{
+                    textAlign: "left",
+                    fontWeight: "bold",
+                    paddingLeft: "20px",
+                    border: "1px solid black",
+                  }}
+                >
+                  Total
+                </td>
+                <td
+                  style={{
+                    textAlign: "left",
+                    paddingRight: "20px",
+                    border: "1px solid black",
+                  }}
+                >
+                  {totalAmount}
+                </td>
+              </tr>
+            </tfoot> */}
+          </table>
+          <div style={{display: "flex",justifyContent: "space-between"}}>
+            <h3>Total: {totalAmount}</h3>
+          </div>
+          <h3>Thank for your support</h3>
+          {/* </div> */}
+
+          {/* </div> */}
+          <button className="hide-on-print" onClick={printReceipt}>
+            Print
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
