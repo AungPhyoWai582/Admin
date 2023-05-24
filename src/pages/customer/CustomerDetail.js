@@ -10,9 +10,9 @@ import {
   TableBody,
   TableHead,
   TableCell,
+  Table,
 } from "@mui/material";
 import { Edit, Save } from "@mui/icons-material";
-import { Table } from "antd";
 
 // const useStyles = makeStyles((theme) => ({
 //   root: {

@@ -23,26 +23,18 @@ import {
   Box,
   InputLabel,
   TableFooter,
+  Select,
 } from "@mui/material";
 import { blue, green, grey } from "@mui/material/colors";
 import React from "react";
-
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useState } from "react";
 import { RemoveRedEye, Search } from "@mui/icons-material";
 import { useLocation } from "react-router-dom";
 import Axios from "../../shared/Axios";
 import { useEffect } from "react";
 import SelectTime from "../../components/SelectTime";
-import { Select, Space } from "antd";
 import moment from "moment";
-// import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-// import { Box, fontWeight } from "@mui/system";
-// import { DateRangePicker, StaticDateRangePicker } from "@mui/lab";
-
-// import DatePicker from "../../components/DatePicker";
-// import { DateRangePicker } from "@mui/lab";
+import SelectBox from "../../components/SelectBox";
 
 const ShortCup = () => {
   const location = useLocation();
@@ -117,7 +109,7 @@ const ShortCup = () => {
     setLoading(true);
     if (InOutControl === "In") {
       Axios.get(
-        `/reports/members-collections?&start_date=${dates[0]}&end_date=${dates[1]}&customer=${autoCompleteValue}&time=${timeselect}`,
+        `/reports/members-collections?&start_date=${startDate}&end_date=${endDate}&customer=${autoCompleteValue}&time=${timeselect}`,
         {
           headers: {
             authorization: `Bearer ` + localStorage.getItem("access-token"),
@@ -137,7 +129,7 @@ const ShortCup = () => {
     }
     if (InOutControl === "Out") {
       Axios.get(
-        `/reports/total-out?start_date=${dates[0]}&end_date=${dates[1]}&time=${timeselect}`,
+        `/reports/total-out?start_date=${startDate}&end_date=${endDate}&time=${timeselect}`,
         {
           headers: {
             authorization: `Bearer ` + localStorage.getItem("access-token"),
@@ -154,7 +146,7 @@ const ShortCup = () => {
     }
     if (InOutControl === "Main") {
       Axios.get(
-        `/reports/main-collections?start_date=${dates[0]}&end_date=${dates[1]}&time=${timeselect}`,
+        `/reports/main-collections?start_date=${startDate}&end_date=${endDate}&time=${timeselect}`,
         {
           headers: {
             authorization: `Bearer ` + localStorage.getItem("access-token"),
@@ -205,33 +197,37 @@ const ShortCup = () => {
             ))}
           </Select>
         </FormControl> */}
-        <Space wrap>
+        <>
           {/* <Stack direction={"row"} paddingLeft={{ xs: 0, sm: 0, md: 2, xl: 2 }}> */}
-          <SelectTime setDates={setDates} />
-          <Select
-            defaultValue={timeselect}
-            style={{ width: 150 }}
-            onChange={(e) => setTimeSelect(e)}
-            options={[
-              { value: "All", label: "All" },
-              { value: "AM", label: "AM" },
-              { value: "PM", label: "PM" },
-            ]}
+          <SelectTime setStartDate={setStartDate} setEndDate={setEndDate} />
+          <SelectBox
+            select={timeselect}
+            setSelect={setTimeSelect}
+            options={["All", "AM", "PM"]}
           />
 
           {InOutControl === "In" && (
-            <Select
-              defaultValue={autoCompleteValue}
-              style={{ width: 150 }}
-              onChange={(e) => setAutoCompleteValue(e)}
+            <SelectBox
+              select={autoCompleteValue}
+              setSelect={setAutoCompleteValue}
               options={[
                 ...customer.map((cus) => {
-                  return { value: cus.value, label: cus.name };
+                  return cus.name.toString();
                 }),
               ]}
             />
+            // <Select
+            //   defaultValue={autoCompleteValue}
+            //   style={{ width: 150 }}
+            //   onChange={(e) => setAutoCompleteValue(e)}
+            //   options={[
+            //     ...customer.map((cus) => {
+            //       return { value: cus.value, label: cus.name };
+            //     }),
+            //   ]}
+            // />
           )}
-        </Space>
+        </>
 
         {/* </Stack> */}
       </Stack>

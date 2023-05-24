@@ -8,12 +8,12 @@ import {
   TableContainer,
   TableHead,
   Typography,
+  Button,
 } from "@mui/material";
 import { blue, blueGrey, cyan, grey, teal } from "@mui/material/colors";
 import { Box } from "@mui/system";
-import { Button } from "antd";
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { NavLink, useLocation, useParams } from "react-router-dom";
 import Axios from "../../shared/Axios";
 
 const CallDetail = ({ authUser }) => {
@@ -48,14 +48,30 @@ const CallDetail = ({ authUser }) => {
             // flexGrow={2}
           >
             <Stack padding={1}>
-              <Button>Print</Button>
+              {/* <Button>Print</Button> */}
+              <NavLink
+          style={{ textDecoration: "none" }}
+          to={`/print`}
+          state={{
+            ID: call.callId,
+            count: call.numbers.length,
+            name: call.master.name,
+            time: call.betTime,
+            numbers: call.numbers,
+            totalAmount: call.totalAmount,
+          }}
+        >
+          {/* <Button onClick={handlePrint} variant="outlined" size="small"> */}
+          print
+          {/* </Button> */}
+        </NavLink>
             </Stack>
             <Stack direction={"row"} justifyContent="space-between">
               <Typography
                 fontSize={{ xs: 12, sm: 14, md: 16 }}
                 fontWeight="bold"
               >
-                BetId.
+                BetId :
               </Typography>
               <Typography fontSize={{ xs: 12, sm: 14, md: 16 }}>
                 {call.callId}
@@ -67,7 +83,7 @@ const CallDetail = ({ authUser }) => {
                 fontSize={{ xs: 12, sm: 14, md: 16 }}
                 fontWeight="bold"
               >
-                Total.
+                Total :
               </Typography>
               <Typography fontSize={{ xs: 12, sm: 14, md: 16 }}>
                 {call.totalAmount}
@@ -78,7 +94,17 @@ const CallDetail = ({ authUser }) => {
                 fontSize={{ xs: 12, sm: 14, md: 16 }}
                 fontWeight="bold"
               >
-                Status.
+                Numbers :              </Typography>
+              <Typography fontSize={{ xs: 12, sm: 14, md: 16 }}>
+                {call.numbers.length}
+              </Typography>
+            </Stack>
+            <Stack direction={"row"} justifyContent="space-between">
+              <Typography
+                fontSize={{ xs: 12, sm: 14, md: 16 }}
+                fontWeight="bold"
+              >
+                Status :
               </Typography>
               <Typography fontSize={{ xs: 12, sm: 14, md: 16 }} color="red">
                 {call.status}
@@ -89,7 +115,7 @@ const CallDetail = ({ authUser }) => {
                 fontSize={{ xs: 12, sm: 14, md: 16 }}
                 fontWeight="bold"
               >
-                Win.
+                Win :
               </Typography>
               <Typography fontSize={{ xs: 12, sm: 14, md: 16 }}>
                 {call.win}
@@ -100,7 +126,7 @@ const CallDetail = ({ authUser }) => {
                 fontSize={{ xs: 12, sm: 14, md: 16 }}
                 fontWeight="bold"
               >
-                Time.
+                Time :
               </Typography>
               <Typography fontSize={{ xs: 12, sm: 14, md: 16 }}>
                 {call.betTime}

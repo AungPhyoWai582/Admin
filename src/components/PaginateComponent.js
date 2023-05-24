@@ -1,7 +1,7 @@
 import { Stack,Typography,Pagination } from "@mui/material";
 import React from "react";
 import MuiPagination from '@mui/material'
-import { Select } from "antd";
+// import { Select } from "antd";
 
 const PaginateComponent = ({page,count,color,handleChangePage,handleChangeRowsPerPage,rowsPerPage}) => {
   return (
@@ -20,7 +20,7 @@ const PaginateComponent = ({page,count,color,handleChangePage,handleChangeRowsPe
         onChange={handleChangePage}
       />
       <Typography>Page</Typography>
-      <Select
+      {/* <Select
         defaultValue={rowsPerPage}
         style={{ width: 70, textAlign: "center" }}
         onChange={handleChangeRowsPerPage}
@@ -30,7 +30,7 @@ const PaginateComponent = ({page,count,color,handleChangePage,handleChangeRowsPe
           { value: "10", label: "10" },
           { value: "20", label: "20" },
         ]}
-      />
+      /> */}
     </Stack>
   );
 };

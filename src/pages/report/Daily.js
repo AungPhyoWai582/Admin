@@ -21,15 +21,15 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Select,
 } from "@mui/material";
 import { grey, teal } from "@mui/material/colors";
 import { useLocation, NavLink } from "react-router-dom";
 import Axios from "../../shared/Axios";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+// import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+// import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import SelectTime from "../../components/SelectTime";
-import { FormContext } from "antd/lib/form/context";
-import { Select } from "antd";
+import SelectBox from "../../components/SelectBox";
 
 const Daily = () => {
   const location = useLocation();
@@ -68,7 +68,7 @@ const Daily = () => {
   const searchReport = () => {
     console.log(timeselect);
     Axios.get(
-      `/reports/daily?start_date=${dates[0]}&end_date=${dates[1]}&_time=${timeselect}`,
+      `/reports/daily?start_date=${startDate}&end_date=${endDate}&_time=${timeselect}`,
       {
         headers: {
           authorization: `Bearer ` + localStorage.getItem("access-token"),
@@ -80,7 +80,7 @@ const Daily = () => {
     });
   };
 
-  console.log(lager)
+  console.log(lager);
 
   return (
     <Stack>
@@ -98,7 +98,7 @@ const Daily = () => {
           size="small"
         >
           {/* <InputLabel id="demo-select-small">Time</InputLabel> */}
-          {/* <Select
+          {/* <select
             autoWidth={true}
             sx={{ height: "30px" }}
             // size="small"
@@ -107,13 +107,16 @@ const Daily = () => {
             id="demo-select-small"
             value={timeselect}
             // label="Age"
-            onChange={(e) => setTimeSelect(e.target.value)}
+            onChange={(e) => setTimeSelect(e)}
           >
-            {time.map((t) => (
-              <MenuItem value={t}>{t}</MenuItem>
-            ))}
-          </Select> */}
-          <Select
+            {[
+              { value: "AM", label: "AM" },
+              { value: "PM", label: "PM" },
+            ].map((t) => (
+              <option value={t}>{t}</option>
+            )}
+          </select> */}
+          {/* <select
             defaultValue={timeselect}
             style={{ width: 150 }}
             onChange={(e) => setTimeSelect(e)}
@@ -122,10 +125,11 @@ const Daily = () => {
               { value: "AM", label: "AM" },
               { value: "PM", label: "PM" },
             ]}
-          />
+          /> */}
+          <SelectBox select={timeselect} setSelect={setTimeSelect} options={["AM","PM"]} />
         </FormControl>
         <Stack direction={"row"} height={"30px"} spacing={1}>
-          <SelectTime setDates={setDates} />
+          <SelectTime setStartDate={setStartDate} setEndDate={setEndDate} />
           <Button
             // sx={{ bgcolor: green[300] }}
 
@@ -166,33 +170,29 @@ const Daily = () => {
         </TableHead>
         <TableBody>
           {lager.length ? (
-            lager.map((lg,key) => {
+            lager.map((lg, key) => {
               // const date = new Date(lg.date);
               return (
-              
-                  <TableRow key={key}>
-                    <TableCell sx={{ overflow: "scroll/" }}>
-                      {lg.date}
-                    </TableCell>
-                    {/* <TableCell>{lg.master.name}</TableCell> */}
-                    <TableCell>{lg.totalAmount.toString()}</TableCell>
-                    <TableCell>
-                      {lg.pout_tee_amount ? lg.pout_tee_amount.toString() : "0"}
-                    </TableCell>
+                <TableRow key={key}>
+                  <TableCell sx={{ overflow: "scroll/" }}>{lg.date}</TableCell>
+                  {/* <TableCell>{lg.master.name}</TableCell> */}
+                  <TableCell>{lg.totalAmount.toString()}</TableCell>
+                  <TableCell>
+                    {lg.pout_tee_amount ? lg.pout_tee_amount.toString() : "0"}
+                  </TableCell>
 
-                    <TableCell>{lg.totalWin}</TableCell>
-                    <TableCell>
-                      <NavLink
-                        to={"/reports/daily/members"}
-                        state={{ date: lg.date }}
-                      >
-                        <IconButton size="small" color="success">
-                          <RemoveRedEye fontSize="12" />
-                        </IconButton>
-                      </NavLink>
-                    </TableCell>
-                  </TableRow>
-              
+                  <TableCell>{lg.totalWin}</TableCell>
+                  <TableCell>
+                    <NavLink
+                      to={"/reports/daily/members"}
+                      state={{ date: lg.date }}
+                    >
+                      <IconButton size="small" color="success">
+                        <RemoveRedEye fontSize="12" />
+                      </IconButton>
+                    </NavLink>
+                  </TableCell>
+                </TableRow>
               );
             })
           ) : (

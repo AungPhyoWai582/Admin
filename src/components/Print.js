@@ -6,54 +6,6 @@ import { useLocation } from "react-router-dom";
 function App() {
   const location = useLocation();
   const { ID, count, name, time, numbers, totalAmount } = location.state;
-  const data = {
-    id: 1234556,
-    name: "yya",
-    numbers: 25,
-    time: "18:00pm 12/12/2022",
-    betList: [
-      { number: "56", amount: "1500" },
-      { number: "65", amount: "1500" },
-      { number: "66", amount: "2000" },
-      { number: "56", amount: "1500" },
-      { number: "65", amount: "1500" },
-      { number: "66", amount: "2000" },
-      { number: "56", amount: "1500" },
-      { number: "65", amount: "1500" },
-      { number: "66", amount: "2000" },
-      { number: "56", amount: "1500" },
-      { number: "65", amount: "1500" },
-      { number: "66", amount: "2000" },
-      { number: "56", amount: "1500" },
-      { number: "65", amount: "1500" },
-      { number: "66", amount: "2000" },
-      { number: "56", amount: "1500" },
-      { number: "65", amount: "1500" },
-      { number: "66", amount: "2000" },
-      { number: "56", amount: "1500" },
-      { number: "65", amount: "1500" },
-      { number: "66", amount: "2000" },
-      { number: "56", amount: "1500" },
-      { number: "65", amount: "1500" },
-      { number: "66", amount: "2000" },
-    ],
-  };
-
-  const calls = [
-    { number: "65", amount: "1500" },
-    { number: "56", amount: "1500" },
-    { number: "68", amount: "3000" },
-    { number: "86", amount: "3000" },
-    { number: "65", amount: "2000" },
-    { number: "90", amount: "1500" },
-    { number: "80", amount: "1500" },
-  ];
-  const remark = [
-    { number: "65", amount: "1500" },
-    { number: "56", amount: "1500" },
-    { number: "68", amount: "3000" },
-    { number: "86", amount: "3000" },
-  ];
   // const printReceipt = () => {
   //   window.print();
   // };
@@ -86,7 +38,7 @@ function App() {
               </tr>
               <tr>
                 <td style={{ fontWeight: "bold" }}>numbers : </td>
-                <td>{count}</td>
+                <td>{count.toString()}</td>
               </tr>
               <tr>
                 <td style={{ fontWeight: "bold" }}>time : </td>
@@ -96,8 +48,8 @@ function App() {
             </thead>
 
             <tbody>
-              {numbers.map((num) => (
-                <tr>
+              {numbers.map((num,key) => (
+                <tr key={key}>
                   <td
                     style={{
                       width: "50%",
@@ -110,10 +62,16 @@ function App() {
                     {num.number}
                   </td>
                   <td
-                    style={{
-                      textAlign: "left",
-                      paddingRight: "20px",
-                      border: "1px solid black",
+                   style={{
+                    width: "50%",
+                    border: "1px solid black",
+                    textAlign: "right",
+                    paddingLeft: "20px",
+                    border: "1px solid black",
+                    // style={{
+                    //   textAlign: "right",
+                    //   paddingRight: "20px",
+                    //   border: "1px solid black",
                     }}
                   >
                     {num.amount}
@@ -147,7 +105,7 @@ function App() {
             </tfoot> */}
           </table>
           <div style={{display: "flex",justifyContent: "space-between"}}>
-            <h3>Total: {totalAmount}</h3>
+            <h3>Total :</h3><h3>{totalAmount}</h3>
           </div>
           <h3>Thank for your support</h3>
           {/* </div> */}

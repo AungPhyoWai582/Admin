@@ -22,8 +22,8 @@ import {
 import { grey, teal } from "@mui/material/colors";
 import { useLocation, NavLink } from "react-router-dom";
 import Axios from "../../shared/Axios";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+// import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+// import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 const Report = () => {
   const location = useLocation();
@@ -118,8 +118,8 @@ const Report = () => {
             />
           )}
         /> */}
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DatePicker
+        {/* <LocalizationProvider dateAdapter={AdapterDateFns}> */}
+          {/* <DatePicker
             label="Start Date"
             value={startDate}
             onChange={(newValue) => {
@@ -139,8 +139,8 @@ const Report = () => {
             renderInput={(params) => (
               <TextField {...params} size={"small"} sx={{ width: 150 }} />
             )}
-          />
-        </LocalizationProvider>
+          /> */}
+        {/* </LocalizationProvider> */}
         <Button
           sx={{ bgcolor: "ButtonShadow" }}
           size="small"

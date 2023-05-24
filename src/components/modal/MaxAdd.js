@@ -1,5 +1,4 @@
-import { Dialog, DialogActions, DialogContent } from "@mui/material";
-import { Button } from "antd";
+import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import React from "react";
 
 const MaxAdd = ({ cusval, maxAddhandle, setMaxAddhandle, sentMaxAdd }) => {

@@ -23,8 +23,6 @@ import {
 import { grey, teal } from "@mui/material/colors";
 import { useLocation, NavLink } from "react-router-dom";
 import Axios from "../../shared/Axios";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 const DailyMembers = () => {
   const location = useLocation();
