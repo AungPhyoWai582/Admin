@@ -125,7 +125,10 @@ const ShortCup = () => {
           setReportIn({ me: me, memberReport: memberReport });
           setLoading(false);
         })
-        .catch((err) => setReportIn({ me: {}, memberReport: [] }));
+        .catch((err) => {
+          setReportIn({ me: {}, memberReport: [] });
+          setLoading(false);
+        });
     }
     if (InOutControl === "Out") {
       Axios.get(
@@ -142,7 +145,10 @@ const ShortCup = () => {
           setReportOut({ calls: calls, totalOut: totalOut });
           setLoading(false);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          setReportOut({ totalOut: {}, calls: [] });
+          setLoading(false);
+        });
     }
     if (InOutControl === "Main") {
       Axios.get(
@@ -159,7 +165,10 @@ const ShortCup = () => {
           setReportMain({ main: main, totalMain: totalMain });
           setLoading(false);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          setReportMain({ totalMain: {}, main: [] });
+          setLoading(false);
+        });
     }
   };
 
